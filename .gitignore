@@ -9,6 +9,7 @@ Ravel-Creators/[Bb]uild/
 Ravel-Creators/[Bb]uilds/
 Ravel-Creators/[Ll]ogs/
 Ravel-Creators/[Mm]emoryCaptures/
+Ravel-Creators/[Uu]serSettings/
 
 # Asset meta data should only be ignored when the corresponding asset is also ignored
 !/[Aa]ssets/**/*.meta
