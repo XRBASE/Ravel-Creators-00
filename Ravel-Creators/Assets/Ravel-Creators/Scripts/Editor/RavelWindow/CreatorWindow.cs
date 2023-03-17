@@ -1,0 +1,92 @@
+using System;
+using System.Collections.Generic;
+using UnityEditor;
+using UnityEngine;
+
+public class CreatorWindow : EditorWindow
+{
+	public CreatorWindowState Tab {
+		get {
+			if (!_states.ContainsKey(_tab)) {
+				_states.Add(_tab, GetState(_tab));
+			}
+			return _states[_tab];
+		}
+	}
+
+	private Vector2 _scroll;
+	
+	private State _tab;
+	private Dictionary<State, CreatorWindowState> _states = new Dictionary<State, CreatorWindowState>();
+
+	[MenuItem("Ravel/Creators", false, 0)]
+	public static void OpenWindow() {
+		GetWindow();
+	}
+	
+	[MenuItem("Ravel/Account", false, 1)]
+	public static void OpenAccount() {
+		GetWindow(State.Account);
+	}
+	
+	public static CreatorWindow GetWindow(State s = State.None, bool show = true) {
+		CreatorWindow wnd = GetWindow<CreatorWindow>();
+		if (s != State.None) {
+			wnd.SetState(s);
+		}
+		
+		if (show) {
+			wnd.Show();	
+		}
+		return wnd;
+	}
+
+	public void SetState(State newState) {
+		_tab = newState;
+	}
+
+	public CreatorWindowState GetState(State s) {
+		switch (s) {
+			case State.Account:
+				return new AccountState(this);
+			default:
+				throw new Exception($"Missing creator window state ({s})");
+		}
+	}
+
+	private void OnGUI() {
+		if (!RavelEditor.LoggedIn) {
+			_tab = State.Account;
+			GUI.enabled = false;
+		}
+		
+		_tab = (State)GUILayout.Toolbar((int)_tab, Enum.GetNames(typeof(State)));
+		GUI.enabled = true;
+		
+		if (RavelEditor.Branding.banner) {
+			RavelEditor.DrawTextureScaledGUI(new Rect(0, GUILayoutUtility.GetLastRect().yMax, position.width, RavelBranding.BANNER_HEIGHT), 
+				RavelEditor.Branding.banner, RavelEditor.Branding.bannerPOI);
+		}
+
+		
+		if (_tab != State.None) {
+			_scroll = EditorGUILayout.BeginScrollView(_scroll, GUILayout.Width(position.width));
+			Tab.OnGUI();
+		}
+		
+		if (RavelEditor.Branding.daan) {
+			RavelEditor.DrawTextureScaledGUI(new Rect(position.width / 2f - 50,  GUILayoutUtility.GetLastRect().yMax, 100f, 100f), 
+				RavelEditor.Branding.daan, Vector2.one * 0.5f);
+		}
+
+		if (_tab != State.None) {
+			EditorGUILayout.EndScrollView();
+		}
+	}
+
+	public enum State
+	{
+		None = 0,
+		Account,
+	}
+}
