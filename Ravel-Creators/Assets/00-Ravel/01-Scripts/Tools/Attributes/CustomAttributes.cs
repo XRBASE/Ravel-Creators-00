@@ -16,7 +16,6 @@ namespace Base.Ravel.CustomAttributes
     {
         public override void OnGUI(Rect position, SerializedProperty property, GUIContent label)
         {
-            //disable GUI, draw property as not enabled and re-enable GUI
             GUI.enabled = false;
             EditorGUI.PropertyField(position, property, label);
             GUI.enabled = true;

@@ -79,6 +79,6 @@ public struct ImageSizeUrls
                 return false;
         }
 
-        return true;
+        return !string.IsNullOrEmpty(url);
     }
 }

@@ -11,66 +11,112 @@ public class EnvironmentState : CreatorWindowState
         get { return CreatorWindow.State.Environment; }
     }
 
-    private bool _envFoldOpen = false;
+    public Environment CurEnv { get { return _environments[_envIndex]; } }
+
+    private bool _envFoldOpen = true;
     private string[] _names;
     private Environment[] _environments;
-    private int _curEnv = -1;
+    private int _envIndex = -1;
     private bool _retrievingImg = false;
     private Sprite _curEnvImg;
-    
+
     public EnvironmentState(CreatorWindow wnd) : base(wnd) { }
     
     public override void OnGUI(Rect position) {
-        int indent = EditorGUI.indentLevel;
+        if (GUILayout.Button("Create")) {
+            CreateEnvironmentWindow.OpenWindow();
+        }
+
         _envFoldOpen = EditorGUILayout.Foldout(_envFoldOpen, "Existing");
 
         if (_envFoldOpen) {
-            if (GUILayout.Button("Fetch environments")) {
-                FetchEnvironments();
+            if (GUILayout.Button("Fetch remote environments")) {
+                FetchRemoteEnvironments();
+            }
+            
+            if (GUILayout.Button("Fetch local environments")) {
+                FetchLocalEnvironments();
             }
 
             if (GUILayout.Button("Clear environments")) {
                 Clear();
             }
-            GUILayout.Space(20f);
+            GUILayout.Space(RavelBranding.SPACING_SMALL);
             
             if (_environments != null && _environments.Length > 0) {
-                if (_curEnv < 0) {
-                    _curEnv = 0;
+                if (_envIndex < 0) {
+                    _envIndex = 0;
                 }
-                
+
                 EditorGUI.BeginChangeCheck();
-                _curEnv = GUILayout.SelectionGrid(_curEnv, _names, ENVIRONMENT_BTN_COUNT);
+                _envIndex = GUILayout.SelectionGrid(_envIndex, _names, ENVIRONMENT_BTN_COUNT);
                 if (EditorGUI.EndChangeCheck()) {
                     _curEnvImg = null;
                 }
 
-                if (_curEnvImg == null && !_retrievingImg) {
-                    EditorImageService.GetSprite(_environments[_curEnv].imageUrl, ImageSize.I1920, OnImageRetrieved);
+                if (_curEnvImg == null && !_retrievingImg && _environments[_envIndex].metadataPreviewImage
+                        .TryGetUrl(ImageSize.I1024,
+                            out string url)) {
+                    EditorImageService.GetSprite(url, ImageSize.I256, OnImageRetrieved);
                     _retrievingImg = true;
                 }
-                
-                GUILayout.Space(20f);
-                GUILayout.Label($"Name: \t\t{_environments[_curEnv].name}");
-                GUILayout.Label($"Guid: \t\t{_environments[_curEnv].environmentUuid}");
-                GUILayout.Label($"description: \t{_environments[_curEnv].description}");
-                
-                
+
                 //indent by space
                 GUILayout.BeginHorizontal();
-                GUILayout.Space(100f);
+                GUILayout.Space(RavelBranding.SPACING_SMALL);
                 GUILayout.BeginVertical();
-                
                 GUI.enabled = false;
-                GUILayout.Toggle(_environments[_curEnv].active, "active:");
-                GUILayout.Toggle(_environments[_curEnv].publicEnvironment, "public:");
+                GUILayout.Space(RavelBranding.SPACING_SMALL);
+                GUILayout.TextField($"Name: \t\t{CurEnv.name}");
+                GUILayout.TextField($"Guid: \t\t{CurEnv.environmentUuid}");
+
+                GUILayout.TextArea($"Short summary: \t{CurEnv.shortSummary}");
+                GUILayout.TextArea($"Long summary: \t{CurEnv.longSummary}");
+
+                GUILayout.Toggle(CurEnv.isPublic, "public:");
+                GUILayout.Toggle(CurEnv.published, "published:");
                 GUI.enabled = true;
-                
+
                 //undo indent
                 GUILayout.EndVertical();
                 GUILayout.EndHorizontal();
                 
-                GUILayout.Space(5f);
+                GUILayout.BeginHorizontal();
+                if (GUILayout.Button("Save as asset")) {
+                    string path = EditorUtility.SaveFilePanel("Save environment", Application.dataPath, 
+                        $"ENV_{CurEnv.name}", "asset");
+
+                    if (!string.IsNullOrEmpty(path)) {
+                        EnvironmentSO so = ScriptableObject.CreateInstance<EnvironmentSO>();
+                        so.environment = CurEnv;
+
+                        path = path.Substring(path.IndexOf("Assets", StringComparison.Ordinal));
+                        
+                        AssetDatabase.CreateAsset(so, path);
+                        AssetDatabase.Refresh();
+                    }
+                }
+                if (CurEnv.metadataPreviewImage.TryGetUrl(ImageSize.I1920, out string imgUrl) && GUILayout.Button("Save image")) {
+                    string path = EditorUtility.SaveFilePanel("Save image", Application.dataPath, 
+                        $"IMG_{CurEnv.name}_1920", "jpg");
+
+                    if (!string.IsNullOrEmpty(path)) {
+                        RavelWebRequest req = new RavelWebRequest(imgUrl, RavelWebRequest.Method.Get);
+                        EditorWebRequests.DownloadAndSave(req, path, true, this);
+                    }
+                }
+                if (!string.IsNullOrEmpty(CurEnv.metadataAssetBundle.assetBundleUrl) && GUILayout.Button("Save bundle")) {
+                    string path = EditorUtility.SaveFilePanel("Save bundle", Application.dataPath, 
+                        $"BUN_{CurEnv.name}", "");
+
+                    if (!string.IsNullOrEmpty(path)) {
+                        RavelWebRequest req = new RavelWebRequest(CurEnv.metadataAssetBundle.assetBundleUrl, RavelWebRequest.Method.Get);
+                        EditorWebRequests.DownloadAndSave(req, path, true, this);
+                    }
+                }
+                GUILayout.EndHorizontal();
+
+                GUILayout.Space(RavelBranding.SPACING_SMALL);
                 if (_curEnvImg != null) {
                     RavelEditor.DrawTextureScaledGUI(new Vector2(0, GUILayoutUtility.GetLastRect().yMax),
                         position.width, _curEnvImg.texture);
@@ -78,16 +124,40 @@ public class EnvironmentState : CreatorWindowState
             }
         }
     }
-
-    private void FetchEnvironments() {
+    
+    /// <summary>
+    /// Fetches all remote environments (this includes the environments in the project).
+    /// </summary>
+    private void FetchRemoteEnvironments() {
         RavelWebRequest res = CreatorRequest.GetCreatorEnvironments(RavelEditor.User.userUUID);
         EditorWebRequests.SendWebRequest(res, OnEnvironmentsRetrieved, this);
     }
 
+    /// <summary>
+    /// Fetches all local environments, based on the scriptable objects in the project.
+    /// </summary>
+    private void FetchLocalEnvironments() {
+        string[] paths = AssetDatabase.FindAssets("t:"+ typeof(EnvironmentSO));
+        _environments = new Environment[paths.Length];
+        for (int i = 0; i < paths.Length; i++) {
+            _environments[i] = AssetDatabase.LoadAssetAtPath<EnvironmentSO>(paths[i]).environment;
+        }
+
+        _names = _environments.GetNames();
+    }
+
     private void OnEnvironmentsRetrieved(RavelWebResponse res) {
-        if (res.Success && res.TryGetCollection(out ProxyCollection<Environment> environments)) {
-            _environments = environments.Array;
-            _names = _environments.GetNames();
+        if (res.Success) {
+            //rename public var, cus that's a bad name
+            res.DataString = res.DataString.Replace("\"public\":", "\"isPublic\":");
+            
+            if (res.TryGetCollection(out ProxyCollection<Environment> environments)) {
+                _environments = environments.Array;
+                _names = _environments.GetNames();
+            }
+            else {
+                Debug.LogError($"error fetching and or converting environments error: {res.Error.FullMessage}, data ({res.DataString})!");
+            }
         }
         else {
             Debug.LogError($"error fetching environments {res.Error.FullMessage}!");
@@ -102,6 +172,6 @@ public class EnvironmentState : CreatorWindowState
     private void Clear() {
         _environments = Array.Empty<Environment>();
         _names = Array.Empty<string>();
-        _curEnv = -1;
+        _envIndex = -1;
     }
 }

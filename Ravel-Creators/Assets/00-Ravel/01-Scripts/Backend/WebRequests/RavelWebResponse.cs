@@ -31,6 +31,7 @@ namespace Base.Ravel.Networking {
         /// </summary>
         public string DataString {
             get { return _dataString; }
+            set { _dataString = value; }
         }
 
         private string _dataString;

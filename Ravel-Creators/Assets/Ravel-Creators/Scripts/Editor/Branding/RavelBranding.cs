@@ -4,6 +4,8 @@ using UnityEngine;
 public class RavelBranding : ScriptableObject
 {
     public const float BANNER_HEIGHT = 100f;
+    public const float SPACING_SMALL = 20f;
+    public const float HORI_BTN_SMALL = 100f;
     
     public Texture2D banner;
     [Tooltip("Zooms in on this point of the banner, use decimals range 0.0 t/m 1.0")]

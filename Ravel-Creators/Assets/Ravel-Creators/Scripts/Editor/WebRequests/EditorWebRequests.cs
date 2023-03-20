@@ -1,9 +1,11 @@
 using System;
 using System.Collections;
 using Base.Ravel.Networking;
-using Base.Ravel.Networking.Authorization;
 using Unity.EditorCoroutines.Editor;
+using UnityEditor;
 using UnityEngine;
+using UnityEngine.Windows;
+using Object = UnityEngine.Object;
 
 public static class EditorWebRequests
 {
@@ -16,11 +18,34 @@ public static class EditorWebRequests
 
         RavelWebResponse res = new RavelWebResponse(req);
         if (!res.Success) {
-            string token = PlayerCache.GetString(LoginRequest.SYSTEMS_TOKEN_KEY);
-            Debug.LogError($"Webresponse Error: {res.Error.FullMessage}) ({token}).");
+            //TODO: unauthorized logout (401)
+            Debug.LogError($"Webresponse Error: {res.Error.FullMessage}).");
         }
-        Debug.Log($"Webresponse ({req.Request.url}): Success:({res.Success}, {res.ResultCode}).");
+        
         onReqSent?.Invoke(res);
+    }
+
+    public static void DownloadAndSave(RavelWebRequest req, string path, bool select, object sender) {
+        EditorCoroutineUtility.StartCoroutine(DownloadAndSaveRequest(req, path, select), sender);
+    }
+
+    private static IEnumerator DownloadAndSaveRequest(RavelWebRequest req, string path, bool select) {
+        yield return req.Send();
+
+        RavelWebResponse res = new RavelWebResponse(req);
+        if (!res.Success) {
+            Debug.Log($"Error downloading file: ({req.Request.url}): {res.Error.FullMessage}).");
+            yield break;
+        }
+
+        byte[] bytes = res.DataByte;
+        File.WriteAllBytes(path, bytes);
+        
+        if (select && path.Contains("Assets")) {
+            AssetDatabase.Refresh();
+            path = path.Substring(path.IndexOf("Assets", StringComparison.Ordinal));
+            Selection.activeObject = AssetDatabase.LoadAssetAtPath<Object>(path);
+        }
     }
 }
 

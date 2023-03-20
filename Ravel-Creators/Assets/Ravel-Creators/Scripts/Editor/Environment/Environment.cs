@@ -2,30 +2,39 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Base.Ravel.CustomAttributes;
+using UnityEngine;
 
 [Serializable]
 public class Environment
 {
     [ReadOnly]
     public string environmentUuid;
+    
     [ReadOnly]
     public new string name;
     [ReadOnly] 
-    public string description;
+    public string shortSummary;
+    [ReadOnly]
+    public string longSummary;
+    
+    [HideInInspector]
+    public ImageSizeUrls metadataPreviewImage;
+    [HideInInspector]
+    public Assetbundle metadataAssetBundle;
+    
     [ReadOnly] 
-    public string imageUrl;
+    public bool isPublic;
     [ReadOnly] 
-    public string assetBundleUrl;
-    [ReadOnly] 
-    public bool active;
-    [ReadOnly] 
-    public bool publicEnvironment;
+    public bool published;
 }
 
-public static class EnvironmentExtentions
+public static class EnvironmentExtensions
 {
     public static string[] GetNames(this IEnumerable<Environment> data) {
         Environment[] envs = data as Environment[] ?? data.ToArray();
+        if (envs.Length == 0) {
+            return Array.Empty<string>();
+        }
         string[] output = new string[envs.Length];
 
         for (int i = 0; i < envs.Length; i++) {
@@ -34,4 +43,10 @@ public static class EnvironmentExtentions
 
         return output;
     }
+}
+
+[Serializable]
+public class Assetbundle
+{
+    public string assetBundleUrl;
 }
