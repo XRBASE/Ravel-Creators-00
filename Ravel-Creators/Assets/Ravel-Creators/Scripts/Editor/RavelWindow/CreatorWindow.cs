@@ -49,6 +49,8 @@ public class CreatorWindow : EditorWindow
 		switch (s) {
 			case State.Account:
 				return new AccountState(this);
+			case State.Environment:
+				return new EnvironmentState(this);
 			default:
 				throw new Exception($"Missing creator window state ({s})");
 		}
@@ -71,7 +73,7 @@ public class CreatorWindow : EditorWindow
 		
 		if (_tab != State.None) {
 			_scroll = EditorGUILayout.BeginScrollView(_scroll, GUILayout.Width(position.width));
-			Tab.OnGUI();
+			Tab.OnGUI(position);
 		}
 		
 		if (RavelEditor.Branding.daan) {
@@ -88,5 +90,6 @@ public class CreatorWindow : EditorWindow
 	{
 		None = 0,
 		Account,
+		Environment,
 	}
 }

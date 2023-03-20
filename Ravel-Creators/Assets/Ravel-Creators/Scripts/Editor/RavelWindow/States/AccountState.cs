@@ -2,7 +2,6 @@ using Base.Ravel.Networking;
 using Base.Ravel.Networking.Authorization;
 using Base.Ravel.Networking.Users;
 using Base.Ravel.Users;
-using UnityEditor;
 using UnityEngine;
 
 public class AccountState : CreatorWindowState
@@ -15,7 +14,7 @@ public class AccountState : CreatorWindowState
 	}
 	public AccountState(CreatorWindow wnd) : base(wnd) { }
 
-	public override void OnGUI() {
+	public override void OnGUI(Rect position) {
 		if (!RavelEditor.LoggedIn) { 
 			GUILayout.Label($"email:");
 			email = GUILayout.TextField(email);

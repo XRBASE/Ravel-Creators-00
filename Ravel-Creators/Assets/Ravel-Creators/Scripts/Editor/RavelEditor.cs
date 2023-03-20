@@ -34,7 +34,27 @@ public static class RavelEditor
         
         Debug.LogError("Not logged in, please open the account window and log in (Topbar, Ravel, Account).");
     }
-    
+
+    /// <summary>
+    /// Draws whole texture and scales height based on given width
+    /// </summary>
+    /// <param name="pos">Position on which the texture is drawn.</param>
+    /// <param name="width">Width of the texture, height is calculated from this.</param>
+    /// <param name="tex">Texture to draw.</param>
+    public static void DrawTextureScaledGUI(Vector2 pos, float width, Texture2D tex) {
+        float px = ((float)tex.height / tex.width) * width;
+        Rect coords = new Rect(0,0,1,1);
+        
+        GUI.DrawTextureWithTexCoords(new Rect(pos, new Vector2(width, px)), tex, coords);
+        EditorGUILayout.Space(px);
+    }
+
+    /// <summary>
+    /// Draws texture in given rect and masks the not visible parts of the texture
+    /// </summary>
+    /// <param name="mask">Mask rect, in which texture is drawn.</param>
+    /// <param name="tex">Texture to draw.</param>
+    /// <param name="poi">Point of interest, zooms in on this position.</param>
     public static void DrawTextureScaledGUI(Rect mask, Texture2D tex, Vector2 poi) {
         Vector2 res = new Vector2(tex.width, tex.height);
         Rect coords = new Rect(0,0,1,1);

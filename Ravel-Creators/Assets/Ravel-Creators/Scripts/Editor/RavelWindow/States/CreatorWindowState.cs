@@ -1,3 +1,5 @@
+using UnityEngine;
+
 public abstract class CreatorWindowState
 {
 	public abstract CreatorWindow.State State { get; } 
@@ -8,7 +10,7 @@ public abstract class CreatorWindowState
 		_wnd = wnd;
 	}
 	
-	public abstract void OnGUI();
+	public abstract void OnGUI(Rect position);
 
 	public void Show() {
 		_wnd.SetState(State);
