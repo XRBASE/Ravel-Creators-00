@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Base.Ravel.CustomAttributes;
+using Newtonsoft.Json;
 using UnityEngine;
 
 [Serializable]
@@ -42,6 +43,14 @@ public static class EnvironmentExtensions
         }
 
         return output;
+    }
+
+    public static string RenameStringToBackend(string json) {
+        return json.Replace("\"isPublic\":", "\"public\":");
+    }
+    
+    public static string RenameStringFromBackend(string json) {
+        return json.Replace("\"public\":", "\"isPublic\":");
     }
 }
 

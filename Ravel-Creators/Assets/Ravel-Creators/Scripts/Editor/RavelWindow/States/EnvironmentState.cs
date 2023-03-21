@@ -149,7 +149,7 @@ public class EnvironmentState : CreatorWindowState
     private void OnEnvironmentsRetrieved(RavelWebResponse res) {
         if (res.Success) {
             //rename public var, cus that's a bad name
-            res.DataString = res.DataString.Replace("\"public\":", "\"isPublic\":");
+            res.DataString = EnvironmentExtensions.RenameStringFromBackend(res.DataString);
             
             if (res.TryGetCollection(out ProxyCollection<Environment> environments)) {
                 _environments = environments.Array;

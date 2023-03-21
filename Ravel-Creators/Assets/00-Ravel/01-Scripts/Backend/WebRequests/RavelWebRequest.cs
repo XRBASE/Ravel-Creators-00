@@ -25,7 +25,7 @@ namespace Base.Ravel.Networking {
         protected Dictionary<string, string> _parameters;
         protected Dictionary<string, string> _header;
         //used for passing data in PostJSON calls
-        protected string _json = "";
+        protected string _data = "";
         protected Method _method;
         
         private bool _disposed;
@@ -103,20 +103,27 @@ namespace Base.Ravel.Networking {
                 case Method.Post:
                     _request = UnityWebRequest.Post(_url, _parameters);
                     break;
+                case Method.PostBytes:
+                    _url += ParameterExtension;
+                    _request = UnityWebRequest.Post(_url, _parameters);
+                    
+                    _request.uploadHandler = (UploadHandler)new UploadHandlerRaw(new UTF8Encoding().GetBytes(_data));
+                    _request.downloadHandler = (DownloadHandler)new DownloadHandlerBuffer();
+                    break;
                 case Method.PostJSON:
                     _url += ParameterExtension;
                     //specific case for posting json data
                     _request = new UnityWebRequest(_url, "POST");
         
                     //use upload and download manager manually to enforce json instead of form
-                    _request.uploadHandler = (UploadHandler)new UploadHandlerRaw(new UTF8Encoding().GetBytes(_json));
+                    _request.uploadHandler = (UploadHandler)new UploadHandlerRaw(new UTF8Encoding().GetBytes(_data));
                     _request.downloadHandler = (DownloadHandler)new DownloadHandlerBuffer();
                     _request.SetRequestHeader("Content-Type", "application/json");
                     break;    
                 case Method.Put:
                     _request = new UnityWebRequest(_url, "PUT");
                     //use upload and download manager manually to enforce json instead of form
-                    _request.uploadHandler = (UploadHandler)new UploadHandlerRaw(new UTF8Encoding().GetBytes(_json));
+                    _request.uploadHandler = (UploadHandler)new UploadHandlerRaw(new UTF8Encoding().GetBytes(_data));
                     _request.downloadHandler = (DownloadHandler)new DownloadHandlerBuffer();
                     _request.SetRequestHeader("Content-Type", "application/json");
                     break;
@@ -128,7 +135,7 @@ namespace Base.Ravel.Networking {
                     _request = new UnityWebRequest(_url, "DELETE");
         
                     //use upload and download manager manually to enforce json instead of form
-                    _request.uploadHandler = (UploadHandler)new UploadHandlerRaw(new UTF8Encoding().GetBytes(_json));
+                    _request.uploadHandler = (UploadHandler)new UploadHandlerRaw(new UTF8Encoding().GetBytes(_data));
                     _request.downloadHandler = (DownloadHandler)new DownloadHandlerBuffer();
                     _request.SetRequestHeader("Content-Type", "application/json");
                     break;
@@ -222,6 +229,7 @@ namespace Base.Ravel.Networking {
             GetSprite,
             Post,
             PostJSON,
+            PostBytes,
             Put,
             Delete,
             DeleteJSON,

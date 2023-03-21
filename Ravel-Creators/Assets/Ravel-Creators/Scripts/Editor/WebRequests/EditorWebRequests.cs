@@ -22,6 +22,7 @@ public static class EditorWebRequests
             Debug.LogError($"Webresponse Error: {res.Error.FullMessage}).");
         }
         
+        req.DisposeData();
         onReqSent?.Invoke(res);
     }
 
@@ -41,6 +42,7 @@ public static class EditorWebRequests
         byte[] bytes = res.DataByte;
         File.WriteAllBytes(path, bytes);
         
+        req.DisposeData();
         if (select && path.Contains("Assets")) {
             AssetDatabase.Refresh();
             path = path.Substring(path.IndexOf("Assets", StringComparison.Ordinal));
