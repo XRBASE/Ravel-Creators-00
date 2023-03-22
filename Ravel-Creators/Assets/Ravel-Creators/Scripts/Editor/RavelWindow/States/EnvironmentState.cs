@@ -129,7 +129,7 @@ public class EnvironmentState : CreatorWindowState
     /// Fetches all remote environments (this includes the environments in the project).
     /// </summary>
     private void FetchRemoteEnvironments() {
-        RavelWebRequest res = CreatorRequest.GetCreatorEnvironments(RavelEditor.User.userUUID);
+        RavelWebRequest res = CreatorRequest.GetCreatorEnvironments(RavelEditor.User.userUUID, false);
         EditorWebRequests.SendWebRequest(res, OnEnvironmentsRetrieved, this);
     }
 

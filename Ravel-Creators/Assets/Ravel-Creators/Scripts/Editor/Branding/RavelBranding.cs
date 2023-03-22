@@ -4,6 +4,9 @@ using UnityEngine;
 public class RavelBranding : ScriptableObject
 {
     public const float BANNER_HEIGHT = 100f;
+    
+    public const int FONT_TITLE = 30;
+    
     public const float SPACING_SMALL = 20f;
     public const float HORI_BTN_SMALL = 100f;
     

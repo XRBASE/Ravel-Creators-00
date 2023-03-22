@@ -1,9 +1,8 @@
-using System.Net;
-using System.Text;
+using System.IO;
 using Base.Ravel.Networking;
 using Newtonsoft.Json;
 using UnityEngine;
-using UnityEngine.Windows;
+using File = UnityEngine.Windows.File;
 
 public class CreatorRequest : TokenWebRequest
 {
@@ -17,6 +16,10 @@ public class CreatorRequest : TokenWebRequest
         _data = data;
     }
 
+    public CreatorRequest(string postfix, WWWForm form, string version = "v1/") : base ("api/", version, form) {
+        _url += "environments/" + postfix;
+    }
+
     public static CreatorRequest CreateEnvironment(string userUuid, Environment env) {
         string json = JsonConvert.SerializeObject(env);
         json = EnvironmentExtensions.RenameStringToBackend(json);
@@ -24,30 +27,29 @@ public class CreatorRequest : TokenWebRequest
         return new CreatorRequest(Method.PostJSON, $"{userUuid}", json, "v1/");
     }
     
-    public static CreatorRequest UploadPreview(string envUuid, string filePath, string extension) {
-        string data = Encoding.UTF8.GetString(File.ReadAllBytes(filePath));
-        
-        CreatorRequest req = new CreatorRequest(Method.PostBytes, $"uploads/preview-images", data, "v1/");
-        req.AddParameter("environmentUuid", envUuid);
-        req.AddHeader("Content-Type", $"image/{extension}");
-        //req.AddHeader("name", "preview.jpg");
-        //req.AddHeader("name", "preview.jpg");
-        //req.AddHeader("type", "image/jpeg");
+    public static CreatorRequest UploadPreview(string envUuid, string imagePath) {
+        WWWForm form = new WWWForm();
+        string fName = Path.GetFileName(imagePath);
+        form.AddBinaryData("image", File.ReadAllBytes(imagePath), fName);
 
-        return req;
+        return new CreatorRequest($"uploads/preview-images?environmentUuid={envUuid}", form);
     }
     
     public static CreatorRequest UploadBundle(string envUuid, string bundlePath) {
+        WWWForm form = new WWWForm();
+        string fName = Path.GetFileName(bundlePath);
+        form.AddBinaryData("file", File.ReadAllBytes(bundlePath), fName);
 
-        string data = Encoding.UTF8.GetString(File.ReadAllBytes(bundlePath));
-        
-        CreatorRequest req = new CreatorRequest(Method.PostBytes, $"uploads/asset-bundles", data, "v1/");
-        req.AddParameter("environmentUuid", envUuid);
-        
+        return new CreatorRequest($"uploads/asset-bundles?environmentUuid={envUuid}", form);
+    }
+    
+    public static CreatorRequest GetCreatorEnvironments(string userUuid, bool isPublished) {
+        CreatorRequest req = new CreatorRequest(Method.Get, $"{userUuid}");
+        req.AddParameter("isPublished", isPublished.ToString());
         return req;
     }
     
-    public static CreatorRequest GetCreatorEnvironments(string userUuid) {
-        return new CreatorRequest(Method.Get, $"{userUuid}");
+    public static CreatorRequest GetCreatorEnvironment(string envUuid) {
+        return new CreatorRequest(Method.Get, $"single/{envUuid}");
     }
 }

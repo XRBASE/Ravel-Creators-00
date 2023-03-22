@@ -20,13 +20,17 @@ public class AccountState : CreatorWindowState
 			email = GUILayout.TextField(email);
 			GUILayout.Label($"password");
 			pass = GUILayout.PasswordField(pass, '*');
-			
+
 			if (GUILayout.Button("Log in")) {
 				LoginUserPass(email, pass);
 			}
 		}
 		else {
 			GUILayout.Label($"Logged in as user {RavelEditor.User.FullName}");
+			if (GUILayout.Button("Copy UUID")) {
+				GUIUtility.systemCopyBuffer = RavelEditor.User.userUUID;
+			}
+
 			if (GUILayout.Button("Log out")) {
 				RavelEditor.OnLogout();
 			}

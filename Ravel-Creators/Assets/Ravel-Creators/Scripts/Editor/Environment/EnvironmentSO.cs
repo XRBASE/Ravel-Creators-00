@@ -1,12 +1,7 @@
 using UnityEngine;
 #if UNITY_EDITOR
-using System.Collections;
-using System.Collections.Generic;
-using System.IO;
-using System.Net;
 using Base.Ravel.Networking;
 using UnityEditor;
-using UnityEngine.Networking;
 #endif
 
 public class EnvironmentSO : ScriptableObject
@@ -17,22 +12,63 @@ public class EnvironmentSO : ScriptableObject
     [CustomEditor(typeof(EnvironmentSO))]
     private class EnvironmentSOEditor : Editor
     {
-        ImageSize _size = ImageSize.I1920;
+        private EnvironmentSO _instance;
+        
+        private bool _uploadingFile = false;
+        private ImageSize _size = ImageSize.I1920;
+        
+        private SerializedProperty _envProp;
+
+        private void OnEnable() {
+            _envProp = serializedObject.FindProperty("environment");
+        }
 
         public override void OnInspectorGUI() {
-            EnvironmentSO instance = (EnvironmentSO)target; 
+            _instance = (EnvironmentSO)target;
+            
+            if (_uploadingFile) {
+                GUILayout.Label("Uploading file, please wait...");
+                GUI.enabled = false;
+            }
+
+            GUITitle();
+            
             DrawDefaultInspector();
             
             if (GUILayout.Button("copy UUID")) {
-                GUIUtility.systemCopyBuffer = instance.environment.environmentUuid;
+                GUIUtility.systemCopyBuffer = _instance.environment.environmentUuid;
                 Debug.Log("UUID copied!");
             }
 
             _size = (ImageSize)EditorGUILayout.EnumPopup("image url size:", _size);
             
+            GUIDataUrls();
+            
+            GUIUpload();
+            
+            GUI.enabled = true;
+        }
+
+#region draw GUI methods
+
+        private void GUITitle() {
+            EditorGUILayout.BeginHorizontal();
+            int fontSize = GUI.skin.label.fontSize;
+            GUI.skin.label.fontSize = RavelBranding.FONT_TITLE;
+            
+            GUILayout.Label(_instance.environment.name);
+            if (GUILayout.Button("Refresh", GUILayout.Width(RavelBranding.HORI_BTN_SMALL))) {
+                RefreshEnvironment();
+            }
+            
+            GUI.skin.label.fontSize = fontSize;
+            EditorGUILayout.EndHorizontal();
+        }
+
+        private void GUIDataUrls() {
             string url;
             bool error = false;
-            if (!instance.environment.metadataPreviewImage.TryGetUrl(_size, out url)) {
+            if (!_instance.environment.metadataPreviewImage.TryGetUrl(_size, out url)) {
                 url = $"Error recieving url of size {_size}!";
                 error = true;
             }
@@ -43,11 +79,11 @@ public class EnvironmentSO : ScriptableObject
             GUI.enabled = !error;
             if (GUILayout.Button("Save")) {
                 string path = EditorUtility.SaveFilePanel("Save image", Application.dataPath, 
-                    $"IMG_{instance.environment.name}_{_size.ToString().Substring(1)}", "jpg");
+                    $"IMG_{_instance.environment.name}_{_size.ToString().Substring(1)}", "jpg");
 
                 if (!string.IsNullOrEmpty(path)) {
                     RavelWebRequest req = new RavelWebRequest(url, RavelWebRequest.Method.Get);
-                    EditorWebRequests.DownloadAndSave(req, path, true, instance);
+                    EditorWebRequests.DownloadAndSave(req, path, true, _instance);
                 }
             }
             
@@ -55,24 +91,24 @@ public class EnvironmentSO : ScriptableObject
                 GUIUtility.systemCopyBuffer = url;
                 Debug.Log("Url copied!");
             }
-            GUI.enabled = true;
+            GUI.enabled = !_uploadingFile;
             EditorGUILayout.EndHorizontal();
 
-            if (!string.IsNullOrEmpty(instance.environment.metadataAssetBundle.assetBundleUrl)) {
-                url = instance.environment.metadataAssetBundle.assetBundleUrl;
+            if (!string.IsNullOrEmpty(_instance.environment.metadataAssetBundle.assetBundleUrl)) {
+                url = _instance.environment.metadataAssetBundle.assetBundleUrl;
                 
                 EditorGUILayout.BeginHorizontal();
                 GUI.enabled = false;
                 GUILayout.TextField($"Bundle url \t\t{url}", GUILayout.Width(EditorGUIUtility.currentViewWidth - RavelBranding.HORI_BTN_SMALL * 2f));
-                GUI.enabled = true;
+                GUI.enabled = !_uploadingFile;
                 
                 if (GUILayout.Button("Save")) {
                     string path = EditorUtility.SaveFilePanel("Save image", Application.dataPath, 
-                        $"BUN_{instance.environment.name}", "");
+                        $"BUN_{_instance.environment.name}", "");
 
                     if (!string.IsNullOrEmpty(path)) {
                         RavelWebRequest req = new RavelWebRequest(url, RavelWebRequest.Method.Get);
-                        EditorWebRequests.DownloadAndSave(req, path, false, instance);
+                        EditorWebRequests.DownloadAndSave(req, path, false, _instance);
                     }
                 }
                 
@@ -83,60 +119,59 @@ public class EnvironmentSO : ScriptableObject
                 
                 EditorGUILayout.EndHorizontal();
             }
+        }
 
-            
+        private void GUIUpload() {
             if (GUILayout.Button("Upload preview")) {
-                string path = EditorUtility.OpenFilePanel("Select preview image", Application.dataPath, "jpg,jpeg,png");
+                string path = EditorUtility.OpenFilePanel("Upload new preview", Application.dataPath, "jpg,jpeg,png");
 
                 if (!string.IsNullOrEmpty(path)) {
-                    //extension without dot
-                    string ext = Path.GetExtension(path).Substring(1);
-                    RavelWebRequest req = CreatorRequest.UploadPreview(instance.environment.environmentUuid, path, ext);
+                    RavelWebRequest req = CreatorRequest.UploadPreview(_instance.environment.environmentUuid, path);
                     EditorWebRequests.SendWebRequest(req, OnImageUploaded, this);
+                    _uploadingFile = true;
                 }
             }
             
             if (GUILayout.Button("Upload bundle")) {
-                string path = EditorUtility.OpenFilePanel("Select asset bundle", Application.dataPath, "");
+                string path = EditorUtility.OpenFilePanel("Upload new asset bundle", Application.dataPath, "");
 
                 if (!string.IsNullOrEmpty(path)) {
-                    RavelWebRequest req = CreatorRequest.UploadBundle(instance.environment.environmentUuid, path);
+                    RavelWebRequest req = CreatorRequest.UploadBundle(_instance.environment.environmentUuid, path);
                     EditorWebRequests.SendWebRequest(req, OnBundleUploaded, this);
+                    _uploadingFile = true;
                 }
             }
         }
-        
-        //EditorCoroutineUtility.StartCoroutine(UploadImage(instance.environment.environmentUuid, _tex), this);
-        private IEnumerator UploadImage(string envUuid, Texture2D tex) {
-            List<IMultipartFormSection> pictureData = new();
-            //pictureData.Add(new MultipartFormFileSection("file", tex.EncodeToJPG(), "Image", "image/jpg"));
-            pictureData.Add(new MultipartFormFileSection("file", tex.EncodeToJPG(), "Image", "image/jpg"));
-            string url =
-                $"https://dev.ravel.systems/api/v1/environments/uploads/preview-images?environmentUuid={envUuid}";
 
-            UnityWebRequest req = UnityWebRequest.Post(url, pictureData);
-            req.SetRequestHeader("Authorization", "Bearer " + TokenWebRequest.GetToken());
+#endregion
 
-            yield return req.SendWebRequest();
-
-            if (req.result == UnityWebRequest.Result.Success) {
-                Debug.Log("Success");
-            }
-            else {
-                Debug.LogError($"Failure: ({req.error})");
-            }
+        public void RefreshEnvironment() {
+            RavelWebRequest req = CreatorRequest.GetCreatorEnvironment(_instance.environment.environmentUuid);
+            EditorWebRequests.SendWebRequest(req, OnEnvironmentUpdate, this);
         }
 
+        private void OnEnvironmentUpdate(RavelWebResponse res) {
+            if (res.Success && res.TryGetData(out Environment env)) {
+                _instance.environment = env;
+            }
+        }
+        
         public void OnImageUploaded(RavelWebResponse res) {
             if (res.Success) {
                 Debug.Log("Preview image uploaded successfully");
             }
+
+            _uploadingFile = false;
+            RefreshEnvironment();
         }
         
         public void OnBundleUploaded(RavelWebResponse res) {
             if (res.Success) {
                 Debug.Log("Asset bundle uploaded successfully");
             }
+            
+            _uploadingFile = false;
+            RefreshEnvironment();
         }
     }
 #endif

@@ -23,7 +23,8 @@ namespace Base.Ravel.Networking {
         protected string _url;
         protected UnityWebRequest _request;
         protected Dictionary<string, string> _parameters;
-        protected Dictionary<string, string> _header;
+        protected Dictionary<string, string> _header; 
+        protected WWWForm _form;
         //used for passing data in PostJSON calls
         protected string _data = "";
         protected Method _method;
@@ -56,6 +57,50 @@ namespace Base.Ravel.Networking {
         }
         
         /// <summary>
+        /// Form based put request. binary data can be added to the form to push it the url server. This calls the url
+        /// without use of the base url.
+        /// </summary>
+        /// <param name="url">full url to which the webcall is made.</param>
+        /// <param name="form">form for webdata to upload.</param>
+        /// <param name="parameters">parameters (added to url)</param>
+        /// <param name="header">headers for webrequest.</param>
+        public RavelWebRequest(string url, WWWForm form, Dictionary<string, string> parameters = null, Dictionary<string, string> header = null) {
+            if(header != null) {
+                _header = header;
+            } else {
+                _header = new Dictionary<string, string>();
+            }
+
+            if(parameters != null) {
+                _parameters = parameters;
+            } else {
+                _parameters = new Dictionary<string, string>();
+            }
+            
+            _url = url;
+            _method = Method.Post;
+            _form = form;
+            _disposed = false;
+        }
+
+        /// <summary>
+        /// Internal form based post call.
+        /// </summary>
+        /// <param name="api">api text that is added to the url (baseUrl/api/version/postfix).</param>
+        /// <param name="version">version of the call (baseUrl/api/version/postfix).</param>
+        /// <param name="form">form with request data.</param>
+        protected RavelWebRequest(string api, string version, WWWForm form) {
+            _parameters = new Dictionary<string, string>();
+            _header = new Dictionary<string, string>();
+            _method = Method.Post;
+
+            //url
+            _url = AppConfig.Networking.DataServiceBaseUrl + api + version;
+            _form = form;
+            _disposed = false;
+        }
+
+        /// <summary>
         /// Base for Ravel web requests, fills in the base url, based on development setting. 
         /// </summary>
         /// <param name="method">Method of requesting (Get, Post, Put, Etc).</param>
@@ -68,8 +113,9 @@ namespace Base.Ravel.Networking {
 
             //url
             _url = AppConfig.Networking.DataServiceBaseUrl + api + version;
+            _disposed = false;
         }
-
+        
         ~RavelWebRequest()
         {
             if (!_disposed) {
@@ -80,10 +126,13 @@ namespace Base.Ravel.Networking {
         public void DisposeData()
         {
             _disposed = true;
-            if (_method == Method.PostJSON) {
+            
+            if (_method is Method.PostJSON or Method.Put or Method.DeleteJSON or Method.GetSprite) {
                 _request.uploadHandler.Dispose();
-                _request.downloadHandler.Dispose();    
+                _request.downloadHandler.Dispose();
             }
+
+            _form = null;
         }
 
         /// <summary>
@@ -101,14 +150,13 @@ namespace Base.Ravel.Networking {
                     _request.downloadHandler = new DownloadHandlerTexture(true);
                     break;
                 case Method.Post:
-                    _request = UnityWebRequest.Post(_url, _parameters);
-                    break;
-                case Method.PostBytes:
-                    _url += ParameterExtension;
-                    _request = UnityWebRequest.Post(_url, _parameters);
-                    
-                    _request.uploadHandler = (UploadHandler)new UploadHandlerRaw(new UTF8Encoding().GetBytes(_data));
-                    _request.downloadHandler = (DownloadHandler)new DownloadHandlerBuffer();
+                    if (_form != null) {
+                        _url += ParameterExtension;
+                        _request = UnityWebRequest.Post(_url, _form);
+                    }
+                    else {
+                        _request = UnityWebRequest.Post(_url, _parameters);
+                    }
                     break;
                 case Method.PostJSON:
                     _url += ParameterExtension;
@@ -248,6 +296,10 @@ namespace Base.Ravel.Networking {
         /// <param name="api">Api addition part, added between base url and version of the whole url.</param>
         /// <param name="version">Version addition, added after api part of the url.</param>
         public TokenWebRequest(Method method, string api, string version) : base(method, api, version) {
+            AddHeader("Authorization", "Bearer " + GetToken());
+        }
+
+        public TokenWebRequest(string api, string version, WWWForm form) : base(api, version, form) {
             AddHeader("Authorization", "Bearer " + GetToken());
         }
 
