@@ -39,6 +39,12 @@ namespace Base.Ravel.Users
         
         public string profileImageUrl;
         
+        public Organisation[] Organisations {
+            get { return _organisations; }
+            set { _organisations = value; }
+        }
+        
+        private Organisation[] _organisations;
         
         /// <summary>
         /// Overwrite this user's data with other userdata. Any filled in field in other will be applied to this user.

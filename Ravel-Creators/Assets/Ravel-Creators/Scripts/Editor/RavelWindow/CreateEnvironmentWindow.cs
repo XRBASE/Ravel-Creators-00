@@ -8,8 +8,9 @@ using Object = UnityEngine.Object;
 public class CreateEnvironmentWindow : EditorWindow
 {
 	private Environment _environment;
-	
-	[MenuItem("Ravel/CreateEnv", false, 3)]
+	private Vector2 _scroll;
+
+	[MenuItem("Ravel/Create new environment", false, 3)]
 	public static void OpenWindow() {
 		GetWindow();
 	}
@@ -27,9 +28,18 @@ public class CreateEnvironmentWindow : EditorWindow
 
 			return;
 		}
+		
+		_scroll = EditorGUILayout.BeginScrollView(_scroll, GUILayout.Width(position.width));
+		
+		if (RavelEditor.Branding.banner) {
+			RavelEditor.DrawTextureScaledCropGUI(new Rect(0, 0, position.width, RavelBranding.BANNER_HEIGHT), 
+				RavelEditor.Branding.banner, RavelEditor.Branding.bannerPOI);
+		}
+		EditorGUILayout.Space(RavelBranding.INDENT_SMALL);
 
 		if (_environment == null) {
 			_environment = new Environment();
+			_environment.isPublic = true;
 		}
 
 		bool canCreate = true;
@@ -48,13 +58,17 @@ public class CreateEnvironmentWindow : EditorWindow
 		if (string.IsNullOrWhiteSpace(_environment.longSummary)) {
 			canCreate = false;
 		}
-		
-		_environment.isPublic = EditorGUILayout.Toggle("public environment: ", _environment.isPublic);
 
-		if (canCreate && GUILayout.Button("Create")) {
+		_environment.isPublic = GUILayout.SelectionGrid((_environment.isPublic ? 0 : 1), new[] { "Public", "Private" }, 2) == 0;
+
+		EditorGUILayout.Space(RavelBranding.INDENT_SMALL);
+		GUI.enabled = canCreate;
+		if (GUILayout.Button("Create")) {
 			CreatorRequest req = CreatorRequest.CreateEnvironment(RavelEditor.User.userUUID, _environment);
 			EditorWebRequests.SendWebRequest(req, OnCreateSent, this);
 		}
+		GUI.enabled = true;
+		EditorGUILayout.EndScrollView();
 	}
 
 	private void OnCreateSent(RavelWebResponse res) {

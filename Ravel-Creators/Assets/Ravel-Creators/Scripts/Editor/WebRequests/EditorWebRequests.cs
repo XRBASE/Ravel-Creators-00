@@ -43,10 +43,57 @@ public static class EditorWebRequests
         File.WriteAllBytes(path, bytes);
         
         req.DisposeData();
-        if (select && path.Contains("Assets")) {
+        if (path.Contains("Assets")) {
             AssetDatabase.Refresh();
-            path = path.Substring(path.IndexOf("Assets", StringComparison.Ordinal));
-            Selection.activeObject = AssetDatabase.LoadAssetAtPath<Object>(path);
+
+            if (select) {
+                path = path.Substring(path.IndexOf("Assets", StringComparison.Ordinal));
+                Selection.activeObject = AssetDatabase.LoadAssetAtPath<Object>(path);
+            }
+        }
+    }
+    
+    /// <summary>
+    /// Send webrequest to retrieve single instance of data from the backend.
+    /// </summary>
+    /// <param name="req">webrequest that requests the data</param>
+    /// <param name="dataRetrieved">callback for when request is made, boolean is false when webrequest failed.</param>
+    /// <param name="sender">send object to run the coroutine on.</param>
+    public static void GetDataRequest<T>(RavelWebRequest req, Action<T, bool> dataRetrieved, object sender) {
+        EditorCoroutineUtility.StartCoroutine(RetrieveData(req, dataRetrieved), sender);
+    }
+    
+    /// <summary>
+    /// Send webrequest to retrieve multiple instances of data from the backend.
+    /// </summary>
+    /// <param name="req">webrequest that requests the data</param>
+    /// <param name="dataRetrieved">callback for when request is made, boolean is false when webrequest failed.</param>
+    /// <param name="sender">send object to run the coroutine on.</param>
+    public static void GetDataCollectionRequest<T>(RavelWebRequest req, Action<T[], bool> dataRetrieved, object sender) {
+        EditorCoroutineUtility.StartCoroutine(RetrieveData(req, dataRetrieved), sender);
+    }
+
+    private static IEnumerator RetrieveData<T>(RavelWebRequest req, Action<T, bool> dataRetrieved) {
+        yield return req.Send();
+
+        RavelWebResponse res = new RavelWebResponse(req);
+        if (res.Success && res.TryGetData(out T data)) {
+            dataRetrieved?.Invoke(data, true);
+        }
+        else {
+            dataRetrieved?.Invoke(default, false);
+        }
+    }
+    
+    private static IEnumerator RetrieveData<T>(RavelWebRequest req, Action<T[], bool> dataRetrieved) {
+        yield return req.Send();
+
+        RavelWebResponse res = new RavelWebResponse(req);
+        if (res.Success && res.TryGetCollection(out ProxyCollection<T> data)) {
+            dataRetrieved?.Invoke(data.Array, true);
+        }
+        else {
+            dataRetrieved?.Invoke(Array.Empty<T>(), false);
         }
     }
 }

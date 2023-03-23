@@ -128,8 +128,8 @@ namespace Base.Ravel.Networking {
             _disposed = true;
             
             if (_method is Method.PostJSON or Method.Put or Method.DeleteJSON or Method.GetSprite) {
-                _request.uploadHandler.Dispose();
-                _request.downloadHandler.Dispose();
+                _request.uploadHandler?.Dispose(); 
+                _request.downloadHandler?.Dispose();
             }
 
             _form = null;

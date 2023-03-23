@@ -1,3 +1,4 @@
+using System;
 using System.IO;
 using Base.Ravel.Networking;
 using Newtonsoft.Json;
@@ -25,6 +26,17 @@ public class CreatorRequest : TokenWebRequest
         json = EnvironmentExtensions.RenameStringToBackend(json);
         
         return new CreatorRequest(Method.PostJSON, $"{userUuid}", json, "v1/");
+    }
+    
+    public static CreatorRequest DeleteEnvironment(Environment env) {
+        if (env.published) {
+            throw new Exception("Cannot delete published environments");
+        }
+        return new CreatorRequest(Method.Delete, $"{env.environmentUuid}");
+    }
+    
+    public static CreatorRequest PublishEnvironment(string envUuid) {
+        return new CreatorRequest(Method.Put, $"submissions/{envUuid}", "v1/");
     }
     
     public static CreatorRequest UploadPreview(string envUuid, string imagePath) {

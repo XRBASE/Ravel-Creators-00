@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
+using MathBuddy.Strings;
 
 public class CreatorWindow : EditorWindow
 {
@@ -19,16 +20,21 @@ public class CreatorWindow : EditorWindow
 	private State _tab;
 	private Dictionary<State, CreatorWindowState> _states = new Dictionary<State, CreatorWindowState>();
 
-	[MenuItem("Ravel/Creators", false, 0)]
+	//[MenuItem("Ravel/Creator", false, 0)]
 	public static void OpenWindow() {
 		GetWindow();
 	}
 	
-	[MenuItem("Ravel/Account", false, 1)]
+	[MenuItem("Ravel/Creator/Account", false, 1)]
 	public static void OpenAccount() {
 		GetWindow(State.Account);
 	}
-	
+
+	[MenuItem("Ravel/Creator/Environments", false, 1)]
+	public static void OpenEnvironment() {
+		GetWindow(State.Environments);
+	}
+
 	public static CreatorWindow GetWindow(State s = State.None, bool show = true) {
 		CreatorWindow wnd = GetWindow<CreatorWindow>();
 		if (s != State.None) {
@@ -49,7 +55,7 @@ public class CreatorWindow : EditorWindow
 		switch (s) {
 			case State.Account:
 				return new AccountState(this);
-			case State.Environment:
+			case State.Environments:
 				return new EnvironmentState(this);
 			default:
 				throw new Exception($"Missing creator window state ({s})");
@@ -62,11 +68,11 @@ public class CreatorWindow : EditorWindow
 			GUI.enabled = false;
 		}
 		
-		_tab = (State)GUILayout.Toolbar((int)_tab, Enum.GetNames(typeof(State)));
+		_tab = (State)GUILayout.Toolbar((int)_tab, GetStateNames());
 		GUI.enabled = true;
 		
 		if (RavelEditor.Branding.banner) {
-			RavelEditor.DrawTextureScaledGUI(new Rect(0, GUILayoutUtility.GetLastRect().yMax, position.width, RavelBranding.BANNER_HEIGHT), 
+			RavelEditor.DrawTextureScaledCropGUI(new Rect(0, GUILayoutUtility.GetLastRect().yMax, position.width, RavelBranding.BANNER_HEIGHT), 
 				RavelEditor.Branding.banner, RavelEditor.Branding.bannerPOI);
 		}
 
@@ -77,7 +83,7 @@ public class CreatorWindow : EditorWindow
 		}
 		
 		if (RavelEditor.Branding.daan) {
-			RavelEditor.DrawTextureScaledGUI(new Rect(position.width / 2f - 50,  GUILayoutUtility.GetLastRect().yMax, 100f, 100f), 
+			RavelEditor.DrawTextureScaledCropGUI(new Rect(position.width / 2f - 50,  GUILayoutUtility.GetLastRect().yMax, 100f, 100f), 
 				RavelEditor.Branding.daan, Vector2.one * 0.5f);
 		}
 
@@ -86,10 +92,20 @@ public class CreatorWindow : EditorWindow
 		}
 	}
 
+	private string[] GetStateNames() {
+		string[] names = Enum.GetNames(typeof(State));
+		for (int i = 0; i < names.Length; i++) {
+			names[i] = names[i].ToString(StringExtentions.NamingCastType.UpperCamelCase,
+				StringExtentions.NamingCastType.UserFormatting);
+		}
+
+		return names;
+	}
+
 	public enum State
 	{
 		None = 0,
 		Account,
-		Environment,
+		Environments,
 	}
 }

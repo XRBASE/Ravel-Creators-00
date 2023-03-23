@@ -69,7 +69,7 @@ public class AccountState : CreatorWindowState
 				PlayerCache.SetString(LoginRequest.SYSTEMS_TOKEN_KEY, jsonData);
 			}
 			
-			RavelEditor.OnLogin(user, token);
+			RavelEditor.OnLogin(user);
 			email = "";
 			pass = "";
 		}

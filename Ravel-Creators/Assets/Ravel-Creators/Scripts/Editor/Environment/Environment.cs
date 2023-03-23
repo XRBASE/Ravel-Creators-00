@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Base.Ravel.CustomAttributes;
+using Base.Ravel.Users;
 using Newtonsoft.Json;
 using UnityEngine;
 
@@ -27,6 +28,21 @@ public class Environment
     public bool isPublic;
     [ReadOnly] 
     public bool published;
+    [HideInInspector] 
+    public bool submissionInProgress;
+
+    [HideInInspector] public User[] userList;
+    [HideInInspector] public Organisation[] organizations;
+
+    [HideInInspector] public ImageSize previewSize = ImageSize.None;
+    [HideInInspector] public Sprite preview;
+
+    public void UpdateEnvironmentSprite(Sprite spr, ImageSize size) {
+        if (size >= previewSize) {
+            preview = spr;
+            previewSize = size;
+        }
+    }
 }
 
 public static class EnvironmentExtensions

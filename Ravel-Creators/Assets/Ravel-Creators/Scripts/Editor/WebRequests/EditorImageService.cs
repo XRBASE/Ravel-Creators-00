@@ -1,5 +1,7 @@
 using System;
+using System.Collections;
 using Base.Ravel.Networking;
+using Unity.EditorCoroutines.Editor;
 using UnityEngine;
 
 /// <summary>
@@ -7,6 +9,24 @@ using UnityEngine;
     /// </summary>
     public static class EditorImageService
     {
+        public static EditorCoroutine GetSpriteRoutine(string url, ImageSize size, Action<Sprite, ImageSize> callback, object owner) {
+            return EditorCoroutineUtility.StartCoroutine(RetrieveSprite(url, size, callback), owner);
+        }
+
+        private static IEnumerator RetrieveSprite(string url, ImageSize size, Action<Sprite, ImageSize> callback) {
+            SpriteRequest req = new SpriteRequest(url);
+            
+            yield return req.Send();
+            
+            RavelWebResponse res = new RavelWebResponse(req);
+            if (res.Success && res.TryGetSprite(out Sprite result)) {
+                callback?.Invoke(result, size);
+            }
+            else {
+                Debug.LogError($"Error downloading sprite: {res.Error.FullMessage}.");
+            }
+        }
+        
         /// <summary>
         /// Starts and returns the image download routine, for given url.
         /// </summary>
