@@ -5,13 +5,23 @@ using Base.Ravel.Users;
 using UnityEditor;
 using UnityEngine;
 
+/// <summary>
+/// Manager class for editor user data and usefull editor functions
+/// </summary>
 public static class RavelEditor
 {
     public static bool LoggedIn {
         get { return User != null; }
     }
     public static  User User { get; set; }
-
+    public static bool DevUser { get; private set; }
+    
+    private static bool _retrievingOrganisations;
+    private static Action<Organisation[], bool> _onOrgsRetrieved;
+    
+    /// <summary>
+    /// This object contains custom settable branding files for the editor tools.
+    /// </summary>
     public static RavelBranding Branding {
         get {
             if (_branding == null) {
@@ -21,53 +31,98 @@ public static class RavelEditor
             return _branding;
         }
     }
-
     private static RavelBranding _branding;
 
+    /// <summary>
+    /// Sets the user (creator) after login.
+    /// </summary>
     public static void OnLogin(User user) {
         User = user;
     }
+
+    /// <summary>
+    /// Set the system authorities, and determine if user should have access to development features.
+    /// </summary>
+    /// <param name="auths">authority responses from the backend.</param>
+    public static void SetAuthorities(string[] auths) {
+        for (int i = 0; i < auths.Length; i++) {
+            if (auths[i] == "dev:access") {
+                DevUser = true;
+            }
+        }
+    }
     
-    //also call when webrequests fail because of authority reasons
+    /// <summary>
+    /// Logs out the user.
+    /// </summary>
     public static void OnLogout() {
         User = null;
         PlayerCache.DeleteKey(LoginRequest.SYSTEMS_TOKEN_KEY);
         
         Debug.LogError("Not logged in, please open the account window and log in (Topbar, Ravel, Account).");
     }
-
-    private static bool _retrievingOrganisations;
+    
+    /// <summary>
+    /// Retrieve the organisations of the currently logged in user.
+    /// </summary>
+    /// <param name="onRetrieved">Callback for when the organisations have been retrieved.</param>
+    /// <param name="sender">Sender object, this object runs the coroutine and the coroutine stops when the object is deleted.</param>
     public static void GetUserOrganisations(Action<Organisation[], bool> onRetrieved, object sender) {
-        if (_retrievingOrganisations)
-            return;
-        
         if (User == null) {
             CreatorWindow.OpenAccount();
             throw new Exception("User not found, please log in first!");
         }
-
+        
         if (User.Organisations != null) {
             Debug.LogWarning("Reusing previous organisations, to refresh organisations, please select refresh " +
                              "user data in the account window (Ravel>Creators>Account).");
             onRetrieved?.Invoke(User.Organisations, true);
+            return;
         }
-
-        _retrievingOrganisations = true;
-        if (onRetrieved == null) {
-            onRetrieved = OnOrganisationsRetrieved;
+        
+        //subscribe callbacks
+        if (onRetrieved != null) {
+            _onOrgsRetrieved += onRetrieved;
         }
-        else {
-            onRetrieved = OnOrganisationsRetrieved + onRetrieved;
+        
+        //if response not made make response, otherwise wait for response and call all subscribers. 
+        if (!_retrievingOrganisations) {
+            _retrievingOrganisations = true;
+            EditorWebRequests.GetDataCollectionRequest<Organisation>(OrganisationRequest.GetUsersOrganisations(User.userUUID), 
+                OnOrganisationsRetrieved, sender);
         }
-        EditorWebRequests.GetDataCollectionRequest(OrganisationRequest.GetUsersOrganisations(User.userUUID), onRetrieved, sender);
     }
 
+    /// <summary>
+    /// Callback for when organisations have been retrieved. Calls all subscribed callbacks with user organisation data. 
+    /// </summary>
     private static void OnOrganisationsRetrieved(Organisation[] organisations, bool success) {
         if (success) {
             User.Organisations = organisations;
         }
-
+        
+        _onOrgsRetrieved?.Invoke(organisations, success);
+        
+        _onOrgsRetrieved = null;
         _retrievingOrganisations = false;
+    }
+
+    /// <summary>
+    /// Indent GUI with given amount of pixels.
+    /// </summary>
+    /// <param name="sizePx">size of indent.</param>
+    public static void GUIBeginIndent(float sizePx) {
+        GUILayout.BeginHorizontal();
+        GUILayout.Space(sizePx);
+        GUILayout.BeginVertical();
+    }
+
+    /// <summary>
+    /// End a previously opened indent (ends the most recent indent).
+    /// </summary>
+    public static void GUIEndIndent() {
+        GUILayout.EndVertical();
+        GUILayout.EndHorizontal();
     }
 
     /// <summary>
@@ -191,18 +246,22 @@ public static class RavelEditor
     
 }
 
+/// <summary>
+/// Helper class that is invoked the moment unity starts up.
+/// </summary>
 [InitializeOnLoad]
 class StartupHelper
 {
     static StartupHelper() {
+        //waits for the first update call, then opens the window and unsubscribes.
+        //this is because the window doesn't stay open if it is opened on the actual start-up (it's too early).
         EditorApplication.update += StartUp;
-        
     }
 
     static void StartUp() {
         EditorApplication.update -= StartUp;
         
         CreatorWindow wnd = CreatorWindow.GetWindow(CreatorWindow.State.Account, false);
-        (wnd.Tab as AccountState).TryLoginWithToken();
+        (wnd.Tab as AccountState).TryLoginWithToken(true);
     }
 }

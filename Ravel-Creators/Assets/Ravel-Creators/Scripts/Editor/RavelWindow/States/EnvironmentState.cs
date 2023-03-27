@@ -4,24 +4,36 @@ using Unity.EditorCoroutines.Editor;
 using UnityEditor;
 using UnityEngine;
 
+/// <summary>
+/// Environment overview page in creator window.
+/// </summary>
 public class EnvironmentState : CreatorWindowState
 {
+    //amount of environment per row in the selection grid.
     private const int ENVIRONMENT_BTN_COUNT = 3;
     
     public override CreatorWindow.State State {
         get { return CreatorWindow.State.Environments; }
     }
 
-    public Environment CurEnv { get { return _environments[_envIndex]; } }
+    /// <summary>
+    /// Currently selected environment.
+    /// </summary>
+    private Environment CurEnv { get { return _environments[_envIndex]; } }
 
+    /// <summary>
+    /// Location from which the environments are shown
+    /// </summary>
     private Location _location = Location.None;
     
-
+    //Used for environment display and selection.
     private int _envIndex = -1;
     private string[] _names;
     private Environment[] _environments;
     
+    //used for image retrieval and canceling the retrieval.
     private EditorCoroutine _getImageRoutine;
+    //texture of image that was retrieved.
     private Texture2D _curEnvTex;
 
     public EnvironmentState(CreatorWindow wnd) : base(wnd) { }
@@ -36,7 +48,7 @@ public class EnvironmentState : CreatorWindowState
         
         
         if (_location != Location.None) {
-            GUILayout.Space(RavelBranding.SPACING_SMALL);
+            GUILayout.Space(RavelBranding.SPACING_MED);
             
             if (_environments != null && _environments.Length > 0) {
                 int prev = _envIndex; 
@@ -54,7 +66,7 @@ public class EnvironmentState : CreatorWindowState
                 GUISaveEnvBundle();
                 GUILayout.EndHorizontal();
                 
-                GUILayout.Space(RavelBranding.SPACING_SMALL);
+                GUILayout.Space(RavelBranding.SPACING_MED);
                 //Debug.Log($"_curEnvImg {_curEnvImg} {_curEnvImg.name}");
                 if (_curEnvTex != null && _getImageRoutine == null) {
                     RavelEditor.DrawTextureScaleWidthGUI(new Vector2(0, GUILayoutUtility.GetLastRect().yMax),
@@ -118,10 +130,10 @@ public class EnvironmentState : CreatorWindowState
     private void GUIDrawEnvData() {
         //indent by space
         GUILayout.BeginHorizontal();
-        GUILayout.Space(RavelBranding.SPACING_SMALL);
+        GUILayout.Space(RavelBranding.SPACING_MED);
         GUILayout.BeginVertical();
         GUI.enabled = false;
-        GUILayout.Space(RavelBranding.SPACING_SMALL);
+        GUILayout.Space(RavelBranding.SPACING_MED);
         GUILayout.TextField($"Name: \t\t{CurEnv.name}");
         GUILayout.TextField($"Guid: \t\t{CurEnv.environmentUuid}");
 
@@ -324,6 +336,9 @@ public class EnvironmentState : CreatorWindowState
         return names;
     }
 
+    /// <summary>
+    /// Retrieval locations (None means the foldout is closed, Length is used for the top-bar button count).
+    /// </summary>
     private enum Location
     {
         None = 0,

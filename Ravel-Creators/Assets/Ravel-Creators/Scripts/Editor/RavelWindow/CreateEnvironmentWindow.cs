@@ -5,9 +5,14 @@ using UnityEditor;
 using UnityEngine;
 using Object = UnityEngine.Object;
 
+/// <summary>
+/// Separate window for creating a new environment on the server.
+/// </summary>
 public class CreateEnvironmentWindow : EditorWindow
 {
+	//data class for caching users input
 	private Environment _environment;
+	//scroll vector, so the window is able to scroll if it is too big.
 	private Vector2 _scroll;
 
 	[MenuItem("Ravel/Create new environment", false, 3)]
@@ -29,19 +34,21 @@ public class CreateEnvironmentWindow : EditorWindow
 			return;
 		}
 		
-		_scroll = EditorGUILayout.BeginScrollView(_scroll, GUILayout.Width(position.width));
-		
 		if (RavelEditor.Branding.banner) {
 			RavelEditor.DrawTextureScaledCropGUI(new Rect(0, 0, position.width, RavelBranding.BANNER_HEIGHT), 
 				RavelEditor.Branding.banner, RavelEditor.Branding.bannerPOI);
 		}
-		EditorGUILayout.Space(RavelBranding.INDENT_SMALL);
-
+		EditorGUILayout.Space(RavelBranding.SPACING_SMALL);
+		
+		_scroll = EditorGUILayout.BeginScrollView(_scroll, GUILayout.Width(position.width));
+		
 		if (_environment == null) {
 			_environment = new Environment();
+			//auto set to true, as it is the easier option of the two.
 			_environment.isPublic = true;
 		}
 
+		//checks if enough data is set for a create.
 		bool canCreate = true;
 
 		_environment.name = EditorGUILayout.TextField("Name: ", _environment.name);
@@ -61,17 +68,21 @@ public class CreateEnvironmentWindow : EditorWindow
 
 		_environment.isPublic = GUILayout.SelectionGrid((_environment.isPublic ? 0 : 1), new[] { "Public", "Private" }, 2) == 0;
 
-		EditorGUILayout.Space(RavelBranding.INDENT_SMALL);
+		EditorGUILayout.Space(RavelBranding.SPACING_SMALL);
 		GUI.enabled = canCreate;
 		if (GUILayout.Button("Create")) {
 			CreatorRequest req = CreatorRequest.CreateEnvironment(RavelEditor.User.userUUID, _environment);
-			EditorWebRequests.SendWebRequest(req, OnCreateSent, this);
+			EditorWebRequests.SendWebRequest(req, OnCreateResponse, this);
 		}
 		GUI.enabled = true;
 		EditorGUILayout.EndScrollView();
 	}
 
-	private void OnCreateSent(RavelWebResponse res) {
+	/// <summary>
+	/// Callback from server after calling create environment.
+	/// </summary>
+	/// <param name="res">WebResponse data</param>
+	private void OnCreateResponse(RavelWebResponse res) {
 		if (res.Success) {
 			string json = EnvironmentExtensions.RenameStringFromBackend(res.DataString);
 			Environment newEnv = JsonConvert.DeserializeObject<Environment>(json);

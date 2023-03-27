@@ -7,12 +7,24 @@ using UnityEngine;
 using UnityEngine.Windows;
 using Object = UnityEngine.Object;
 
+/// <summary>
+/// Editor web request class for sending and retrieving webrequests.
+/// </summary>
 public static class EditorWebRequests
 {
+    /// <summary>
+    /// Send given webrequest.
+    /// </summary>
+    /// <param name="req">Request to send.</param>
+    /// <param name="onReqSent">Callback for when response is received.</param>
+    /// <param name="sender">Sender object, this object runs the coroutine and the coroutine stops when the object is deleted.</param>
     public static void SendWebRequest(RavelWebRequest req, Action<RavelWebResponse> onReqSent, object sender) {
         EditorCoroutineUtility.StartCoroutine(SendRequest(req, onReqSent), sender);
     }
 
+    /// <summary>
+    /// IENumerator for running the webrequests. Sends request, puts it in a webresponse and fires the callback.
+    /// </summary>
     private static IEnumerator SendRequest(RavelWebRequest req, Action<RavelWebResponse> onReqSent) {
         yield return req.Send();
 
@@ -26,10 +38,20 @@ public static class EditorWebRequests
         onReqSent?.Invoke(res);
     }
 
+    /// <summary>
+    /// Directly download file data from webrequest on local disk.
+    /// </summary>
+    /// <param name="req">WebRequest that returns the download data.</param>
+    /// <param name="path">Path where the file should be saved.</param>
+    /// <param name="select">Should the file be selected after download (only works for files in the project).</param>
+    /// <param name="sender">Sender object, this object runs the coroutine and the coroutine stops when the object is deleted.</param>
     public static void DownloadAndSave(RavelWebRequest req, string path, bool select, object sender) {
         EditorCoroutineUtility.StartCoroutine(DownloadAndSaveRequest(req, path, select), sender);
     }
 
+    /// <summary>
+    /// IENumerator of the download file call.
+    /// </summary>
     private static IEnumerator DownloadAndSaveRequest(RavelWebRequest req, string path, bool select) {
         yield return req.Send();
 
@@ -58,7 +80,7 @@ public static class EditorWebRequests
     /// </summary>
     /// <param name="req">webrequest that requests the data</param>
     /// <param name="dataRetrieved">callback for when request is made, boolean is false when webrequest failed.</param>
-    /// <param name="sender">send object to run the coroutine on.</param>
+    /// <param name="sender">Sender object, this object runs the coroutine and the coroutine stops when the object is deleted.</param>
     public static void GetDataRequest<T>(RavelWebRequest req, Action<T, bool> dataRetrieved, object sender) {
         EditorCoroutineUtility.StartCoroutine(RetrieveData(req, dataRetrieved), sender);
     }
@@ -68,11 +90,14 @@ public static class EditorWebRequests
     /// </summary>
     /// <param name="req">webrequest that requests the data</param>
     /// <param name="dataRetrieved">callback for when request is made, boolean is false when webrequest failed.</param>
-    /// <param name="sender">send object to run the coroutine on.</param>
+    /// <param name="sender">Sender object, this object runs the coroutine and the coroutine stops when the object is deleted.</param>
     public static void GetDataCollectionRequest<T>(RavelWebRequest req, Action<T[], bool> dataRetrieved, object sender) {
         EditorCoroutineUtility.StartCoroutine(RetrieveData(req, dataRetrieved), sender);
     }
 
+    /// <summary>
+    /// IENumerator of the data (singular) retrieval calls.
+    /// </summary>
     private static IEnumerator RetrieveData<T>(RavelWebRequest req, Action<T, bool> dataRetrieved) {
         yield return req.Send();
 
@@ -85,6 +110,9 @@ public static class EditorWebRequests
         }
     }
     
+    /// <summary>
+    /// IENumerator of the data (collection) retrieval calls.
+    /// </summary>
     private static IEnumerator RetrieveData<T>(RavelWebRequest req, Action<T[], bool> dataRetrieved) {
         yield return req.Send();
 

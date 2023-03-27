@@ -27,8 +27,12 @@ public class AccountState : CreatorWindowState
 		}
 		else {
 			GUILayout.Label($"Logged in as user {RavelEditor.User.FullName}");
-			if (GUILayout.Button("Copy UUID")) {
+			if (RavelEditor.DevUser && GUILayout.Button("Copy UUID")) {
 				GUIUtility.systemCopyBuffer = RavelEditor.User.userUUID;
+			}
+			
+			if (GUILayout.Button("Refresh user data")) {
+				TryLoginWithToken(false);
 			}
 
 			if (GUILayout.Button("Log out")) {
@@ -40,14 +44,15 @@ public class AccountState : CreatorWindowState
 	/// <summary>
 	/// Tries to log in using the cached token and otherwise opens the window and shows the login screen.
 	/// </summary>
-	public void TryLoginWithToken() {
+	public void TryLoginWithToken(bool closeWindow) {
 		if (PlayerCache.TryGetString(LoginRequest.SYSTEMS_TOKEN_KEY, out string jsonData)) {
 			//move string into player cache, so token request will pick it up
 			PlayerCache.SetString(LoginRequest.SYSTEMS_TOKEN_KEY, jsonData);
 			//uses token stored in cache
 			RavelWebRequest req = UserRequest.GetSelf();
 			EditorWebRequests.SendWebRequest(req, ProcessLoginResponse, this);
-			Close();
+			if (closeWindow)
+				Close();
 		}
 		else {
 			//no login cached, show window
@@ -70,6 +75,10 @@ public class AccountState : CreatorWindowState
 			}
 			
 			RavelEditor.OnLogin(user);
+			RavelEditor.GetUserOrganisations(null, this);
+			//used for checking for dev users.
+			RavelEditor.SetAuthorities(token.systemAuthorities);
+			
 			email = "";
 			pass = "";
 		}
