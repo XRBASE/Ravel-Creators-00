@@ -9,14 +9,24 @@ public abstract class CreatorWindowState
 	/// State identifier of this window.
 	/// </summary>
 	public abstract CreatorWindow.State State { get; } 
+	protected abstract Vector2 MinSize { get; } 
 
 	private CreatorWindow _wnd;
+	
 	
 	public CreatorWindowState(CreatorWindow wnd) {
 		_wnd = wnd;
 	}
 	
 	public abstract void OnGUI(Rect position);
+
+	public void OnSwitchState() {
+		SetMinSize();
+	}
+
+	protected void SetMinSize() {
+		_wnd.minSize = MinSize;
+	}
 
 	/// <summary>
 	/// Opens creator window to this sub-page.

@@ -72,15 +72,20 @@ public class EnvironmentSOEditor : Editor
         }
 
         DrawDefaultInspector();
-
+        
         if (RavelEditor.DevUser && GUILayout.Button("copy UUID")) {
+            GUILayout.Space(RavelBranding.SPACING_SMALL);
             GUIUtility.systemCopyBuffer = _instance.environment.environmentUuid;
             Debug.Log("UUID copied!");
         }
+        
+        GUILayout.Space(RavelBranding.SPACING_SMALL);
 
         //used to determine what image to download.
         _size = (ImageSize)EditorGUILayout.EnumPopup("image url size:", _size);
         GUIDataUrls();
+
+        GUILayout.Space(RavelBranding.SPACING_SMALL);
 
         if (!(_instance.environment.published || _instance.environment.submissionInProgress)) {
             //upload and publish
@@ -140,25 +145,39 @@ public class EnvironmentSOEditor : Editor
     /// Download bundle and image urls, with save and copy buttons.
     /// </summary>
     private void GUIDataUrls() {
-        string url;
-        bool error = false;
-        if (!_instance.environment.metadataPreviewImage.TryGetUrl(_size, out url)) {
-            url = $"Error recieving url of size {_size}!";
-            error = true;
-        }
+        _instance.environment.metadataPreviewImage.TryGetUrl(_size, out string url);
+        GUIDrawCopySaveUrl("Image", url, $"IMG_{_instance.environment.name}_{_size.ToString().Substring(1)}", "jpg", 
+            !_uploadingFile);
 
+        url = _instance.environment.metadataAssetBundle.assetBundleUrl;
+        GUIDrawCopySaveUrl( "Bundle", url, $"BUN_{_instance.environment.name}", "", 
+            !_uploadingFile);
+    }
+    
+    private void GUIDrawCopySaveUrl(string label, string url, string fileName, string extension, bool enabled) {
+        bool empty = false;
+        if (string.IsNullOrEmpty(url)) {
+            url = $"No url for {label}.";
+            empty = true;
+        }
+        
         EditorGUILayout.BeginHorizontal();
         GUI.enabled = false;
-        GUILayout.TextField($"Image url \t\t{url}",
-            GUILayout.Width(EditorGUIUtility.currentViewWidth - RavelBranding.HORI_BTN_SMALL * 2f));
-        GUI.enabled = !(error || _uploadingFile);
+        if (empty) {
+            GUILayout.TextField(url, GUILayout.Width(EditorGUIUtility.currentViewWidth - RavelBranding.HORI_BTN_SMALL * 2f));
+        }
+        else {
+            GUILayout.TextField($"{label}: \t\t{url}", GUILayout.Width(EditorGUIUtility.currentViewWidth - RavelBranding.HORI_BTN_SMALL * 2f));
+        }
+        
+        GUI.enabled = !empty && enabled;
+
         if (GUILayout.Button("Save")) {
-            string path = EditorUtility.SaveFilePanel("Save image", Application.dataPath,
-                $"IMG_{_instance.environment.name}_{_size.ToString().Substring(1)}", "jpg");
+            string path = EditorUtility.SaveFilePanel("Save", Application.dataPath,fileName, extension);
 
             if (!string.IsNullOrEmpty(path)) {
                 RavelWebRequest req = new RavelWebRequest(url, RavelWebRequest.Method.Get);
-                EditorWebRequests.DownloadAndSave(req, path, true, _instance);
+                EditorWebRequests.DownloadAndSave(req, path, false, _instance);
             }
         }
 
@@ -167,35 +186,8 @@ public class EnvironmentSOEditor : Editor
             Debug.Log("Url copied!");
         }
 
-        GUI.enabled = !_uploadingFile;
         EditorGUILayout.EndHorizontal();
-
-        if (!string.IsNullOrEmpty(_instance.environment.metadataAssetBundle.assetBundleUrl)) {
-            url = _instance.environment.metadataAssetBundle.assetBundleUrl;
-
-            EditorGUILayout.BeginHorizontal();
-            GUI.enabled = false;
-            GUILayout.TextField($"Bundle url \t\t{url}",
-                GUILayout.Width(EditorGUIUtility.currentViewWidth - RavelBranding.HORI_BTN_SMALL * 2f));
-            GUI.enabled = !_uploadingFile;
-
-            if (GUILayout.Button("Save")) {
-                string path = EditorUtility.SaveFilePanel("Save image", Application.dataPath,
-                    $"BUN_{_instance.environment.name}", "");
-
-                if (!string.IsNullOrEmpty(path)) {
-                    RavelWebRequest req = new RavelWebRequest(url, RavelWebRequest.Method.Get);
-                    EditorWebRequests.DownloadAndSave(req, path, false, _instance);
-                }
-            }
-
-            if (GUILayout.Button("copy")) {
-                GUIUtility.systemCopyBuffer = url;
-                Debug.Log("Url copied!");
-            }
-
-            EditorGUILayout.EndHorizontal();
-        }
+        GUI.enabled = enabled;
     }
 
     /// <summary>

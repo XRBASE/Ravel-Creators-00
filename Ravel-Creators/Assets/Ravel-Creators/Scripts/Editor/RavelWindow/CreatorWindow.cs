@@ -24,7 +24,8 @@ public class CreatorWindow : EditorWindow
 
 	private Vector2 _scroll;
 	
-	private State _tab;
+	private State _tab = State.Account;
+	private State _prevTab = State.None;
 	private Dictionary<State, CreatorWindowState> _states = new Dictionary<State, CreatorWindowState>();
 	
 	[MenuItem("Ravel/Creator/Account", false, 1)]
@@ -81,9 +82,15 @@ public class CreatorWindow : EditorWindow
 			GUI.enabled = false;
 		}
 		
-		_tab = (State)GUILayout.Toolbar((int)_tab, GetStateNames());
+		//plus and minus one correct for removing none from the state names
+		_tab = (State)GUILayout.Toolbar((int)_tab - 1, RavelEditor.GetEnumNames<State>(1)) + 1;
 		//if it was disabled, re-enable gui
 		GUI.enabled = true;
+
+		if (_tab != _prevTab) {
+			Tab.OnSwitchState();
+			_prevTab = _tab;
+		}
 		
 		if (RavelEditor.Branding.banner) {
 			RavelEditor.DrawTextureScaledCropGUI(new Rect(0, GUILayoutUtility.GetLastRect().yMax, position.width, RavelBranding.BANNER_HEIGHT), 
@@ -92,9 +99,6 @@ public class CreatorWindow : EditorWindow
 		
 		_scroll = EditorGUILayout.BeginScrollView(_scroll, GUILayout.Width(position.width));
 		Tab.OnGUI(position);
-			
-		RavelEditor.DrawTextureScaledCropGUI(new Rect(position.width / 2f - 50,  GUILayoutUtility.GetLastRect().yMax, 100f, 100f), 
-			RavelEditor.Branding.daan, Vector2.one * 0.5f);
 			
 		EditorGUILayout.EndScrollView();
 	}
@@ -117,6 +121,7 @@ public class CreatorWindow : EditorWindow
 	/// </summary>
 	public enum State
 	{
+		None = 0,
 		Account,
 		Environments,
 	}

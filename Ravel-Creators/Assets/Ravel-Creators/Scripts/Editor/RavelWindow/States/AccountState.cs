@@ -12,6 +12,10 @@ public class AccountState : CreatorWindowState
 	public override CreatorWindow.State State {
 		get { return CreatorWindow.State.Account; }
 	}
+
+	protected override Vector2 MinSize {
+		get { return new Vector2(390, 211); }
+	}
 	public AccountState(CreatorWindow wnd) : base(wnd) { }
 
 	public override void OnGUI(Rect position) {

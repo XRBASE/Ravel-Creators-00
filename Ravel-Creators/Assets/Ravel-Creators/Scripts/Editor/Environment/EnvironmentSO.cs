@@ -1,7 +1,6 @@
 using UnityEngine;
 #if UNITY_EDITOR
 using Base.Ravel.Networking;
-using Unity.EditorCoroutines.Editor;
 using UnityEditor;
 #endif
 
@@ -17,7 +16,7 @@ public class EnvironmentSO : ScriptableObject
 #if UNITY_EDITOR
 
     //cache for network errors in retrieving environment, used for showing the error to users.
-    public string networkError = "";
+    [HideInInspector] public string networkError = "";
     
     /// <summary>
     /// Keep status up to date.

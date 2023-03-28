@@ -16,6 +16,10 @@ public class EnvironmentState : CreatorWindowState
         get { return CreatorWindow.State.Environments; }
     }
 
+    protected override Vector2 MinSize {
+        get { return (_location == Location.None)? new Vector2(510, 185) : new Vector2(510, 400); }
+    }
+
     /// <summary>
     /// Currently selected environment.
     /// </summary>
@@ -37,7 +41,7 @@ public class EnvironmentState : CreatorWindowState
     private Texture2D _curEnvTex;
 
     public EnvironmentState(CreatorWindow wnd) : base(wnd) { }
-    
+
     public override void OnGUI(Rect position) {
         if (GUILayout.Button("Create")) {
             CreateEnvironmentWindow.OpenWindow();
@@ -88,9 +92,13 @@ public class EnvironmentState : CreatorWindowState
         
         if (!EditorGUILayout.Foldout(foldout, "Existing")) {
             _location = Location.None;
+            
+            if (foldout) {
+                //foldout closed
+                SetMinSize();
+            }
             return;
         }
-        
         if (_location == Location.None) {
             _location = (Location)1;
             forceRefresh = true;
@@ -108,6 +116,11 @@ public class EnvironmentState : CreatorWindowState
                     FetchRemoteEnvironments(_location == Location.Published);
                     break;
             }
+        }
+        
+        if (!foldout) {
+            //foldout opened
+            SetMinSize();
         }
     }
 
@@ -302,10 +315,10 @@ public class EnvironmentState : CreatorWindowState
                     
         if(!CurEnv.metadataPreviewImage.TryGetUrl(ImageSize.I1024, out string url))
         {
-            Debug.LogError($"Could not retrieve image for url ({url})");
+            _curEnvTex = null;
             return;
         }
-        Debug.Log($"Retrieve image for url ({url})");
+        
         _getImageRoutine = EditorImageService.GetSpriteRoutine(url, ImageSize.I1024, OnImageRetrieved, this);
     }
     

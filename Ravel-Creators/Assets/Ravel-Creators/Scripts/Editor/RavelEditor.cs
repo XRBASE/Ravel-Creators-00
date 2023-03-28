@@ -28,6 +28,9 @@ public static class RavelEditor
                 _branding = Resources.Load<RavelBranding>("Branding/BrandingConfig");
             }
 
+            if (_branding == null) {
+                Debug.LogError("Missing branding file (Resources/Branding/BrandingConfig.asset)");
+            }
             return _branding;
         }
     }
@@ -243,7 +246,23 @@ public static class RavelEditor
             EditorGUILayout.Space(mask.height);
         }
     }
-    
+
+    public static string[] GetEnumNames<T>(int start = 0, int length = 0) where T : Enum {
+        T[] values = (T[]) Enum.GetValues(typeof(T));
+        if (values.Length == 0)
+            return Array.Empty<string>();
+        
+        if (length <= 0) {
+            length = values.Length - start;
+        }
+        
+        string[] names = new string[length];
+        for (int i = 0, j = start; i < length; i++, j++) {
+            names[i] = values[j].ToString();
+        }
+
+        return names;
+    }
 }
 
 /// <summary>
