@@ -12,9 +12,7 @@ public class CreateEnvironmentWindow : EditorWindow
 {
 	//data class for caching users input
 	private Environment _environment;
-	//scroll vector, so the window is able to scroll if it is too big.
-	private Vector2 _scroll;
-
+	
 	[MenuItem("Ravel/Create new environment", false, 3)]
 	public static void OpenWindow() {
 		GetWindow();
@@ -22,6 +20,7 @@ public class CreateEnvironmentWindow : EditorWindow
 
 	public static CreateEnvironmentWindow GetWindow() {
 		CreateEnvironmentWindow wnd = GetWindow<CreateEnvironmentWindow>();
+		wnd.minSize = new Vector2(290, 230);
 		return wnd;
 	}
 
@@ -39,8 +38,6 @@ public class CreateEnvironmentWindow : EditorWindow
 				RavelEditor.Branding.banner, RavelEditor.Branding.bannerPOI);
 		}
 		EditorGUILayout.Space(RavelBranding.SPACING_SMALL);
-		
-		_scroll = EditorGUILayout.BeginScrollView(_scroll, GUILayout.Width(position.width));
 		
 		if (_environment == null) {
 			_environment = new Environment();
@@ -75,7 +72,6 @@ public class CreateEnvironmentWindow : EditorWindow
 			EditorWebRequests.SendWebRequest(req, OnCreateResponse, this);
 		}
 		GUI.enabled = true;
-		EditorGUILayout.EndScrollView();
 	}
 
 	/// <summary>

@@ -25,7 +25,4 @@ public class RavelBranding : ScriptableObject
     public Vector2 bannerPOI = new Vector2(0.5f, 0.5f);
     [Tooltip("This default transparant logo is drawn over other images, used as banners.")]
     public Texture2D overlayLogo;
-    
-    [Tooltip("I mean this is self explanatory...")]
-    public Texture2D daan;
 }
