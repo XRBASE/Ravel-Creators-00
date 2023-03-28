@@ -21,8 +21,6 @@ public class CreatorWindow : EditorWindow
 			return _states[_tab];
 		}
 	}
-
-	private Vector2 _scroll;
 	
 	private State _tab = State.Account;
 	private State _prevTab = State.None;
@@ -33,9 +31,14 @@ public class CreatorWindow : EditorWindow
 		GetWindow(State.Account);
 	}
 
-	[MenuItem("Ravel/Creator/Environments", false, 1)]
+	[MenuItem("Ravel/Creator/Environments", false)]
 	public static void OpenEnvironment() {
 		GetWindow(State.Environments);
+	}
+	
+	[MenuItem("Ravel/Creator/Configuration", false)]
+	public static void OpenConfig() {
+		GetWindow(State.Configuration);
 	}
 
 	/// <summary>
@@ -70,6 +73,8 @@ public class CreatorWindow : EditorWindow
 				return new AccountState(this);
 			case State.Environments:
 				return new EnvironmentState(this);
+			case State.Configuration:
+				return new ConfigState(this);
 			default:
 				throw new Exception($"Missing creator window state ({tab})");
 		}
@@ -97,10 +102,7 @@ public class CreatorWindow : EditorWindow
 				RavelEditor.Branding.banner, RavelEditor.Branding.bannerPOI);
 		}
 		
-		_scroll = EditorGUILayout.BeginScrollView(_scroll, GUILayout.Width(position.width));
 		Tab.OnGUI(position);
-			
-		EditorGUILayout.EndScrollView();
 	}
 	
 	/// <summary>
@@ -124,5 +126,6 @@ public class CreatorWindow : EditorWindow
 		None = 0,
 		Account,
 		Environments,
+		Configuration,
 	}
 }

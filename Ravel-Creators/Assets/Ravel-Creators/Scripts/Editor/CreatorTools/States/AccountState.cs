@@ -8,6 +8,7 @@ public class AccountState : CreatorWindowState
 {
 	private string email = "";
 	private string pass = "";
+	private bool _remember = false;
 
 	public override CreatorWindow.State State {
 		get { return CreatorWindow.State.Account; }
@@ -16,7 +17,16 @@ public class AccountState : CreatorWindowState
 	protected override Vector2 MinSize {
 		get { return new Vector2(390, 211); }
 	}
-	public AccountState(CreatorWindow wnd) : base(wnd) { }
+
+	public AccountState(CreatorWindow wnd) : base(wnd) {
+		_remember = RavelEditor.Config.saveUserMail;
+	}
+
+	public override void OnSwitchState() {
+		if (RavelEditor.Config.saveUserMail) {
+			email = RavelEditor.Config.userMail;
+		}
+	}
 
 	public override void OnGUI(Rect position) {
 		if (!RavelEditor.LoggedIn) { 
@@ -25,7 +35,18 @@ public class AccountState : CreatorWindowState
 			GUILayout.Label($"password");
 			pass = GUILayout.PasswordField(pass, '*');
 
+			//if remember is disabled, this is local only (so log in with another account won't clear the cache)
+			_remember = GUILayout.Toggle(_remember, "remember login");
+
 			if (GUILayout.Button("Log in")) {
+				//if remember is set to true, the mail and remember value are both saved in cache
+				if (_remember) {
+					RavelEditor.Config.saveUserMail = true;
+					RavelEditor.Config.userMail = email;
+					
+					RavelEditor.Config.SaveConfig();
+				}
+				
 				LoginUserPass(email, pass);
 			}
 		}
@@ -40,7 +61,7 @@ public class AccountState : CreatorWindowState
 			}
 
 			if (GUILayout.Button("Log out")) {
-				RavelEditor.OnLogout();
+				RavelEditor.OnLogout(true);
 			}
 		}
 	}
@@ -87,7 +108,7 @@ public class AccountState : CreatorWindowState
 			pass = "";
 		}
 		else {
-			RavelEditor.OnLogout();
+			RavelEditor.OnLogout(true);
 		}
 	}
 }

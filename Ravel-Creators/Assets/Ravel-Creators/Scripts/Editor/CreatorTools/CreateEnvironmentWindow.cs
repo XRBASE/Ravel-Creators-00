@@ -86,7 +86,7 @@ public class CreateEnvironmentWindow : EditorWindow
 			EnvironmentSO so = CreateInstance<EnvironmentSO>();
 			so.environment = newEnv;
 
-			string path = EditorUtility.SaveFilePanel("Save environment", Application.dataPath, 
+			string path = EditorUtility.SaveFilePanel("Save environment", RavelEditor.Config.GetFilePath(), 
 				$"ENV_{newEnv.name}", "asset");
 
 			if (string.IsNullOrEmpty(path)) {
@@ -96,7 +96,7 @@ public class CreateEnvironmentWindow : EditorWindow
 					    "To delete this environment, use the environment tab of the ravel window or the website.",
 					    "Save environment", "Cancel save")) {
 
-					path = EditorUtility.SaveFilePanel("Save environment", Application.dataPath,
+					path = EditorUtility.SaveFilePanel("Save environment", RavelEditor.Config.GetFilePath(),
 						$"ENV_{newEnv.name}", "asset");
 				} else {
 					Debug.LogWarning("Environment created, but not saved.");
@@ -104,6 +104,7 @@ public class CreateEnvironmentWindow : EditorWindow
 			}
 
 			if (!string.IsNullOrEmpty(path)) {
+				RavelEditor.Config.SetFilePath(path);
 				path = path.Substring(path.IndexOf("Assets", StringComparison.Ordinal));
 				
 				AssetDatabase.CreateAsset(so, path);

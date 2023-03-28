@@ -16,8 +16,14 @@ public class RavelBranding : ScriptableObject
     public const float SPACING_SMALL = 10f;
     public const float SPACING_MED = 20f;
     
+    
     //size of small horizontal button (save and copy for instance)
-    public const float HORI_BTN_SMALL = 100f;
+    public const float TOOLBAR_BTN_SQUARE = 20f;
+    public const float TOOLBAR_BTN_TXT_SMALL = 75f;
+    
+    public const float TXT_BTN_SMALL = 100f;
+    public const float TXT_BTN_MED = 150f;
+    public const float LABEL_MED = 150f;
     
     [Tooltip("This is the default banner that is shown in the top of editor windows.")]
     public Texture2D banner;
@@ -25,4 +31,6 @@ public class RavelBranding : ScriptableObject
     public Vector2 bannerPOI = new Vector2(0.5f, 0.5f);
     [Tooltip("This default transparant logo is drawn over other images, used as banners.")]
     public Texture2D overlayLogo;
+    [Tooltip("Small square logo.")]
+    public Texture2D logoSquare;
 }

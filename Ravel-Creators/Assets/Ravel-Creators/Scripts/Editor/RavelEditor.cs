@@ -10,6 +10,19 @@ using UnityEngine;
 /// </summary>
 public static class RavelEditor
 {
+    public static CreatorConfig Config {
+        get {
+            if (_config == null) {
+                _config = CreatorConfig.LoadCurrent();
+            }
+
+            return _config;
+        }
+        set { _config = value; }
+    }
+
+    private static CreatorConfig _config;
+
     public static bool LoggedIn {
         get { return User != null; }
     }
@@ -58,11 +71,12 @@ public static class RavelEditor
     /// <summary>
     /// Logs out the user.
     /// </summary>
-    public static void OnLogout() {
+    public static void OnLogout(bool log) {
         User = null;
         PlayerCache.DeleteKey(LoginRequest.SYSTEMS_TOKEN_KEY);
         
-        Debug.LogError("Not logged in, please open the account window and log in (Topbar, Ravel, Account).");
+        if (log)
+            Debug.LogWarning("Not logged in, please open the account window and log in (Topbar, Ravel, Account).");
     }
     
     /// <summary>
