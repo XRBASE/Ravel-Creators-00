@@ -21,12 +21,14 @@ public class ConfigState : CreatorWindowState
     }
     
     private Vector2 _scroll;
+    private int _versioningMode = 0;
     
     public override void OnGUI(Rect position) {
         _scroll = EditorGUILayout.BeginScrollView(_scroll);
 
         GUIDrawMailCaching(position);
         GUIDrawBundlePath(position);
+        GUIDrawBundleTools(position);
 
         GUILayout.Space(RavelBranding.SPACING_SMALL);
         EditorGUILayout.EndScrollView();
@@ -93,6 +95,26 @@ public class ConfigState : CreatorWindowState
             Debug.Log("Path copied!");
         }
         GUILayout.EndHorizontal();
+    }
+
+    private void GUIDrawBundleTools(Rect position) {
+        Config.autoClean = GUILayout.Toggle(Config.autoClean, "auto cleanup build files");
+        
+        EditorGUILayout.BeginHorizontal();
+        GUILayout.Label("versioning");
+        _versioningMode = EditorGUILayout.Popup(_versioningMode, CreatorConfig.VERSIONING_OPTIONS);
+        EditorGUILayout.EndHorizontal();
+        
+        if (CreatorConfig.IsCustomVersioning(_versioningMode)) {
+            EditorGUILayout.BeginHorizontal();
+            GUILayout.Label("Custom versioning string!");
+            Config.versioning = GUILayout.TextArea(Config.versioning);
+            EditorGUILayout.EndHorizontal();
+
+            if (string.IsNullOrEmpty(Config.versioning) || !Config.versioning.Contains('1')) {
+                EditorGUILayout.HelpBox("Versioning should always include the character 1, this character will be replaced with the actual number of the assetbundle build!", MessageType.Error);
+            }
+        }
     }
 
 #endregion

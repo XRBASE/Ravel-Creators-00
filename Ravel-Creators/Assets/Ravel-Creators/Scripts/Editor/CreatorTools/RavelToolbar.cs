@@ -1,6 +1,9 @@
+using System;
 using Base.Ravel.Config;
 using UnityEditor;
+using UnityEditor.SceneManagement;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityToolbarExtender;
 
 [InitializeOnLoad]
@@ -43,8 +46,34 @@ public class RavelToolbar
         }
     }
 
+    private static SceneConfiguration _config;
+    
     static RavelToolbar() {
         ToolbarExtender.RightToolbarGUI.Add(OnRightToolbarGUI);
+        EditorSceneManager.sceneLoaded += OnSceneLoaded;
+    }
+
+    private static void OnSceneLoaded(Scene s, LoadSceneMode mode) {
+        RefreshConfig();
+    }
+    
+    [UnityEditor.Callbacks.DidReloadScripts]
+    private static void OnScriptsReloaded() {
+        RefreshConfig();
+    }
+
+    private static void RefreshConfig() {
+        SceneConfiguration[] configs = GameObject.FindObjectsOfType<SceneConfiguration>();
+        if (configs.Length == 0) {
+            _config = SceneConfiguration.ShowNoConfigDialog();
+            return;
+        } 
+        
+        if (configs.Length > 1) {
+            Debug.LogWarning("Found multiple scene configurations, this is not supported in the build process. Defaulting to first found configuration");
+        }
+
+        _config = configs[0];
     }
 
     public static void OnRightToolbarGUI() {
@@ -55,15 +84,36 @@ public class RavelToolbar
             Application.OpenURL("https://www.youtube.com/watch?v=CnnvbFTuge8&ab_channel=gijsjaradijsja");
         }
 
+        string bundleName;
+        bool cleanup = RavelEditor.Config.autoClean;
+        if (_config != null) {
+            bundleName = _config.environmentSO.bundleName;
+            GUI.enabled = false;
+            GUILayout.TextField(bundleName, GUILayout.Width(RavelBranding.SPACING_BIG));
+            GUI.enabled = true;
+        }
+        else {
+            bundleName = new Guid().ToString();
+            cleanup = true;
+        }
+        
         if (GUILayout.Button("Preview", ToolbarStyle.txtBtnSmall)) {
-            BundleBuilder.BuildOpenScene();
+            BundleBuilder.BuildOpenScene(bundleName, cleanup);
+        }
+        GUI.enabled = true;
+        if (GUILayout.Button("Clear", ToolbarStyle.txtBtnSmall)) {
+            BundleBuilder.ClearAllBundles();
+        }
+        
+        if (GUILayout.Button("Get Config", ToolbarStyle.txtBtnSmall)) {
+            RefreshConfig();
         }
 
         GUI.enabled = RavelEditor.DevUser;
         bool curMode = AppConfig.Networking.Mode == NetworkConfig.AppMode.Live;
         //user picks between app and live
-        bool pickedMode = EditorGUILayout.Popup("", curMode ? 0 : 1, new[] { "App", "Dev" },
-            ToolbarStyle.txtBtnSmall) == 0;
+        bool pickedMode = EditorGUILayout.Popup("", curMode ? 0 : 1, new[] { "App", "Dev" }, 
+            GUILayout.Width(RavelBranding.TOOLBAR_BTN_TXT_SMALL)) == 0;
         
         if (curMode != pickedMode &&
             EditorUtility.DisplayDialog("Switch app modes", "Are you sure you want to switch app modes? You'll have to log in again.", "Yes", "No")) {

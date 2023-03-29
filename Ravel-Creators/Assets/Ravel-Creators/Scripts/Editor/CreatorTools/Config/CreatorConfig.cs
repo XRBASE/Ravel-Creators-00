@@ -8,6 +8,9 @@ using UnityEngine;
 [Serializable]
 public class CreatorConfig
 {
+	private const string CUSTOM_VERSIONING = "Custom";
+	public static readonly string[] VERSIONING_OPTIONS = { "(1)", "_1", CUSTOM_VERSIONING };
+	
 	private const string CONFIG_KEY = "CREATOR_CONFIG";
 	public static readonly string DEFAULT_FILE_PATH = Application.dataPath;
 	public static readonly string DEFAULT_BUNDLE_PATH = Application.dataPath + "/StreamingAssets/";
@@ -16,6 +19,9 @@ public class CreatorConfig
 	public string userMail;
 	
 	public string bundlePath;
+	public bool autoClean;
+	public string versioning;
+	
 	public string prevFilePath;
 
 	public CreatorConfig() {
@@ -51,5 +57,9 @@ public class CreatorConfig
 		}
 		
 		return JsonConvert.DeserializeObject<CreatorConfig>(json);
+	}
+
+	public static bool IsCustomVersioning(int index) {
+		return VERSIONING_OPTIONS[index] == CUSTOM_VERSIONING;
 	}
 }

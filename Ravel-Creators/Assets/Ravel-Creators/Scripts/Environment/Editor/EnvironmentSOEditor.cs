@@ -38,7 +38,7 @@ public class EnvironmentSOEditor : Editor
 
     public override void OnInspectorGUI() {
         _instance = (EnvironmentSO)target;
-
+        
         //draw banner image
         if (_instance.environment.preview == null) {
             _instance.environment.previewSize = ImageSize.None;
@@ -86,6 +86,14 @@ public class EnvironmentSOEditor : Editor
             GUILayout.EndHorizontal();
             return;
         }
+        
+        EditorGUILayout.BeginHorizontal();
+        if (string.IsNullOrEmpty(_instance.bundleName)) {
+            _instance.bundleName = _instance.environment.name;
+        }
+        GUILayout.Label("Assetbundle name:", GUILayout.Width(RavelBranding.TXT_BTN_MED));
+        _instance.bundleName = GUILayout.TextField(_instance.bundleName);
+        EditorGUILayout.EndHorizontal();
 
         DrawDefaultInspector();
         

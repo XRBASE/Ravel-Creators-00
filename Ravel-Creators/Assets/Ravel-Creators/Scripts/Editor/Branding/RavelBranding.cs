@@ -15,7 +15,7 @@ public class RavelBranding : ScriptableObject
     //spacing to highlight separation of two items.
     public const float SPACING_SMALL = 10f;
     public const float SPACING_MED = 20f;
-    
+    public const float SPACING_BIG = 100f;
     
     //size of small horizontal button (save and copy for instance)
     public const float TOOLBAR_BTN_SQUARE = 20f;

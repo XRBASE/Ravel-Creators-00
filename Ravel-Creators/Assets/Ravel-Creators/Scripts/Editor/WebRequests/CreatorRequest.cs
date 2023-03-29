@@ -1,6 +1,8 @@
 using System;
 using System.IO;
+using Base.Ravel.Config;
 using Base.Ravel.Networking;
+using CodiceApp;
 using Newtonsoft.Json;
 using UnityEngine;
 using File = UnityEngine.Windows.File;
@@ -10,17 +12,16 @@ using File = UnityEngine.Windows.File;
 /// </summary>
 public class CreatorRequest : TokenWebRequest
 {
-    public CreatorRequest(Method method, string postfix, string version = "v1/") : base(method, "api/", version) {
+    public CreatorRequest(Method method, string postfix, string version = "v1/", string api = "api/") : base(method, api, version) {
         _url += "environments/" + postfix;
     }
 
-    public CreatorRequest(Method method, string postfix, string data, string version) : base(method, "api/",
-        version) {
+    public CreatorRequest(Method method, string postfix, string data, string version, string api = "api/") : base(method, api, version) {
         _url += "environments/" + postfix;
         _data = data;
     }
 
-    public CreatorRequest(string postfix, WWWForm form, string version = "v1/") : base ("api/", version, form) {
+    public CreatorRequest(string postfix, WWWForm form, string version = "v1/", string api = "api/") : base (api, version, form) {
         _url += "environments/" + postfix;
     }
 
@@ -93,5 +94,13 @@ public class CreatorRequest : TokenWebRequest
     /// </summary>
     public static CreatorRequest GetCreatorEnvironment(string envUuid) {
         return new CreatorRequest(Method.Get, $"single/{envUuid}");
+    }
+
+    public static string GetPreviewUrl(Environment env) {
+        string url = AppConfig.Networking.DataServiceBaseUrl;
+        url = url.Replace("systems", "world");
+        url += $"creators/environments/preview/{env.environmentUuid}";
+
+        return url;
     }
 }
