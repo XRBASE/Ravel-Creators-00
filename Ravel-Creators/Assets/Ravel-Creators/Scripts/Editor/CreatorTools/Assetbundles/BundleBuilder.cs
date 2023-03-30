@@ -13,6 +13,16 @@ public static class BundleBuilder
 {
 	private static LogList _logs;
 
+	[MenuItem("Ravel/AssetBundles/Clear references", false)]
+	private static void ClearBundles() {
+		ClearAllBundles();
+	}
+	
+	[MenuItem("Ravel/AssetBundles/Delete bundles", false)]
+	private static void DeleteAllBundles() {
+		DeleteBundles();
+	}
+	
 	public static void BuildOpenScene(string bundleName, bool autoCleanFiles) {
 		if (_logs == null) {
 			_logs = new LogList();
@@ -42,6 +52,19 @@ public static class BundleBuilder
 			return;
 		}
 
+		if (string.IsNullOrEmpty(bundleName)) {
+			if (string.IsNullOrEmpty(config.environmentSO.bundleName)) {
+				bundleName = Guid.NewGuid().ToString();
+				autoCleanFiles = true;
+			}
+			else {
+				bundleName = config.environmentSO.bundleName;
+			}
+		}
+
+		BundleConfig.BundleData data = RavelEditor.BundleConfig.GetBundleData(config.environmentSO);
+		bundleName += RavelEditor.BundleConfig.GetVersionString(data);
+		
 		if (s.isDirty) {
 			EditorSceneManager.SaveModifiedScenesIfUserWantsTo(new[] { s });
 		}
@@ -69,10 +92,11 @@ public static class BundleBuilder
 			if (name != bundleName)
 				AssetDatabase.RemoveAssetBundleName(name, true);
 		}
-		if (!sceneAdded)
+		if (!sceneAdded) {
 			AssetImporter.GetAtPath(s.path).SetAssetBundleNameAndVariant(bundleName, "");
+		}
 
-		string path = RavelEditor.Config.bundlePath;
+		string path = RavelEditor.CreatorConfig.bundlePath;
 		if (!Directory.Exists(path)) {
 			_logs.AddLog($"Bundle directory {path} does not exist, creating it!", Log.LogType.Warning);
 			Directory.CreateDirectory(path);
@@ -80,6 +104,11 @@ public static class BundleBuilder
 		var assetBundleManifest = BuildPipeline.BuildAssetBundles(path, BuildAssetBundleOptions.None,
 			BuildTarget.WebGL);
 		
+		if(RavelEditor.CreatorConfig.incrementMinorVersionOnBuild){
+			data.vMinor++;
+			RavelEditor.BundleConfig.SaveConfig();
+		}
+
 		_logs.AddLog($"Uploading bundle!", Log.LogType.Log);
 		RavelWebRequest req = CreatorRequest.UploadBundle(config.environmentSO.environment.environmentUuid,
 			Path.Combine(path, bundleName));
@@ -88,13 +117,13 @@ public static class BundleBuilder
 		if (autoCleanFiles) {
 			EditorWebRequests.SendWebRequest(req, 
 				(res) => OnBundleUploaded(res, config.environmentSO.environment, () => DeleteBundle(path + bundleName)), config);
-			if (File.Exists(path + "/StreamingAssets")) {
-				DeleteBundle(path + "/StreamingAssets");
-			}
 		}
 		else {
 			EditorWebRequests.SendWebRequest(req, 
 				(res) => OnBundleUploaded(res, config.environmentSO.environment, null), config);
+		}
+		if (File.Exists(path + "/StreamingAssets")) {
+			DeleteBundle(path + "/StreamingAssets");
 		}
 	}
 
@@ -125,9 +154,9 @@ public static class BundleBuilder
 	}
 
 	public static void DeleteBundles() {
-		List<string> files = Directory.GetFiles(RavelEditor.Config.bundlePath).ToList();
+		List<string> files = Directory.GetFiles(RavelEditor.CreatorConfig.bundlePath).ToList();
 		if (files.Count == 0) {
-			Debug.LogWarning($"Cannot delete bundles, no files found at {RavelEditor.Config.bundlePath}");
+			Debug.LogWarning($"Cannot delete bundles, no files found at {RavelEditor.CreatorConfig.bundlePath}");
 			return;
 		}
 		
@@ -147,7 +176,7 @@ public static class BundleBuilder
 
 		if (kill.Count == 0) {
 			//no bundles found
-			Debug.LogWarning($"Cannot delete bundles, no bundles found at {RavelEditor.Config.bundlePath}");
+			Debug.LogWarning($"Cannot delete bundles, no bundles found at {RavelEditor.CreatorConfig.bundlePath}");
 			return;
 		}
 		//remove last comma

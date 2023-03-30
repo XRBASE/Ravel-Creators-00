@@ -21,6 +21,8 @@ public class RavelBranding : ScriptableObject
     public const float TOOLBAR_BTN_SQUARE = 20f;
     public const float TOOLBAR_BTN_TXT_SMALL = 75f;
     
+    public const float INT_FIELD_999 = 25f;
+    public const float TXT_LAB_MICRO = 40f;
     public const float TXT_BTN_SMALL = 100f;
     public const float TXT_BTN_MED = 150f;
     public const float LABEL_MED = 150f;

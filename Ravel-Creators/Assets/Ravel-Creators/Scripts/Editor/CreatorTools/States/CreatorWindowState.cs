@@ -20,6 +20,9 @@ public abstract class CreatorWindowState
 	
 	public abstract void OnGUI(Rect position);
 
+	public virtual void OnStateClosed() {
+		
+	}
 	public virtual void OnSwitchState() {
 		SetMinSize();
 	}

@@ -36,6 +36,11 @@ public class CreatorWindow : EditorWindow
 		GetWindow(State.Environments);
 	}
 	
+	[MenuItem("Ravel/Creator/Bundles", false)]
+	public static void OpenBundles() {
+		GetWindow(State.Bundles);
+	}
+	
 	[MenuItem("Ravel/Creator/Configuration", false)]
 	public static void OpenConfig() {
 		GetWindow(State.Configuration);
@@ -56,6 +61,11 @@ public class CreatorWindow : EditorWindow
 		return wnd;
 	}
 
+	private void OnDestroy() {
+		//called when the window is closed
+		Tab.OnStateClosed();
+	}
+
 	/// <summary>
 	/// Switch tab of window.
 	/// </summary>
@@ -73,6 +83,8 @@ public class CreatorWindow : EditorWindow
 				return new AccountState(this);
 			case State.Environments:
 				return new EnvironmentState(this);
+			case State.Bundles:
+				return new BundleState(this);
 			case State.Configuration:
 				return new ConfigState(this);
 			default:
@@ -93,6 +105,9 @@ public class CreatorWindow : EditorWindow
 		GUI.enabled = true;
 
 		if (_tab != _prevTab) {
+			if (_prevTab != State.None) {
+				_states[_prevTab].OnStateClosed();				
+			}
 			Tab.OnSwitchState();
 			_prevTab = _tab;
 		}
@@ -126,6 +141,7 @@ public class CreatorWindow : EditorWindow
 		None = 0,
 		Account,
 		Environments,
+		Bundles,
 		Configuration,
 	}
 }

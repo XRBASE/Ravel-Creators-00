@@ -6,8 +6,8 @@ public class ConfigState : CreatorWindowState
     private const int PATH_TRUNC_FOLDERS = 3;
     
     public CreatorConfig Config {
-        get { return RavelEditor.Config; }
-        set { RavelEditor.Config = value; }
+        get { return RavelEditor.CreatorConfig; }
+        set { RavelEditor.CreatorConfig = value; }
     }
 
     public ConfigState(CreatorWindow wnd) : base(wnd) { }
@@ -17,11 +17,16 @@ public class ConfigState : CreatorWindowState
     }
     
     protected override Vector2 MinSize {
-        get { return new Vector2(700, 250); }
+        get { return new Vector2(700, 225); }
     }
     
     private Vector2 _scroll;
     private int _versioningMode = 0;
+    
+    public override void OnStateClosed() {
+        base.OnStateClosed();
+        Config.SaveConfig();
+    }
     
     public override void OnGUI(Rect position) {
         _scroll = EditorGUILayout.BeginScrollView(_scroll);
@@ -33,18 +38,13 @@ public class ConfigState : CreatorWindowState
         GUILayout.Space(RavelBranding.SPACING_SMALL);
         EditorGUILayout.EndScrollView();
         GUILayout.BeginHorizontal();
-        if (GUILayout.Button("Save configuration")) {
-            Config.SaveConfig();
-            Debug.Log("Configuration saved!");
-        }
-        if (GUILayout.Button("Load configuration")) {
-            Config = CreatorConfig.LoadCurrent();
-            Debug.Log("Configuration loaded!");
-        }
-        GUILayout.EndHorizontal();
         if (GUILayout.Button("Reset configuration")) {
             Config = new CreatorConfig();
         }
+        if (GUILayout.Button("Clear all cache data")) {
+            EditorCache.Clear();
+        }
+        GUILayout.EndHorizontal();
     }
 
 #region #region draw GUI methods
@@ -99,22 +99,6 @@ public class ConfigState : CreatorWindowState
 
     private void GUIDrawBundleTools(Rect position) {
         Config.autoClean = GUILayout.Toggle(Config.autoClean, "auto cleanup build files");
-        
-        EditorGUILayout.BeginHorizontal();
-        GUILayout.Label("versioning");
-        _versioningMode = EditorGUILayout.Popup(_versioningMode, CreatorConfig.VERSIONING_OPTIONS);
-        EditorGUILayout.EndHorizontal();
-        
-        if (CreatorConfig.IsCustomVersioning(_versioningMode)) {
-            EditorGUILayout.BeginHorizontal();
-            GUILayout.Label("Custom versioning string!");
-            Config.versioning = GUILayout.TextArea(Config.versioning);
-            EditorGUILayout.EndHorizontal();
-
-            if (string.IsNullOrEmpty(Config.versioning) || !Config.versioning.Contains('1')) {
-                EditorGUILayout.HelpBox("Versioning should always include the character 1, this character will be replaced with the actual number of the assetbundle build!", MessageType.Error);
-            }
-        }
     }
 
 #endregion

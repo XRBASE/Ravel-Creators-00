@@ -10,18 +10,31 @@ using UnityEngine;
 /// </summary>
 public static class RavelEditor
 {
-    public static CreatorConfig Config {
+    public static CreatorConfig CreatorConfig {
         get {
-            if (_config == null) {
-                _config = CreatorConfig.LoadCurrent();
+            if (_creatorConfig == null) {
+                _creatorConfig = CreatorConfig.LoadCurrent();
             }
 
-            return _config;
+            return _creatorConfig;
         }
-        set { _config = value; }
+        set { _creatorConfig = value; }
     }
 
-    private static CreatorConfig _config;
+    private static CreatorConfig _creatorConfig;
+    
+    public static BundleConfig BundleConfig {
+        get {
+            if (_bundleConfig == null) {
+                _bundleConfig = BundleConfig.LoadCurrent();
+            }
+
+            return _bundleConfig;
+        }
+        set { _bundleConfig = value; }
+    }
+
+    private static BundleConfig _bundleConfig;
 
     public static bool LoggedIn {
         get { return User != null; }
@@ -48,6 +61,11 @@ public static class RavelEditor
         }
     }
     private static RavelBranding _branding;
+    
+    [MenuItem("Ravel/Clear editor cache", false)]
+    public static void ClearCache() {
+        EditorCache.Clear();
+    }
 
     /// <summary>
     /// Sets the user (creator) after login.
@@ -276,6 +294,17 @@ public static class RavelEditor
         }
 
         return names;
+    }
+
+    public static T[] GetAllAssetsOfType<T>(string filter = "") where T : UnityEngine.Object {
+        string[] paths = AssetDatabase.FindAssets($"t:{typeof(T)} {filter}");
+        T[] data = new T[paths.Length];
+        for (int i = 0; i < paths.Length; i++) {
+            paths[i] = AssetDatabase.GUIDToAssetPath(paths[i]);
+            data[i] = (T) AssetDatabase.LoadAssetAtPath(paths[i], typeof(T));
+        }
+
+        return data;
     }
 }
 

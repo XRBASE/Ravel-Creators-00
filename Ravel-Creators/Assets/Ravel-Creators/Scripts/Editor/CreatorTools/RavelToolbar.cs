@@ -85,34 +85,25 @@ public class RavelToolbar
         
         if (RavelEditor.Branding.logoSquare && GUILayout.Button(RavelEditor.Branding.logoSquare, 
                 ToolbarStyle.imageBtn)) {
-            Application.OpenURL("https://www.youtube.com/watch?v=CnnvbFTuge8&ab_channel=gijsjaradijsja");
+            Debug.Log("BOK BOK, You pressed the hidden chicken button!");
         }
 
-        string bundleName;
-        bool cleanup = RavelEditor.Config.autoClean;
+        string bundleName = "";
         if (_config != null) {
             bundleName = _config.environmentSO.bundleName;
             GUI.enabled = false;
             GUILayout.TextField(bundleName, GUILayout.Width(RavelBranding.SPACING_BIG));
             GUI.enabled = true;
         }
-        else {
-            bundleName = new Guid().ToString();
-            cleanup = true;
-        }
         
-        if (GUILayout.Button("Test", ToolbarStyle.txtBtnSmall)) {
-            BundleBuilder.DeleteBundles();
-        }
         if (GUILayout.Button("Preview", ToolbarStyle.txtBtnSmall)) {
+            bool cleanup = RavelEditor.CreatorConfig.autoClean;
+
             BundleBuilder.BuildOpenScene(bundleName, cleanup);
         }
         GUI.enabled = true;
-        if (GUILayout.Button("Clear", ToolbarStyle.txtBtnSmall)) {
-            BundleBuilder.ClearAllBundles();
-        }
-        
-        if (GUILayout.Button("Get Config", ToolbarStyle.txtBtnSmall)) {
+
+        if (GUILayout.Button("Refresh", ToolbarStyle.txtBtnSmall)) {
             RefreshConfig();
         }
 

@@ -15,16 +15,17 @@ public class AccountState : CreatorWindowState
 	}
 
 	protected override Vector2 MinSize {
-		get { return new Vector2(390, 211); }
+		get { return new Vector2(390, 210); }
 	}
 
 	public AccountState(CreatorWindow wnd) : base(wnd) {
-		_remember = RavelEditor.Config.saveUserMail;
+		_remember = RavelEditor.CreatorConfig.saveUserMail;
 	}
 
 	public override void OnSwitchState() {
-		if (RavelEditor.Config.saveUserMail) {
-			email = RavelEditor.Config.userMail;
+		base.OnSwitchState();
+		if (RavelEditor.CreatorConfig.saveUserMail) {
+			email = RavelEditor.CreatorConfig.userMail;
 		}
 	}
 
@@ -41,10 +42,10 @@ public class AccountState : CreatorWindowState
 			if (GUILayout.Button("Log in")) {
 				//if remember is set to true, the mail and remember value are both saved in cache
 				if (_remember) {
-					RavelEditor.Config.saveUserMail = true;
-					RavelEditor.Config.userMail = email;
+					RavelEditor.CreatorConfig.saveUserMail = true;
+					RavelEditor.CreatorConfig.userMail = email;
 					
-					RavelEditor.Config.SaveConfig();
+					RavelEditor.CreatorConfig.SaveConfig();
 				}
 				
 				LoginUserPass(email, pass);
