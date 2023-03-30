@@ -1,9 +1,9 @@
-using System.Collections;
+using System;
+using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using Base.Ravel.LogList;
 using Base.Ravel.Networking;
-using CodiceApp;
-using Unity.EditorCoroutines.Editor;
 using UnityEditor;
 using UnityEditor.SceneManagement;
 using UnityEngine;
@@ -83,13 +83,22 @@ public static class BundleBuilder
 		_logs.AddLog($"Uploading bundle!", Log.LogType.Log);
 		RavelWebRequest req = CreatorRequest.UploadBundle(config.environmentSO.environment.environmentUuid,
 			Path.Combine(path, bundleName));
-		EditorWebRequests.SendWebRequest(req, 
-			(res) => OnBundleUploaded(res, config.environmentSO.environment), config);
-		
-		Debug.LogError("You forgot to implement the auto cleanup!");
+
+		//only send delete action along if auto cleanup is enabled
+		if (autoCleanFiles) {
+			EditorWebRequests.SendWebRequest(req, 
+				(res) => OnBundleUploaded(res, config.environmentSO.environment, () => DeleteBundle(path + bundleName)), config);
+			if (File.Exists(path + "/StreamingAssets")) {
+				DeleteBundle(path + "/StreamingAssets");
+			}
+		}
+		else {
+			EditorWebRequests.SendWebRequest(req, 
+				(res) => OnBundleUploaded(res, config.environmentSO.environment, null), config);
+		}
 	}
 
-	private static void OnBundleUploaded(RavelWebResponse res, Environment env) {
+	private static void OnBundleUploaded(RavelWebResponse res, Environment env, Action onComplete) {
 		if (res.Success) {
 			_logs.AddLog($"Opening preview in browser!", Log.LogType.Log);
 			Application.OpenURL(CreatorRequest.GetPreviewUrl(env));
@@ -97,6 +106,62 @@ public static class BundleBuilder
 		else {
 			_logs.AddLog($"Error uploading build {res.Error.FullMessage}!", Log.LogType.Error);
 		}
+		onComplete?.Invoke();
+	}
+
+	private static void DeleteBundle(string bundlePath) {
+		Debug.Log($"Deleting bundle at path {bundlePath}");
+		
+		File.Delete(bundlePath);
+		File.Delete(bundlePath + ".manifest");
+		
+		if (File.Exists(bundlePath + ".meta")) {
+			File.Delete(bundlePath + ".meta");
+		}
+		
+		if (File.Exists(bundlePath + ".manifest.meta")) {
+			File.Delete(bundlePath + ".manifest.meta");
+		}
+	}
+
+	public static void DeleteBundles() {
+		List<string> files = Directory.GetFiles(RavelEditor.Config.bundlePath).ToList();
+		if (files.Count == 0) {
+			Debug.LogWarning($"Cannot delete bundles, no files found at {RavelEditor.Config.bundlePath}");
+			return;
+		}
+		
+		List<string> kill = new List<string>();
+
+		string name;
+		string bundlesDisplay = "";
+		for (int i = 0; i < files.Count; i++) {
+			name = files[i];
+
+			//only kill files without extention, with a manifest file, and kill the meta files too
+			if (Path.GetExtension(name) == "" && files.Contains(name + ".manifest")) {
+				kill.Add(name);
+				bundlesDisplay += $"{name},";
+			}
+		}
+
+		if (kill.Count == 0) {
+			//no bundles found
+			Debug.LogWarning($"Cannot delete bundles, no bundles found at {RavelEditor.Config.bundlePath}");
+			return;
+		}
+		//remove last comma
+		bundlesDisplay = bundlesDisplay.Substring(0, bundlesDisplay.Length - 1);
+
+		if (!EditorUtility.DisplayDialog("Deleting all bundles",
+			    $"Are you sure you want to delete the following files: \n {bundlesDisplay}?", "Yes", "No")) {
+			return;
+		}
+
+		for (int i = 0; i < kill.Count; i++) {
+			File.Delete(kill[i]);
+		}
+		AssetDatabase.Refresh();
 	}
 
 	public static void ClearAllBundles() {

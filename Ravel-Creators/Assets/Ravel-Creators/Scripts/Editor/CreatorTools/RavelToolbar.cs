@@ -63,6 +63,10 @@ public class RavelToolbar
     }
 
     private static void RefreshConfig() {
+        //called on startup and untitled scene's 
+        if (string.IsNullOrEmpty(EditorSceneManager.GetActiveScene().path))
+            return;
+        
         SceneConfiguration[] configs = GameObject.FindObjectsOfType<SceneConfiguration>();
         if (configs.Length == 0) {
             _config = SceneConfiguration.ShowNoConfigDialog();
@@ -97,6 +101,9 @@ public class RavelToolbar
             cleanup = true;
         }
         
+        if (GUILayout.Button("Test", ToolbarStyle.txtBtnSmall)) {
+            BundleBuilder.DeleteBundles();
+        }
         if (GUILayout.Button("Preview", ToolbarStyle.txtBtnSmall)) {
             BundleBuilder.BuildOpenScene(bundleName, cleanup);
         }
