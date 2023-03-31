@@ -18,12 +18,12 @@ namespace Base.Ravel.Networking.Authorization
         /// Base constructor for login webrequests. api/ is also added, as this is not a constant part of the webrequests.
         /// </summary>
         /// <param name="postfix">Last part of the webrequest: part after: BaseUrl/auth/</param>
-        /// <param name="json">serialized json data to add to the webrequest body.</param>
+        /// <param name="data">serialized json data to add to the webrequest body.</param>
         /// <param name="api">Left empty, no api part in these urls.</param>
         /// <param name="version">version modifier to add to the called url, v1/ by default.</param>
-        protected LoginRequest(string postfix, string json, string api = "", string version = "v1/") : base(Method.PostJSON, api, version)
+        protected LoginRequest(string postfix, string data, string api = "", string version = "v1/") : base(Method.PostJSON, api, version)
         {
-            _json = json;
+            _data = data;
             _url += "auth/" + postfix;
         }
 
