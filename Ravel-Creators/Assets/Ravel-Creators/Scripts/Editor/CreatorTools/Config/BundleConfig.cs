@@ -9,18 +9,42 @@ using UnityEditor;
 [Serializable]
 public class BundleConfig
 {
+	//saved under this key in editor prefs.
 	private const string CONFIG_KEY = "BUND_CFG";
 
+	/// <summary>
+	/// List of local environment bundle data.
+	/// </summary>
 	public List<BundleData> bundles;
 
 	public BundleConfig() {
 		bundles = new List<BundleData>();
 	}
 
+	/// <summary>
+	/// Save this configuration in the editor cache.
+	/// </summary>
 	public void SaveConfig() {
 		EditorCache.SetString(CONFIG_KEY, JsonConvert.SerializeObject(this));
 	}
+	
+	/// <summary>
+	/// Loads the current config file from the editor cache.
+	/// </summary>
+	public static BundleConfig LoadCurrent() {
+		string json = EditorCache.GetString(CONFIG_KEY);
+		if (string.IsNullOrEmpty(json)) {
+			//default values
+			return new BundleConfig();
+		}
 
+		return JsonConvert.DeserializeObject<BundleConfig>(json);
+	}
+
+	/// <summary>
+	/// Update local values by fetching the cache values and comparing them to the environments in the project. Create new
+	/// bundles for new environments and remove bundles that are not in the project anymore.
+	/// </summary>
 	public void UpdateValues() {
 		string json = EditorCache.GetString(CONFIG_KEY);
 		if (!string.IsNullOrEmpty(json)) {
@@ -77,6 +101,10 @@ public class BundleConfig
 		AssetDatabase.SaveAssets();
 	}
 
+	/// <summary>
+	/// Find related bundle data for an environment object.
+	/// </summary>
+	/// <param name="env">environment object for which the data is being retrieved (or created).</param>
 	public BundleData GetBundleData(EnvironmentSO env) {
 		for (int i = 0; i < bundles.Count; i++) {
 			if (bundles[i].guid == env.environment.environmentUuid) {
@@ -92,21 +120,22 @@ public class BundleConfig
 		bundles.Add(new BundleData(env.bundleName, env.environment.environmentUuid, 0, 0));
 		return bundles[^1];
 	}
-
-	public static BundleConfig LoadCurrent() {
-		string json = EditorCache.GetString(CONFIG_KEY);
-		if (string.IsNullOrEmpty(json)) {
-			//default values
-			return new BundleConfig();
-		}
-
-		return JsonConvert.DeserializeObject<BundleConfig>(json);
-	}
-
+	
+	/// <summary>
+	/// Create a version postfix string that matches the given bundle data.
+	/// </summary>
+	/// <param name="bundle">bundle of which the version number is used.</param>
+	/// <returns>String containing version numbering formatted according to the configuration.</returns>
 	public string GetVersionString(BundleData bundle) {
 		return GetVersionString(bundle.vMajor, bundle.vMinor);
 	}
 
+	/// <summary>
+	/// Create a version postfix string that matches the given version numbers.
+	/// </summary>
+	/// <param name="major">Major version number to include.</param>
+	/// <param name="minor">Minor version number to include.</param>
+	/// <returns>String containing version numbering formatted according to the configuration.</returns>
 	public string GetVersionString(int major, int minor) {
 		if (string.IsNullOrEmpty(RavelEditor.CreatorConfig.versioning)) {
 			//no versioning
@@ -125,6 +154,9 @@ public class BundleConfig
 		return version;
 	}
 
+	/// <summary>
+	/// Data class for saving data about the environments bundles. All this data is environment specific and local to the project. 
+	/// </summary>
 	[Serializable]
 	public class BundleData
 	{

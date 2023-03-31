@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
-using MathBuddy.Strings;
 
 /// <summary>
 /// Parent of the creator window. These gui calls happen for each of the tabs in the window.
@@ -23,7 +22,9 @@ public class CreatorWindow : EditorWindow
 	}
 	
 	private State _tab = State.Account;
+	//used to detect state switching
 	private State _prevTab = State.None;
+	//contains references to all states
 	private Dictionary<State, CreatorWindowState> _states = new Dictionary<State, CreatorWindowState>();
 	
 	[MenuItem("Ravel/Creator/Account", false, 1)]
@@ -113,24 +114,11 @@ public class CreatorWindow : EditorWindow
 		}
 		
 		if (RavelEditor.Branding.banner) {
-			RavelEditor.DrawTextureScaledCropGUI(new Rect(0, GUILayoutUtility.GetLastRect().yMax, position.width, RavelBranding.BANNER_HEIGHT), 
+			RavelEditor.DrawTextureScaledCropGUI(new Rect(0, GUILayoutUtility.GetLastRect().yMax, position.width, RavelEditor.Branding.bannerHeight), 
 				RavelEditor.Branding.banner, RavelEditor.Branding.bannerPOI);
 		}
 		
 		Tab.OnGUI(position);
-	}
-	
-	/// <summary>
-	/// Re-formats the state enum below into more readable names, so they can be shown as the names of the tabs.
-	/// </summary>
-	private string[] GetStateNames() {
-		string[] names = Enum.GetNames(typeof(State));
-		for (int i = 0; i < names.Length; i++) {
-			names[i] = names[i].ToString(StringExtentions.NamingCastType.UpperCamelCase,
-				StringExtentions.NamingCastType.UserFormatting);
-		}
-
-		return names;
 	}
 	
 	/// <summary>

@@ -10,6 +10,9 @@ using UnityEngine;
 /// </summary>
 public static class RavelEditor
 {
+    /// <summary>
+    /// Project configuration.
+    /// </summary>
     public static CreatorConfig CreatorConfig {
         get {
             if (_creatorConfig == null) {
@@ -20,9 +23,11 @@ public static class RavelEditor
         }
         set { _creatorConfig = value; }
     }
-
     private static CreatorConfig _creatorConfig;
     
+    /// <summary>
+    /// Per-bundle configurations, mostly version numbers.
+    /// </summary>
     public static BundleConfig BundleConfig {
         get {
             if (_bundleConfig == null) {
@@ -33,14 +38,25 @@ public static class RavelEditor
         }
         set { _bundleConfig = value; }
     }
-
     private static BundleConfig _bundleConfig;
 
+    /// <summary>
+    /// Checks if the user is set.
+    /// </summary>
     public static bool LoggedIn {
         get { return User != null; }
     }
+    
+    /// <summary>
+    /// Currently logged-in user.
+    /// </summary>
     public static  User User { get; set; }
+    
+    /// <summary>
+    /// Does the current user have dev:access? enables UUID copy buttons.
+    /// </summary>
     public static bool DevUser { get; private set; }
+    
     
     private static bool _retrievingOrganisations;
     private static Action<Organisation[], bool> _onOrgsRetrieved;
@@ -64,7 +80,10 @@ public static class RavelEditor
     
     [MenuItem("Ravel/Clear editor cache", false)]
     public static void ClearCache() {
-        EditorCache.Clear();
+        if (EditorUtility.DisplayDialog("Clear cache",
+                "This will delete all configuration data and version numbering, are you sure?", "Yes", "No")) {
+            EditorCache.Clear();
+        }
     }
 
     /// <summary>
@@ -72,6 +91,7 @@ public static class RavelEditor
     /// </summary>
     public static void OnLogin(User user) {
         User = user;
+        RavelToolbar.RefreshConfig();
     }
 
     /// <summary>
@@ -279,6 +299,11 @@ public static class RavelEditor
         }
     }
 
+    /// <summary>
+    /// Gets an array of names for the enum, removes values outside of start and length, if those values are set, otherwise returns all names.
+    /// </summary>
+    /// <param name="start">start index.</param>
+    /// <param name="length">amount of names to return (0 returns all)</param>
     public static string[] GetEnumNames<T>(int start = 0, int length = 0) where T : Enum {
         T[] values = (T[]) Enum.GetValues(typeof(T));
         if (values.Length == 0)
@@ -296,6 +321,10 @@ public static class RavelEditor
         return names;
     }
 
+    /// <summary>
+    /// Searches the project for files (outside of the scene) of this type, and returns them.
+    /// </summary>
+    /// <param name="filter">additional filtering, apart from the type.</param>
     public static T[] GetAllAssetsOfType<T>(string filter = "") where T : UnityEngine.Object {
         string[] paths = AssetDatabase.FindAssets($"t:{typeof(T)} {filter}");
         T[] data = new T[paths.Length];

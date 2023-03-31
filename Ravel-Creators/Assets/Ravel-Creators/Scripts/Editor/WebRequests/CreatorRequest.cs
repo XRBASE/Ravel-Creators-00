@@ -2,7 +2,6 @@ using System;
 using System.IO;
 using Base.Ravel.Config;
 using Base.Ravel.Networking;
-using CodiceApp;
 using Newtonsoft.Json;
 using UnityEngine;
 using File = UnityEngine.Windows.File;

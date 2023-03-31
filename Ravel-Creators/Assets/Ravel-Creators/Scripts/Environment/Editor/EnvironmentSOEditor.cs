@@ -46,12 +46,12 @@ public class EnvironmentSOEditor : Editor
         
         if (_instance.environment.previewSize >= ImageSize.I512) {
             RavelEditor.DrawTextureScaledCropGUI(
-                new Rect(0, 0, EditorGUIUtility.currentViewWidth, RavelBranding.BANNER_HEIGHT),
+                new Rect(0, 0, EditorGUIUtility.currentViewWidth, RavelEditor.Branding.bannerHeight),
                 _instance.environment.preview.texture, Vector2.one * 0.5f);
 
             if (RavelEditor.Branding.overlayLogo) {
                 RavelEditor.DrawTextureScaledScaleGUI(
-                    new Rect(0, 0, EditorGUIUtility.currentViewWidth, RavelBranding.BANNER_HEIGHT),
+                    new Rect(0, 0, EditorGUIUtility.currentViewWidth, RavelEditor.Branding.bannerHeight),
                     RavelEditor.Branding.overlayLogo, Vector2.one * 0.5f, false);
             }
         }
@@ -91,25 +91,25 @@ public class EnvironmentSOEditor : Editor
         if (string.IsNullOrEmpty(_instance.bundleName)) {
             _instance.bundleName = _instance.environment.name;
         }
-        GUILayout.Label("Assetbundle name:", GUILayout.Width(RavelBranding.TXT_BTN_MED));
+        GUILayout.Label("Assetbundle name:", GUILayout.Width(RavelEditorStying.GUI_SPACING_DECA));
         _instance.bundleName = GUILayout.TextField(_instance.bundleName);
         EditorGUILayout.EndHorizontal();
 
         DrawDefaultInspector();
         
         if (RavelEditor.DevUser && GUILayout.Button("copy UUID")) {
-            GUILayout.Space(RavelBranding.SPACING_SMALL);
+            GUILayout.Space(RavelEditorStying.GUI_SPACING_MICRO);
             GUIUtility.systemCopyBuffer = _instance.environment.environmentUuid;
             Debug.Log("UUID copied!");
         }
         
-        GUILayout.Space(RavelBranding.SPACING_SMALL);
+        GUILayout.Space(RavelEditorStying.GUI_SPACING_MICRO);
 
         //used to determine what image to download.
         _size = (ImageSize)EditorGUILayout.EnumPopup("image url size:", _size);
         GUIDataUrls();
 
-        GUILayout.Space(RavelBranding.SPACING_SMALL);
+        GUILayout.Space(RavelEditorStying.GUI_SPACING_MICRO);
 
         if (!(_instance.environment.published || _instance.environment.submissionInProgress)) {
             //upload and publish
@@ -121,13 +121,13 @@ public class EnvironmentSOEditor : Editor
                 GUILayout.Label("Upload only available for unpublished environments.");
 
                 if (!_instance.environment.isPublic) {
-                    GUILayout.Space(RavelBranding.SPACING_MED);
+                    GUILayout.Space(RavelEditorStying.GUI_SPACING_MILLI);
                     _accessOpen = EditorGUILayout.Foldout(_accessOpen, "Manage access");
                     if (_accessOpen) {
-                        RavelEditor.GUIBeginIndent(RavelBranding.INDENT_SMALL);
+                        RavelEditor.GUIBeginIndent(RavelEditorStying.GUI_SPACING_MILLI);
 
                         GUIChangeAccess();
-                        GUILayout.Space(RavelBranding.SPACING_SMALL);
+                        GUILayout.Space(RavelEditorStying.GUI_SPACING_MICRO);
 
                         GUIDrawAccess();
 
@@ -154,10 +154,10 @@ public class EnvironmentSOEditor : Editor
     private void GUITitle() {
         EditorGUILayout.BeginHorizontal();
         int fontSize = GUI.skin.label.fontSize;
-        GUI.skin.label.fontSize = RavelBranding.FONT_TITLE;
+        GUI.skin.label.fontSize = RavelBranding.titleFont;
 
         GUILayout.Label(_instance.environment.name);
-        if (GUILayout.Button("Refresh", GUILayout.Width(RavelBranding.TXT_BTN_SMALL))) {
+        if (GUILayout.Button("Refresh", GUILayout.Width(RavelEditorStying.GUI_SPACING))) {
             RefreshEnvironment();
         }
 
@@ -188,10 +188,10 @@ public class EnvironmentSOEditor : Editor
         EditorGUILayout.BeginHorizontal();
         GUI.enabled = false;
         if (empty) {
-            GUILayout.TextField(url, GUILayout.Width(EditorGUIUtility.currentViewWidth - RavelBranding.TXT_BTN_SMALL * 2f));
+            GUILayout.TextField(url, GUILayout.Width(EditorGUIUtility.currentViewWidth - RavelEditorStying.GUI_SPACING * 2f));
         }
         else {
-            GUILayout.TextField($"{label}: \t\t{url}", GUILayout.Width(EditorGUIUtility.currentViewWidth - RavelBranding.TXT_BTN_SMALL * 2f));
+            GUILayout.TextField($"{label}: \t\t{url}", GUILayout.Width(EditorGUIUtility.currentViewWidth - RavelEditorStying.GUI_SPACING * 2f));
         }
         
         GUI.enabled = !empty && enabled;
@@ -276,7 +276,7 @@ public class EnvironmentSOEditor : Editor
             EditorWebRequests.SendWebRequest(req, OnAccessUpdateReceived, this);
         }
 
-        GUILayout.Space(RavelBranding.SPACING_SMALL);
+        GUILayout.Space(RavelEditorStying.GUI_SPACING_MICRO);
 
         if (_orgNames == null) {
             RavelEditor.GetUserOrganisations(OnOrganisationsRetrieved, this);
@@ -328,7 +328,7 @@ public class EnvironmentSOEditor : Editor
         GUILayout.TextField(name);
         GUI.enabled = pEnabled;
 
-        if (GUILayout.Button("Remove", GUILayout.Width(RavelBranding.TXT_BTN_SMALL))) {
+        if (GUILayout.Button("Remove", GUILayout.Width(RavelEditorStying.GUI_SPACING))) {
             RavelWebRequest req = (isUser)
                 ? EnvironmentAccessRequest.DeleteAccessUser(_instance.environment.environmentUuid, id)
                 : EnvironmentAccessRequest.DeleteAccessOrganisation(_instance.environment.environmentUuid, id);

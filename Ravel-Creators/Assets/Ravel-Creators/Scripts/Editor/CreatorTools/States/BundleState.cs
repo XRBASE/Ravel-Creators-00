@@ -1,19 +1,22 @@
 using UnityEditor;
 using UnityEngine;
 
+/// <summary>
+/// Overview of local bundles and their version numbering.
+/// </summary>
 public class BundleState : CreatorWindowState
 {
+    //The version data is saved in the creator config, as project wide config is saved there, but this window displays it.
+    
+    //constants for recognizing the custom and no version data.
     private const string CUSTOM_VERSIONING = "Custom";
     public const string NO_VERSIONING = "None";
+    
+    //other built-in versioning types
     public static readonly string[] VERSIONING_OPTIONS = { NO_VERSIONING, "(1,2)", "_1_2", CUSTOM_VERSIONING };
     
-    //width of screen that is reserved for the versioning (21f is extra padding for spacing between elements and scrollbar width)
-    private const float VERSION_WIDTH = (RavelBranding.INT_FIELD_999 + RavelBranding.TOOLBAR_BTN_SQUARE + RavelBranding.TXT_LAB_MICRO + 21f) * 2f;
-    
-    public BundleConfig Config {
-        get { return RavelEditor.BundleConfig; }
-        set { RavelEditor.BundleConfig = value; }
-    }
+    //Width of screen that is reserved for the versioning (21f is extra padding for spacing between elements and scrollbar width)
+    private const float VERSION_WIDTH = (RavelEditorStying.INT_LAB_WIDTH + RavelEditorStying.GUI_SPACING_MILLI + RavelEditorStying.GUI_SPACING_CENTI + 21f) * 2f;
     
     public override CreatorWindow.State State {
         get { return CreatorWindow.State.Bundles; }
@@ -21,18 +24,27 @@ public class BundleState : CreatorWindowState
     protected override Vector2 MinSize {
         get { return new Vector2(350, 210); }
     }
-
+    
+    //Provides easy access to the configuration. The config is stored in Editor, so it is also accessible before the window has been opened.
+    /// <summary>
+    /// Configuration file for most of the data in the window.
+    /// </summary>
+    public BundleConfig Config {
+        get { return RavelEditor.BundleConfig; }
+        set { RavelEditor.BundleConfig = value; }
+    }
+    
     private Vector2 _scroll;
+    //cache for version input of the user.
     private int _versioningMode;
     
-    public BundleState(CreatorWindow wnd) : base(wnd) {
-    }
+    public BundleState(CreatorWindow wnd) : base(wnd) { }
 
     public override void OnSwitchState() {
         base.OnSwitchState();
         Config.UpdateValues();
         
-        //set correct versioning
+        //When the window is opened, set the correct versioning, based on the value in the creator config.
         if (string.IsNullOrEmpty(RavelEditor.CreatorConfig.versioning)) {
             //no versioning
             _versioningMode = 0;
@@ -54,16 +66,35 @@ public class BundleState : CreatorWindowState
         
     }
 
+    //Whenever the window or tab is closed, save the configuration
     public override void OnStateClosed() {
         base.OnStateClosed();
         Config.SaveConfig();
+    }
+    
+    /// <summary>
+    /// Check if option with given index is the CUSTOM version of the options.
+    /// </summary>
+    /// <param name="index">index of the used option</param>
+    private static bool IsCustomVersioning(int index) {
+        return VERSIONING_OPTIONS[index] == CUSTOM_VERSIONING;
+    }
+	
+    /// <summary>
+    /// Check if option with given index is the NO VERSIONING version of the options.
+    /// </summary>
+    /// <param name="index">index of the used option</param>
+    private static bool NoVersioning(int index) {
+        return VERSIONING_OPTIONS[index] == NO_VERSIONING;
     }
 
     public override void OnGUI(Rect position) {
         _scroll = EditorGUILayout.BeginScrollView(_scroll);
         
+        //versioning string input
         GUIDrawVersioning(position);
         
+        //all bundles and their version numbers 
         for (int i = 0; i < Config.bundles.Count; i++) {
             GUIDrawBundleInfo(Config.bundles[i], position);
         }
@@ -77,18 +108,14 @@ public class BundleState : CreatorWindowState
     /// Drawn in version screen, but saved in the creator config, as that contains all user settings.
     /// </summary>
     private void GUIDrawVersioning(Rect position) {
+        //version string drop-down
         EditorGUI.BeginChangeCheck();
         EditorGUILayout.BeginHorizontal();
         GUILayout.Label("versioning: ", GUILayout.Width(position.width - VERSION_WIDTH));
         _versioningMode = EditorGUILayout.Popup(_versioningMode, VERSIONING_OPTIONS);
         EditorGUILayout.EndHorizontal();
         
-        EditorGUILayout.BeginHorizontal();
-        
-        GUILayout.Label("Increment minor version every build", GUILayout.Width(position.width - VERSION_WIDTH));
-        RavelEditor.CreatorConfig.incrementMinorVersionOnBuild = EditorGUILayout.Toggle(RavelEditor.CreatorConfig.incrementMinorVersionOnBuild);
-        EditorGUILayout.EndHorizontal();
-      
+        //string input in the case of custom versioning
         if (IsCustomVersioning(_versioningMode)) {
             EditorGUILayout.BeginHorizontal();
             GUILayout.Label("Custom versioning string!");
@@ -106,12 +133,20 @@ public class BundleState : CreatorWindowState
         else {
             RavelEditor.CreatorConfig.versioning = VERSIONING_OPTIONS[_versioningMode];
         }
-
+        
+        //toggle for version incrementation (on build)
+        EditorGUILayout.BeginHorizontal();
+        GUILayout.Label("Increment minor version every build", GUILayout.Width(position.width - VERSION_WIDTH));
+        RavelEditor.CreatorConfig.incrementMinorVersionOnBuild = EditorGUILayout.Toggle(RavelEditor.CreatorConfig.incrementMinorVersionOnBuild);
+        EditorGUILayout.EndHorizontal();
+        
         if (EditorGUI.EndChangeCheck()) {
+            //whenever changes are made in the editor code above, save the creator config. 
             RavelEditor.CreatorConfig.SaveConfig();
         }
 
-        string sampleLabel = "[BundleName]";
+        //Sample string using either the first bundle or a sample string 
+        string sampleLabel = "Cool_Ravel_World";
         int maj = 0;
         int min = 1;
         if (Config.bundles.Count >= 1) {
@@ -127,6 +162,11 @@ public class BundleState : CreatorWindowState
         EditorGUILayout.EndHorizontal();
     }
     
+    /// <summary>
+    /// Draws info about the bundle data, including a version display, in which the numbers can be changed.
+    /// </summary>
+    /// <param name="bundle">Bundle of which the data is drawn.</param>
+    /// <param name="position">GUI position rect.</param>
     private void GUIDrawBundleInfo(BundleConfig.BundleData bundle, Rect position) {
         GUILayout.BeginHorizontal();
         
@@ -137,29 +177,26 @@ public class BundleState : CreatorWindowState
         GUI.enabled = true;
         
         //GUILayout.FlexibleSpace();
-        GUILayout.Label("major: ", GUILayout.Width(RavelBranding.TXT_LAB_MICRO));
+        GUILayout.Label("major: ", GUILayout.Width(RavelEditorStying.GUI_SPACING_CENTI));
         bundle.vMajor = GUIDrawVersionNumber(bundle.vMajor);
-        GUILayout.Label("minor: ", GUILayout.Width(RavelBranding.TXT_LAB_MICRO));
+        GUILayout.Label("minor: ", GUILayout.Width(RavelEditorStying.GUI_SPACING_CENTI));
         bundle.vMinor = GUIDrawVersionNumber(bundle.vMinor);
         GUILayout.EndHorizontal();
     }
 
+    /// <summary>
+    /// Sub call for drawing one of the two version numbers including the plus button to increment it.
+    /// </summary>
+    /// <param name="num">Current version number</param>
+    /// <returns>New version number after input.</returns>
     private int GUIDrawVersionNumber(int num) {
-        num = Mathf.Abs(EditorGUILayout.IntField(num, GUILayout.Width(RavelBranding.INT_FIELD_999)));
+        num = Mathf.Abs(EditorGUILayout.IntField(num, GUILayout.Width(RavelEditorStying.INT_LAB_WIDTH)));
 
-        if (GUILayout.Button("+", GUILayout.Width(RavelBranding.TOOLBAR_BTN_SQUARE))) {
+        if (GUILayout.Button("+", GUILayout.Width(RavelEditorStying.GUI_SPACING_MILLI))) {
             num++;
         }
 
         return num;
     }
 #endregion
-    
-    public static bool IsCustomVersioning(int index) {
-        return VERSIONING_OPTIONS[index] == CUSTOM_VERSIONING;
-    }
-	
-    public static bool NoVersioning(int index) {
-        return VERSIONING_OPTIONS[index] == NO_VERSIONING;
-    }
 }

@@ -89,10 +89,16 @@ public static class EditorCache
         }
     }
 
-    public static void DeleteKey(string key) {
+    /// <summary>
+    /// Delete entry that is saved under key.
+    /// </summary>
+    public static void Delete(string key) {
         EditorPrefs.DeleteKey(key);
     }
 
+    /// <summary>
+    /// Clear all preferences.
+    /// </summary>
     public static void Clear() {
         EditorPrefs.DeleteAll();
     }

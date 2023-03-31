@@ -1,10 +1,19 @@
 using UnityEditor;
 using UnityEngine;
 
+/// <summary>
+/// Tab for inputting project configuration.
+/// </summary>
 public class ConfigState : CreatorWindowState
 {
+    //Amount of folders to show in the path options, it only shows the last folders this way, so it is more clear what 
+    //actual folders have been selected.
     private const int PATH_TRUNC_FOLDERS = 3;
     
+    //Provides easy access to the configuration. The config is stored in Editor, so it is also accessible before the window has been opened.
+    /// <summary>
+    /// Configuration file for most of the data in the window.
+    /// </summary>
     public CreatorConfig Config {
         get { return RavelEditor.CreatorConfig; }
         set { RavelEditor.CreatorConfig = value; }
@@ -21,8 +30,7 @@ public class ConfigState : CreatorWindowState
     }
     
     private Vector2 _scroll;
-    private int _versioningMode = 0;
-    
+
     public override void OnStateClosed() {
         base.OnStateClosed();
         Config.SaveConfig();
@@ -30,25 +38,24 @@ public class ConfigState : CreatorWindowState
     
     public override void OnGUI(Rect position) {
         _scroll = EditorGUILayout.BeginScrollView(_scroll);
-
+        
         GUIDrawMailCaching(position);
         GUIDrawBundlePath(position);
-        GUIDrawBundleTools(position);
+        GUIDrawBuildConfig();
 
-        GUILayout.Space(RavelBranding.SPACING_SMALL);
+        GUILayout.Space(RavelEditorStying.GUI_SPACING_MICRO);
         EditorGUILayout.EndScrollView();
-        GUILayout.BeginHorizontal();
-        if (GUILayout.Button("Reset configuration")) {
+        
+        if (GUILayout.Button("Reset")) {
             Config = new CreatorConfig();
         }
-        if (GUILayout.Button("Clear all cache data")) {
-            EditorCache.Clear();
-        }
-        GUILayout.EndHorizontal();
     }
 
 #region #region draw GUI methods
 
+    /// <summary>
+    /// Draws user email that was cached, clear button for the mail only and the toggle to disable caching in the whole project.
+    /// </summary>
     private void GUIDrawMailCaching(Rect position) {
         EditorGUI.BeginChangeCheck();
         Config.saveUserMail = GUILayout.Toggle(Config.saveUserMail, "Save email");
@@ -58,31 +65,36 @@ public class ConfigState : CreatorWindowState
 
         GUILayout.BeginHorizontal();
         GUI.enabled = false;
-        GUILayout.Label("Saved e-mail address:", GUILayout.Width(RavelBranding.LABEL_MED));
-        GUILayout.TextField(Config.userMail, GUILayout.Width(position.width - (RavelBranding.LABEL_MED + RavelBranding.TXT_BTN_SMALL + 15f)));
+        GUILayout.Label("Saved e-mail address:", GUILayout.Width(RavelEditorStying.GUI_SPACING_DECA));
+        GUILayout.TextField(Config.userMail, GUILayout.Width(position.width - (RavelEditorStying.GUI_SPACING_DECA + RavelEditorStying.GUI_SPACING + 15f)));
         GUI.enabled = true;
-        if (GUILayout.Button("Clear", GUILayout.Width(RavelBranding.TXT_BTN_SMALL))) {
+        if (GUILayout.Button("Clear", GUILayout.Width(RavelEditorStying.GUI_SPACING))) {
             Config.userMail = "";
+            Config.SaveConfig();
         }
         GUILayout.EndHorizontal();
     }
     
+    /// <summary>
+    /// Draws path (truncated) to the asset bundle folder and a button with which the path can be set.
+    /// </summary>
     private void GUIDrawBundlePath(Rect position) {
         GUILayout.BeginHorizontal();
-        GUILayout.Label("Asset bundle path:", GUILayout.Width(RavelBranding.LABEL_MED));
+        GUILayout.Label("Asset bundle path:", GUILayout.Width(RavelEditorStying.GUI_SPACING_DECA));
         
         //18f is spacing between elements
         GUI.enabled = false;
         
         
-        string truncPath = GetLastFoldersOfPath(Config.bundlePath, PATH_TRUNC_FOLDERS);
+        if (GetLastFoldersOfPath(Config.bundlePath, PATH_TRUNC_FOLDERS, out string truncPath)) {
+            truncPath = "(...)" + truncPath;
+        }
         //width of all other elements and spacing (18f at the end is 3 spacing for each element and one spacing in front and end)
-        float otherWidth = RavelBranding.LABEL_MED + RavelBranding.TXT_BTN_MED + RavelBranding.TXT_BTN_SMALL + 18f;
-        GUILayout.TextField(" (...) " + truncPath, 
-            GUILayout.Width(position.width - otherWidth));
+        float otherWidth = RavelEditorStying.GUI_SPACING_DECA * 2 + RavelEditorStying.GUI_SPACING + 18f;
+        GUILayout.TextField(truncPath, GUILayout.Width(position.width - otherWidth));
         GUI.enabled = true;
         
-        if (GUILayout.Button("Select folder", GUILayout.Width(RavelBranding.TXT_BTN_MED))) {
+        if (GUILayout.Button("Select folder", GUILayout.Width(RavelEditorStying.GUI_SPACING_DECA))) {
             string path = EditorUtility.OpenFolderPanel("Select bundle location", Config.GetFilePath(), "Assetbundle output");
             if (!string.IsNullOrEmpty(path))
             {
@@ -90,19 +102,29 @@ public class ConfigState : CreatorWindowState
             }
         }
         
-        if (GUILayout.Button("Copy", GUILayout.Width(RavelBranding.TXT_BTN_SMALL))) {
+        if (GUILayout.Button("Copy", GUILayout.Width(RavelEditorStying.GUI_SPACING))) {
             GUIUtility.systemCopyBuffer = Config.bundlePath;
             Debug.Log("Path copied!");
         }
         GUILayout.EndHorizontal();
     }
-
-    private void GUIDrawBundleTools(Rect position) {
+    
+    /// <summary>
+    /// Draws configuration settings for the build process.
+    /// </summary>
+    private void GUIDrawBuildConfig() {
         Config.autoClean = GUILayout.Toggle(Config.autoClean, "auto cleanup build files");
     }
 
 #endregion
-    private string GetLastFoldersOfPath(string path, int folders) {
+    /// <summary>
+    /// Splits the path on dashes and removes everything apart from the last folders in the path. 
+    /// </summary>
+    /// <param name="path">path that is being truncated.</param>
+    /// <param name="folders">amount of folders (the last ones) to keep showing.</param>
+    /// <param name="truncated">truncated path (or whole if path was shorter than amount of folders specified).</param>
+    /// <returns>True/False path was made shorter.</returns>
+    private bool GetLastFoldersOfPath(string path, int folders, out string truncated) {
         //truncate to make more readable
         int lastDash = path.LastIndexOf('/');
         
@@ -111,9 +133,18 @@ public class ConfigState : CreatorWindowState
             folders--;
         
         for (int i = 0; i < folders; i++) {
-            lastDash = path.Substring(0,lastDash).LastIndexOf('/');
+            if (path.Substring(0,lastDash).Contains('/'))
+            {
+                lastDash = path.Substring(0,lastDash).LastIndexOf('/');
+            }
+            else {
+                //if path is of less folders than specified amount, return the whole path
+                truncated = path;
+                return false;
+            }
         }
 
-        return path.Substring(lastDash + 1);
+        truncated = path.Substring(lastDash + 1);
+        return true;
     }
 }

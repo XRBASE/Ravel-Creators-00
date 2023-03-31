@@ -9,24 +9,40 @@ public abstract class CreatorWindowState
 	/// State identifier of this window.
 	/// </summary>
 	public abstract CreatorWindow.State State { get; } 
+	
+	/// <summary>
+	/// Minimum size for the window
+	/// </summary>
 	protected abstract Vector2 MinSize { get; } 
 
+	//reference to containing editor window.
 	private CreatorWindow _wnd;
-	
-	
+
 	public CreatorWindowState(CreatorWindow wnd) {
 		_wnd = wnd;
 	}
 	
+	/// <summary>
+	/// Called to draw GUI of the window
+	/// </summary>
+	/// <param name="position">Rect in which is being drawn + position of the current place where draw is performed.</param>
 	public abstract void OnGUI(Rect position);
 
-	public virtual void OnStateClosed() {
-		
-	}
+	/// <summary>
+	/// Called when switching out of the state, or closing the whole window.
+	/// </summary>
+	public virtual void OnStateClosed() { }
+	
+	/// <summary>
+	/// Called when switching to this window.
+	/// </summary>
 	public virtual void OnSwitchState() {
 		SetMinSize();
 	}
 
+	/// <summary>
+	/// Sets the minimum size of the window.
+	/// </summary>
 	protected void SetMinSize() {
 		_wnd.minSize = MinSize;
 	}

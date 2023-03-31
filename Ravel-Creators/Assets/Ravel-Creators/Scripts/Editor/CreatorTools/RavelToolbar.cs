@@ -1,4 +1,3 @@
-using System;
 using Base.Ravel.Config;
 using UnityEditor;
 using UnityEditor.SceneManagement;
@@ -6,63 +5,46 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityToolbarExtender;
 
+/// <summary>
+/// Static class that is responsible for drawing the toolbar buttons next to the play buttons.
+/// </summary>
 [InitializeOnLoad]
 public class RavelToolbar
 {
-    /// <summary>
-    /// contains the GUI styles that are passed on to the buttons in the toolbar
-    /// </summary>
-    private static class ToolbarStyle
-    {
-        public static GUIStyle imageInBtn;
-        public static GUIStyle imageBtn;
-        public static GUIStyle txtBtnSmall;
-
-        static ToolbarStyle() {
-            imageInBtn = new GUIStyle("Command")
-            {
-                imagePosition = ImagePosition.ImageAbove,
-                fixedWidth = RavelBranding.TOOLBAR_BTN_SQUARE,
-                padding = new RectOffset(0,0,2,0),
-            };
-            imageBtn = new GUIStyle()
-            {
-                imagePosition = ImagePosition.ImageOnly,
-                fixedWidth = RavelBranding.TOOLBAR_BTN_SQUARE,
-                padding = new RectOffset(0,0,2,0),
-                
-            };
-            txtBtnSmall = new GUIStyle("Command")
-            {
-                //fontSize = 12,
-                alignment = TextAnchor.MiddleCenter,
-                imagePosition = ImagePosition.ImageAbove,
-                fontStyle = FontStyle.Normal,
-
-                fixedWidth = RavelBranding.TOOLBAR_BTN_TXT_SMALL,
-                fixedHeight = RavelBranding.TOOLBAR_BTN_SQUARE,
-                padding = new RectOffset(0,0,2,0),
-            };
-        }
-    }
-
+    //configuration file for current scene.
     private static SceneConfiguration _config;
     
+    /// <summary>
+    /// This is called on init and recompile.
+    /// </summary>
     static RavelToolbar() {
+        //Used for gui drawing the buttons
         ToolbarExtender.RightToolbarGUI.Add(OnRightToolbarGUI);
-        EditorSceneManager.sceneLoaded += OnSceneLoaded;
+        
+        //used to retrieve scene config when swapping scene's
+        EditorSceneManager.sceneOpened += OnSceneLoaded;
+    }
+    
+    ~RavelToolbar() {
+        EditorSceneManager.sceneOpened -= OnSceneLoaded;
     }
 
-    private static void OnSceneLoaded(Scene s, LoadSceneMode mode) {
+    private static void OnSceneLoaded(Scene s, OpenSceneMode mode) {
         RefreshConfig();
     }
     
+    /// <summary>
+    /// Used when recompiling to retrieve config
+    /// </summary>
     [UnityEditor.Callbacks.DidReloadScripts]
     private static void OnScriptsReloaded() {
         RefreshConfig();
     }
 
-    private static void RefreshConfig() {
+    /// <summary>
+    /// Tries to find a valid configuration in the scene, that is used to build to and display the name of.
+    /// </summary>
+    public static void RefreshConfig() {
         //called on startup and untitled scene's 
         if (string.IsNullOrEmpty(EditorSceneManager.GetActiveScene().path))
             return;
@@ -80,38 +62,47 @@ public class RavelToolbar
         _config = configs[0];
     }
 
+    /// <summary>
+    /// OnGUI call for all toolbar items.
+    /// </summary>
     public static void OnRightToolbarGUI() {
+        //moves the items to the right side of the play button.
         GUILayout.FlexibleSpace();
         
+        //Ravel logo
         if (RavelEditor.Branding.logoSquare && GUILayout.Button(RavelEditor.Branding.logoSquare, 
-                ToolbarStyle.imageBtn)) {
+                RavelEditorStying.imageBtn)) {
             Debug.Log("BOK BOK, You pressed the hidden chicken button!");
         }
 
+        //Bundle/environment label.
         string bundleName = "";
         if (_config != null) {
             bundleName = _config.environmentSO.bundleName;
             GUI.enabled = false;
-            GUILayout.TextField(bundleName, GUILayout.Width(RavelBranding.SPACING_BIG));
+            GUILayout.TextField(bundleName, GUILayout.Width(RavelEditorStying.GUI_SPACING));
             GUI.enabled = true;
         }
         
-        if (GUILayout.Button("Preview", ToolbarStyle.txtBtnSmall)) {
+        //preview environment in ravel web
+        if (GUILayout.Button("Preview", RavelEditorStying.txtBtnSmall)) {
             bool cleanup = RavelEditor.CreatorConfig.autoClean;
 
-            BundleBuilder.BuildOpenScene(bundleName, cleanup);
+            BundleBuilder.BuildAndPreviewOpenScene(bundleName, cleanup);
         }
         GUI.enabled = true;
 
-        if (GUILayout.Button("Refresh", ToolbarStyle.txtBtnSmall)) {
+        //Refreshes the configuration file
+        if (GUILayout.Button("Refresh", RavelEditorStying.txtBtnSmall)) {
             RefreshConfig();
         }
 
+        //Backend mode that is used to preview on, only accessible for dev users.
         GUI.enabled = RavelEditor.DevUser;
         bool curMode = AppConfig.Networking.Mode == NetworkConfig.AppMode.Live;
         //user picks between app and live
         bool pickedMode = EditorGUILayout.Popup("", curMode ? 0 : 1, new[] { "App", "Dev" }, 
-            GUILayout.Width(RavelBranding.TOOLBAR_BTN_TXT_SMALL)) == 0;
+            GUILayout.Width(RavelEditorStying.GUI_SPACING_DECI)) == 0;
         
         if (curMode != pickedMode &&
             EditorUtility.DisplayDialog("Switch app modes", "Are you sure you want to switch app modes? You'll have to log in again.", "Yes", "No")) {
@@ -123,6 +114,6 @@ public class RavelToolbar
         }
         GUI.enabled = true;
 
-        GUILayout.Space(RavelBranding.SPACING_MED);
+        GUILayout.Space(RavelEditorStying.GUI_SPACING_MILLI);
     }
 }

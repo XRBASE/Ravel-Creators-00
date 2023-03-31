@@ -31,6 +31,8 @@ public class AccountState : CreatorWindowState
 
 	public override void OnGUI(Rect position) {
 		if (!RavelEditor.LoggedIn) { 
+			//When not logged in, show email, pass, login and remember me
+			
 			GUILayout.Label($"email:");
 			email = GUILayout.TextField(email);
 			GUILayout.Label($"password");
@@ -52,6 +54,8 @@ public class AccountState : CreatorWindowState
 			}
 		}
 		else {
+			//Otherwise show name of user, refresh button and copy uuid if you're a dev
+			
 			GUILayout.Label($"Logged in as user {RavelEditor.User.FullName}");
 			if (RavelEditor.DevUser && GUILayout.Button("Copy UUID")) {
 				GUIUtility.systemCopyBuffer = RavelEditor.User.userUUID;
@@ -91,6 +95,11 @@ public class AccountState : CreatorWindowState
 		EditorWebRequests.SendWebRequest(login, ProcessLoginResponse, this);
 	}
 
+	/// <summary>
+	/// This is used to validate the token and to log in the user. It also gets the organisations for the user, so it can
+	/// be used to refresh the data of the user as well. 
+	/// </summary>
+	/// <param name="res">WebResponse containing the login/user data.</param>
 	private void ProcessLoginResponse(RavelWebResponse res) {
 		if (res.Success && res.TryGetData(out User user)) {
 			//this does not happen when checking an already cached token, but does happen when logging in using the window.

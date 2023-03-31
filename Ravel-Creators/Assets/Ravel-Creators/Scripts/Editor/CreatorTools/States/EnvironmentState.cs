@@ -56,7 +56,7 @@ public class EnvironmentState : CreatorWindowState
         
         
         if (_location != Location.None) {
-            GUILayout.Space(RavelBranding.SPACING_MED);
+            GUILayout.Space(RavelEditorStying.GUI_SPACING_MILLI);
             
             if (_environments != null && _environments.Length > 0) {
                 int prev = _envIndex; 
@@ -74,7 +74,7 @@ public class EnvironmentState : CreatorWindowState
                 GUISaveEnvBundle();
                 GUILayout.EndHorizontal();
                 
-                GUILayout.Space(RavelBranding.SPACING_MED);
+                GUILayout.Space(RavelEditorStying.GUI_SPACING_MILLI);
                 //Debug.Log($"_curEnvImg {_curEnvImg} {_curEnvImg.name}");
                 if (_curEnvTex != null && _getImageRoutine == null) {
                     RavelEditor.DrawTextureScaleWidthGUI(new Vector2(0, GUILayoutUtility.GetLastRect().yMax),
@@ -147,12 +147,10 @@ public class EnvironmentState : CreatorWindowState
     /// Draws the info about the currently selected environment.
     /// </summary>
     private void GUIDrawEnvData() {
-        //indent by space
-        GUILayout.BeginHorizontal();
-        GUILayout.Space(RavelBranding.SPACING_MED);
-        GUILayout.BeginVertical();
+        RavelEditor.GUIBeginIndent(RavelEditorStying.GUI_SPACING_MICRO);
+        
         GUI.enabled = false;
-        GUILayout.Space(RavelBranding.SPACING_MED);
+        GUILayout.Space(RavelEditorStying.GUI_SPACING_MILLI);
         GUILayout.TextField($"Name: \t\t{CurEnv.name}");
         GUILayout.TextField($"Guid: \t\t{CurEnv.environmentUuid}");
 
@@ -163,9 +161,7 @@ public class EnvironmentState : CreatorWindowState
         GUILayout.Toggle(CurEnv.published, "published:");
         GUI.enabled = true;
 
-        //undo indent
-        GUILayout.EndVertical();
-        GUILayout.EndHorizontal();
+        RavelEditor.GUIEndIndent();
     }
     
     /// <summary>
