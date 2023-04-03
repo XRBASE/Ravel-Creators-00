@@ -13,7 +13,7 @@ public class RavelToolbar
 {
     //configuration file for current scene.
     private static SceneConfiguration _config;
-    
+
     /// <summary>
     /// This is called on init and recompile.
     /// </summary>
@@ -23,10 +23,12 @@ public class RavelToolbar
         
         //used to retrieve scene config when swapping scene's
         EditorSceneManager.sceneOpened += OnSceneLoaded;
+        SceneConfiguration.environmentUpdated += RefreshConfig;
     }
     
     ~RavelToolbar() {
         EditorSceneManager.sceneOpened -= OnSceneLoaded;
+        SceneConfiguration.environmentUpdated -= RefreshConfig;
     }
 
     private static void OnSceneLoaded(Scene s, OpenSceneMode mode) {
@@ -76,13 +78,14 @@ public class RavelToolbar
         }
 
         //Bundle/environment label.
+        bool canBuild = (_config != null && _config.environmentSO != null);
         string bundleName = "";
         if (_config != null) {
-            bundleName = _config.environmentSO.bundleName;
+            bundleName = (_config.environmentSO != null)? _config.environmentSO.bundleName : "Missing environment!";
             GUI.enabled = false;
-            GUILayout.TextField(bundleName, GUILayout.Width(RavelEditorStying.GUI_SPACING));
-            GUI.enabled = true;
+            GUILayout.TextField(bundleName, GUILayout.Width(RavelEditorStying.GUI_SPACING_DECA));
         }
+        GUI.enabled = canBuild;
         
         //preview environment in ravel web
         if (GUILayout.Button("Preview", RavelEditorStying.txtBtnSmall)) {
