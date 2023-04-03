@@ -1,5 +1,7 @@
 using UnityEngine;
+
 #if UNITY_EDITOR
+using System;
 using UnityEditor;
 #endif
 
@@ -9,9 +11,26 @@ using UnityEditor;
 /// </summary>
 public class SceneConfiguration : MonoBehaviour
 {
-    public EnvironmentSO environmentSO;
+    [HideInInspector] public EnvironmentSO environmentSO;
     
 #if UNITY_EDITOR
+    public static Action environmentUpdated;
+    
+    [CustomEditor(typeof(SceneConfiguration))]
+    private class SceneConfigurationEditor : Editor
+    {
+        public override void OnInspectorGUI() {
+            SceneConfiguration instance = (SceneConfiguration)target;
+
+            DrawDefaultInspector();
+            EditorGUI.BeginChangeCheck();
+            instance.environmentSO = EditorGUILayout.ObjectField("Environment:", instance.environmentSO, typeof(EnvironmentSO), false) as EnvironmentSO;
+            if (EditorGUI.EndChangeCheck()) {
+                environmentUpdated?.Invoke();
+            }
+        }
+    }
+    
     /// <summary>
     /// Dialog that is shown to the user in cases where the configuration is needed, but not found. Also offers an option
     /// To auto create the config for the user, though it will only work when an environment is actually set.
