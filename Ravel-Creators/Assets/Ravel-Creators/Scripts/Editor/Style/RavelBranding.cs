@@ -22,4 +22,10 @@ public class RavelBranding : ScriptableObject
     public Texture2D overlayLogo;
     [Tooltip("Small square logo.")]
     public Texture2D logoSquare;
+
+    [Space]
+    [Tooltip("Used for checks that pass")]
+    public Texture2D passCheck;
+    [Tooltip("Used for checks that fail")]
+    public Texture2D failCheck;
 }

@@ -5,6 +5,8 @@ using UnityEngine;
 /// </summary>
 public static class RavelEditorStying
 {
+	public const string IMAGE_EXTENSIONS = "jpg,jpeg,png";
+	
 	/// <summary>
 	/// Width of an integer field, supports numbers up to 999 (or negative down to -99) 
 	/// </summary>

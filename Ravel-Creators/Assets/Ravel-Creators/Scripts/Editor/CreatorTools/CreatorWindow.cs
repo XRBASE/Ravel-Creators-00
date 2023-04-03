@@ -20,6 +20,8 @@ public class CreatorWindow : EditorWindow
 			return _states[_tab];
 		}
 	}
+
+	private bool _bannerEnabled = true;
 	
 	private State _tab = State.Account;
 	//used to detect state switching
@@ -35,6 +37,11 @@ public class CreatorWindow : EditorWindow
 	[MenuItem("Ravel/Creator/Environments", false)]
 	public static void OpenEnvironment() {
 		GetWindow(State.Environments);
+	}
+	
+	[MenuItem("Ravel/Creator/Images", false)]
+	public static void OpenImages() {
+		GetWindow(State.Images);
 	}
 	
 	[MenuItem("Ravel/Creator/Bundles", false)]
@@ -74,6 +81,10 @@ public class CreatorWindow : EditorWindow
 		_tab = newTab;
 	}
 
+	public void EnableBanner(bool enabled) {
+		_bannerEnabled = enabled;
+	}
+
 	/// <summary>
 	/// Creates a new instance of a tab/state
 	/// </summary>
@@ -84,6 +95,8 @@ public class CreatorWindow : EditorWindow
 				return new AccountState(this);
 			case State.Environments:
 				return new EnvironmentState(this);
+			case State.Images:
+				return new ImageState(this);
 			case State.Bundles:
 				return new BundleState(this);
 			case State.Configuration:
@@ -113,7 +126,7 @@ public class CreatorWindow : EditorWindow
 			_prevTab = _tab;
 		}
 		
-		if (RavelEditor.Branding.banner) {
+		if (_bannerEnabled && RavelEditor.Branding.banner) {
 			RavelEditor.DrawTextureScaledCropGUI(new Rect(0, GUILayoutUtility.GetLastRect().yMax, position.width, RavelEditor.Branding.bannerHeight), 
 				RavelEditor.Branding.banner, RavelEditor.Branding.bannerPOI);
 		}
@@ -129,6 +142,7 @@ public class CreatorWindow : EditorWindow
 		None = 0,
 		Account,
 		Environments,
+		Images,
 		Bundles,
 		Configuration,
 	}

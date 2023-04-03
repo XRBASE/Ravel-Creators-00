@@ -221,7 +221,19 @@ public static class RavelEditor
     /// <param name="tex">Texture to draw.</param>
     /// <param name="poi">Point of interest, zooms in on this position.</param>
     /// <param name="addSpace">Adds a guilayout space with the height of the image, to ensure layout items are placed below the image.</param>
-    public static void DrawTextureScaledCropGUI(Rect mask, Texture2D tex, Vector2 poi, bool addSpace = true) {
+    /// <returns>Texture coords that show how the image was scaled</returns>
+    public static Rect DrawTextureScaledCropGUI(Rect mask, Texture2D tex, Vector2 poi, bool addSpace = true) {
+        Rect coords = GetScaleCropCoords(mask, tex, poi);
+		
+        GUI.DrawTextureWithTexCoords(mask, tex, coords);
+        if (addSpace) {
+            EditorGUILayout.Space(mask.height);
+        }
+
+        return coords;
+    }
+
+    public static Rect GetScaleCropCoords(Rect mask, Texture2D tex, Vector2 poi) {
         Vector2 res = new Vector2(tex.width, tex.height);
         Rect coords = new Rect(0,0,1,1);
 
@@ -231,7 +243,10 @@ public static class RavelEditor
 
         float m = mask.width / mask.height;
         float t = (float)tex.width / tex.height;
-		
+
+        if (Mathf.Abs(m - t) <= MathBuddy.FloatingPoints.LABDA) {
+            return coords;
+        }
         if (m > t) {
             //match x, scale y
             //find res y, when x has mask res
@@ -250,14 +265,11 @@ public static class RavelEditor
 			
             //find decimal of image shown
             dec = mask.width / px;
-            pos = Mathf.Max(0.5f - dec / 2f, poi.x - dec / 2f);
+            pos = Mathf.Clamp(poi.x - dec / 2f, 0, 1f - dec);
             coords = new Rect(pos, 0, dec, 1);
         }
-		
-        GUI.DrawTextureWithTexCoords(mask, tex, coords);
-        if (addSpace) {
-            EditorGUILayout.Space(mask.height);
-        }
+
+        return coords;
     }
     
     /// <summary>

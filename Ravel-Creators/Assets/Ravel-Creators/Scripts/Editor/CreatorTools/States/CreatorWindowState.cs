@@ -16,7 +16,7 @@ public abstract class CreatorWindowState
 	protected abstract Vector2 MinSize { get; } 
 
 	//reference to containing editor window.
-	private CreatorWindow _wnd;
+	protected CreatorWindow _wnd;
 
 	public CreatorWindowState(CreatorWindow wnd) {
 		_wnd = wnd;

@@ -220,7 +220,7 @@ public class EnvironmentSOEditor : Editor
     /// </summary>
     private void GUIServerFunctions() {
         if (GUILayout.Button("Upload preview")) {
-            string path = EditorUtility.OpenFilePanel("Upload new preview", RavelEditor.CreatorConfig.GetFilePath(), "jpg,jpeg,png");
+            string path = EditorUtility.OpenFilePanel("Upload new preview", RavelEditor.CreatorConfig.GetFilePath(), RavelEditorStying.IMAGE_EXTENSIONS);
 
             if (!string.IsNullOrEmpty(path)) {
                 RavelEditor.CreatorConfig.SetFilePath(path);
