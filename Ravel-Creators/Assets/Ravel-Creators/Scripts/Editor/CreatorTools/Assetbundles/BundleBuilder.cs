@@ -34,7 +34,7 @@ public static class BundleBuilder
 	/// </summary>
 	/// <param name="bundleName">Name of asset-bundle that is being built.</param>
 	/// <param name="autoCleanFiles">"Should the created bundle files be deleted after building?"</param>
-	public static void BuildAndPreviewOpenScene(string bundleName, bool autoCleanFiles) {
+	public static void BuildOpenScene(string bundleName, bool preview, bool autoCleanFiles) {
 		Scene s = EditorSceneManager.GetActiveScene();
 		
 		//check for multiple scenes (if so, only the active one will be build).
@@ -132,19 +132,21 @@ public static class BundleBuilder
 			RavelEditor.BundleConfig.SaveConfig();
 		}
 
-		//send result to webserver.
-		Debug.Log("Uploading bundle!");
-		RavelWebRequest req = CreatorRequest.UploadBundle(config.environmentSO.environment.environmentUuid,
-			Path.Combine(path, bundleName));
+		if (preview) {
+			//send result to webserver.
+			Debug.Log("Uploading bundle!");
+			RavelWebRequest req = CreatorRequest.UploadBundle(config.environmentSO.environment.environmentUuid,
+				Path.Combine(path, bundleName));
 
-		//only send delete action along if auto cleanup is enabled
-		if (autoCleanFiles) {
-			EditorWebRequests.SendWebRequest(req, 
-				(res) => OnBundleUploaded(res, config.environmentSO.environment, () => DeleteBundle(path + bundleName)), config);
-		}
-		else {
-			EditorWebRequests.SendWebRequest(req, 
-				(res) => OnBundleUploaded(res, config.environmentSO.environment, null), config);
+			//only send delete action along if auto cleanup is enabled
+			if (autoCleanFiles) {
+				EditorWebRequests.SendWebRequest(req, 
+					(res) => OnBundleUploaded(res, config.environmentSO.environment, () => DeleteBundle(path + bundleName)), config);
+			}
+			else {
+				EditorWebRequests.SendWebRequest(req, 
+					(res) => OnBundleUploaded(res, config.environmentSO.environment, null), config);
+			}
 		}
 		
 		//always delete the streaming assets bundle

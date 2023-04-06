@@ -108,7 +108,7 @@ public class CreateEnvironmentWindow : EditorWindow
 					Debug.LogError("Chosen path should be inside of the project for environment asset files.");
 					return;
 				}
-				path = path.Substring(path.IndexOf(Application.dataPath, StringComparison.Ordinal));
+				path = path.Substring(Application.dataPath.Length - 6);
 				
 				AssetDatabase.CreateAsset(so, path);
 				AssetDatabase.Refresh();
