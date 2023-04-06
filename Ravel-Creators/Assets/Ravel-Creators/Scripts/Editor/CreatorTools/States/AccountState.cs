@@ -8,28 +8,54 @@ public class AccountState : CreatorWindowState
 {
 	private string email = "";
 	private string pass = "";
+	private bool _remember = false;
 
 	public override CreatorWindow.State State {
 		get { return CreatorWindow.State.Account; }
 	}
 
 	protected override Vector2 MinSize {
-		get { return new Vector2(390, 211); }
+		get { return new Vector2(390, 210); }
 	}
-	public AccountState(CreatorWindow wnd) : base(wnd) { }
+
+	public AccountState(CreatorWindow wnd) : base(wnd) {
+		_remember = RavelEditor.CreatorConfig.saveUserMail;
+	}
+
+	public override void OnSwitchState() {
+		base.OnSwitchState();
+		if (RavelEditor.CreatorConfig.saveUserMail) {
+			email = RavelEditor.CreatorConfig.userMail;
+		}
+	}
 
 	public override void OnGUI(Rect position) {
 		if (!RavelEditor.LoggedIn) { 
+			//When not logged in, show email, pass, login and remember me
+			
 			GUILayout.Label($"email:");
 			email = GUILayout.TextField(email);
 			GUILayout.Label($"password");
 			pass = GUILayout.PasswordField(pass, '*');
 
+			//if remember is disabled, this is local only (so log in with another account won't clear the cache)
+			_remember = GUILayout.Toggle(_remember, "remember login");
+
 			if (GUILayout.Button("Log in")) {
+				//if remember is set to true, the mail and remember value are both saved in cache
+				if (_remember) {
+					RavelEditor.CreatorConfig.saveUserMail = true;
+					RavelEditor.CreatorConfig.userMail = email;
+					
+					RavelEditor.CreatorConfig.SaveConfig();
+				}
+				
 				LoginUserPass(email, pass);
 			}
 		}
 		else {
+			//Otherwise show name of user, refresh button and copy uuid if you're a dev
+			
 			GUILayout.Label($"Logged in as user {RavelEditor.User.FullName}");
 			if (RavelEditor.DevUser && GUILayout.Button("Copy UUID")) {
 				GUIUtility.systemCopyBuffer = RavelEditor.User.userUUID;
@@ -40,7 +66,7 @@ public class AccountState : CreatorWindowState
 			}
 
 			if (GUILayout.Button("Log out")) {
-				RavelEditor.OnLogout();
+				RavelEditor.OnLogout(true);
 			}
 		}
 	}
@@ -69,6 +95,11 @@ public class AccountState : CreatorWindowState
 		EditorWebRequests.SendWebRequest(login, ProcessLoginResponse, this);
 	}
 
+	/// <summary>
+	/// This is used to validate the token and to log in the user. It also gets the organisations for the user, so it can
+	/// be used to refresh the data of the user as well. 
+	/// </summary>
+	/// <param name="res">WebResponse containing the login/user data.</param>
 	private void ProcessLoginResponse(RavelWebResponse res) {
 		if (res.Success && res.TryGetData(out User user)) {
 			//this does not happen when checking an already cached token, but does happen when logging in using the window.
@@ -87,7 +118,7 @@ public class AccountState : CreatorWindowState
 			pass = "";
 		}
 		else {
-			RavelEditor.OnLogout();
+			RavelEditor.OnLogout(true);
 		}
 	}
 }

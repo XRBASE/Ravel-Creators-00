@@ -40,9 +40,13 @@ public class EnvironmentState : CreatorWindowState
     //texture of image that was retrieved.
     private Texture2D _curEnvTex;
 
+    private Vector2 _scroll;
+
     public EnvironmentState(CreatorWindow wnd) : base(wnd) { }
 
     public override void OnGUI(Rect position) {
+        _scroll = EditorGUILayout.BeginScrollView(_scroll);
+        
         if (GUILayout.Button("Create")) {
             CreateEnvironmentWindow.OpenWindow();
         }
@@ -52,7 +56,7 @@ public class EnvironmentState : CreatorWindowState
         
         
         if (_location != Location.None) {
-            GUILayout.Space(RavelBranding.SPACING_MED);
+            GUILayout.Space(RavelEditorStying.GUI_SPACING_MILLI);
             
             if (_environments != null && _environments.Length > 0) {
                 int prev = _envIndex; 
@@ -70,7 +74,7 @@ public class EnvironmentState : CreatorWindowState
                 GUISaveEnvBundle();
                 GUILayout.EndHorizontal();
                 
-                GUILayout.Space(RavelBranding.SPACING_MED);
+                GUILayout.Space(RavelEditorStying.GUI_SPACING_MILLI);
                 //Debug.Log($"_curEnvImg {_curEnvImg} {_curEnvImg.name}");
                 if (_curEnvTex != null && _getImageRoutine == null) {
                     RavelEditor.DrawTextureScaleWidthGUI(new Vector2(0, GUILayoutUtility.GetLastRect().yMax),
@@ -78,6 +82,8 @@ public class EnvironmentState : CreatorWindowState
                 }
             }
         }
+
+        EditorGUILayout.EndScrollView();
     }
     
 #region draw GUI methods
@@ -141,12 +147,10 @@ public class EnvironmentState : CreatorWindowState
     /// Draws the info about the currently selected environment.
     /// </summary>
     private void GUIDrawEnvData() {
-        //indent by space
-        GUILayout.BeginHorizontal();
-        GUILayout.Space(RavelBranding.SPACING_MED);
-        GUILayout.BeginVertical();
+        RavelEditor.GUIBeginIndent(RavelEditorStying.GUI_SPACING_MICRO);
+        
         GUI.enabled = false;
-        GUILayout.Space(RavelBranding.SPACING_MED);
+        GUILayout.Space(RavelEditorStying.GUI_SPACING_MILLI);
         GUILayout.TextField($"Name: \t\t{CurEnv.name}");
         GUILayout.TextField($"Guid: \t\t{CurEnv.environmentUuid}");
 
@@ -157,9 +161,7 @@ public class EnvironmentState : CreatorWindowState
         GUILayout.Toggle(CurEnv.published, "published:");
         GUI.enabled = true;
 
-        //undo indent
-        GUILayout.EndVertical();
-        GUILayout.EndHorizontal();
+        RavelEditor.GUIEndIndent();
     }
     
     /// <summary>
@@ -188,10 +190,12 @@ public class EnvironmentState : CreatorWindowState
                     Selection.activeObject = so;
                 }
                 else {
-                    string path = EditorUtility.SaveFilePanel("Save environment", Application.dataPath, 
+                    string path = EditorUtility.SaveFilePanel("Save environment", RavelEditor.CreatorConfig.GetFilePath(), 
                         $"ENV_{CurEnv.name}", "asset");
 
                     if (!string.IsNullOrEmpty(path)) {
+                        RavelEditor.CreatorConfig.SetFilePath(path);
+                        
                         so = ScriptableObject.CreateInstance<EnvironmentSO>();
                         so.environment = CurEnv;
 
@@ -210,10 +214,11 @@ public class EnvironmentState : CreatorWindowState
     /// </summary>
     private void GUISaveEnvImage() {
         if (CurEnv.metadataPreviewImage.TryGetUrl(ImageSize.I1920, out string imgUrl) && GUILayout.Button("Save image")) {
-            string path = EditorUtility.SaveFilePanel("Save image", Application.dataPath, 
+            string path = EditorUtility.SaveFilePanel("Save image", RavelEditor.CreatorConfig.GetFilePath(), 
                 $"IMG_{CurEnv.name}_1920", "jpg");
 
             if (!string.IsNullOrEmpty(path)) {
+                RavelEditor.CreatorConfig.SetFilePath(path);
                 RavelWebRequest req = new RavelWebRequest(imgUrl, RavelWebRequest.Method.Get);
                 EditorWebRequests.DownloadAndSave(req, path, true, this);
             }
@@ -229,6 +234,7 @@ public class EnvironmentState : CreatorWindowState
                 $"BUN_{CurEnv.name}", "");
 
             if (!string.IsNullOrEmpty(path)) {
+                RavelEditor.CreatorConfig.SetFilePath(path);
                 RavelWebRequest req = new RavelWebRequest(CurEnv.metadataAssetBundle.assetBundleUrl, RavelWebRequest.Method.Get);
                 EditorWebRequests.DownloadAndSave(req, path, true, this);
             }

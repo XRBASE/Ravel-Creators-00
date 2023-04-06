@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
-using MathBuddy.Strings;
 
 /// <summary>
 /// Parent of the creator window. These gui calls happen for each of the tabs in the window.
@@ -22,10 +21,12 @@ public class CreatorWindow : EditorWindow
 		}
 	}
 
-	private Vector2 _scroll;
+	private bool _bannerEnabled = true;
 	
 	private State _tab = State.Account;
+	//used to detect state switching
 	private State _prevTab = State.None;
+	//contains references to all states
 	private Dictionary<State, CreatorWindowState> _states = new Dictionary<State, CreatorWindowState>();
 	
 	[MenuItem("Ravel/Creator/Account", false, 1)]
@@ -33,9 +34,24 @@ public class CreatorWindow : EditorWindow
 		GetWindow(State.Account);
 	}
 
-	[MenuItem("Ravel/Creator/Environments", false, 1)]
+	[MenuItem("Ravel/Creator/Environments", false)]
 	public static void OpenEnvironment() {
 		GetWindow(State.Environments);
+	}
+	
+	[MenuItem("Ravel/Creator/Images", false)]
+	public static void OpenImages() {
+		GetWindow(State.Images);
+	}
+	
+	[MenuItem("Ravel/Creator/Bundles", false)]
+	public static void OpenBundles() {
+		GetWindow(State.Bundles);
+	}
+	
+	[MenuItem("Ravel/Creator/Configuration", false)]
+	public static void OpenConfig() {
+		GetWindow(State.Configuration);
 	}
 
 	/// <summary>
@@ -53,11 +69,20 @@ public class CreatorWindow : EditorWindow
 		return wnd;
 	}
 
+	private void OnDestroy() {
+		//called when the window is closed
+		Tab.OnStateClosed();
+	}
+
 	/// <summary>
 	/// Switch tab of window.
 	/// </summary>
 	public void SwitchTab(State newTab) {
 		_tab = newTab;
+	}
+
+	public void EnableBanner(bool enabled) {
+		_bannerEnabled = enabled;
 	}
 
 	/// <summary>
@@ -70,6 +95,12 @@ public class CreatorWindow : EditorWindow
 				return new AccountState(this);
 			case State.Environments:
 				return new EnvironmentState(this);
+			case State.Images:
+				return new ImageState(this);
+			case State.Bundles:
+				return new BundleState(this);
+			case State.Configuration:
+				return new ConfigState(this);
 			default:
 				throw new Exception($"Missing creator window state ({tab})");
 		}
@@ -88,32 +119,19 @@ public class CreatorWindow : EditorWindow
 		GUI.enabled = true;
 
 		if (_tab != _prevTab) {
+			if (_prevTab != State.None) {
+				_states[_prevTab].OnStateClosed();				
+			}
 			Tab.OnSwitchState();
 			_prevTab = _tab;
 		}
 		
-		if (RavelEditor.Branding.banner) {
-			RavelEditor.DrawTextureScaledCropGUI(new Rect(0, GUILayoutUtility.GetLastRect().yMax, position.width, RavelBranding.BANNER_HEIGHT), 
+		if (_bannerEnabled && RavelEditor.Branding.banner) {
+			RavelEditor.DrawTextureScaledCropGUI(new Rect(0, GUILayoutUtility.GetLastRect().yMax, position.width, RavelEditor.Branding.bannerHeight), 
 				RavelEditor.Branding.banner, RavelEditor.Branding.bannerPOI);
 		}
 		
-		_scroll = EditorGUILayout.BeginScrollView(_scroll, GUILayout.Width(position.width));
 		Tab.OnGUI(position);
-			
-		EditorGUILayout.EndScrollView();
-	}
-	
-	/// <summary>
-	/// Re-formats the state enum below into more readable names, so they can be shown as the names of the tabs.
-	/// </summary>
-	private string[] GetStateNames() {
-		string[] names = Enum.GetNames(typeof(State));
-		for (int i = 0; i < names.Length; i++) {
-			names[i] = names[i].ToString(StringExtentions.NamingCastType.UpperCamelCase,
-				StringExtentions.NamingCastType.UserFormatting);
-		}
-
-		return names;
 	}
 	
 	/// <summary>
@@ -124,5 +142,8 @@ public class CreatorWindow : EditorWindow
 		None = 0,
 		Account,
 		Environments,
+		Images,
+		Bundles,
+		Configuration,
 	}
 }

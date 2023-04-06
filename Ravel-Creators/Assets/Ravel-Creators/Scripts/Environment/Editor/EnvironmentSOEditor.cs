@@ -23,23 +23,39 @@ public class EnvironmentSOEditor : Editor
     private string _userMail = "";
     private int _selOrg = 0;
     private string[] _orgNames;
+    
+    //cache for network errors in retrieving environment, used for showing the error to users.
+    private string networkError = "";
+    
+    /// <summary>
+    /// Keep status up to date.
+    /// </summary>
+    private void OnEnable() {
+        if (_instance != null) {
+            RefreshEnvironment();
+        }
+    }
 
     public override void OnInspectorGUI() {
         _instance = (EnvironmentSO)target;
-
+        
         //draw banner image
+        if (_instance.environment.preview == null) {
+            _instance.environment.previewSize = ImageSize.None;
+        }
+        
         if (_instance.environment.previewSize >= ImageSize.I512) {
             RavelEditor.DrawTextureScaledCropGUI(
-                new Rect(0, 0, EditorGUIUtility.currentViewWidth, RavelBranding.BANNER_HEIGHT),
+                new Rect(0, 0, EditorGUIUtility.currentViewWidth, RavelEditor.Branding.bannerHeight),
                 _instance.environment.preview.texture, Vector2.one * 0.5f);
 
             if (RavelEditor.Branding.overlayLogo) {
                 RavelEditor.DrawTextureScaledScaleGUI(
-                    new Rect(0, 0, EditorGUIUtility.currentViewWidth, RavelBranding.BANNER_HEIGHT),
+                    new Rect(0, 0, EditorGUIUtility.currentViewWidth, RavelEditor.Branding.bannerHeight),
                     RavelEditor.Branding.overlayLogo, Vector2.one * 0.5f, false);
             }
         }
-        else if (string.IsNullOrEmpty(_instance.networkError) && !_retrievingImg &&
+        else if (string.IsNullOrEmpty(networkError) && !_retrievingImg &&
                  _instance.environment.metadataPreviewImage.TryGetUrl(ImageSize.I512, out string url)) {
             _retrievingImg = true;
             EditorImageService.GetSprite(url, ImageSize.I512, OnPreviewRetrieved);
@@ -54,38 +70,46 @@ public class EnvironmentSOEditor : Editor
         GUITitle();
 
         //environment download error handling
-        if (!string.IsNullOrEmpty(_instance.networkError)) {
-            EditorGUILayout.HelpBox($"Download error :{_instance.networkError}", MessageType.Error);
+        if (!string.IsNullOrEmpty(networkError)) {
+            EditorGUILayout.HelpBox($"Download error :{networkError}", MessageType.Error);
 
             GUILayout.BeginHorizontal();
             if (GUILayout.Button("Refresh environment")) {
-                _instance.RefreshEnvironment();
+                RefreshEnvironment();
             }
 
             if (GUILayout.Button("Delete local file") && EditorUtility.DisplayDialog("Delete environment",
                     "Are you sure you want to delete this environment", "Yes", "No")) {
-                _instance.DeleteLocalAsset();
+                DeleteLocalAsset();
             }
 
             GUILayout.EndHorizontal();
             return;
         }
+        
+        EditorGUILayout.BeginHorizontal();
+        if (string.IsNullOrEmpty(_instance.bundleName)) {
+            _instance.bundleName = _instance.environment.name;
+        }
+        GUILayout.Label("Assetbundle name:", GUILayout.Width(RavelEditorStying.GUI_SPACING_DECA));
+        _instance.bundleName = GUILayout.TextField(_instance.bundleName);
+        EditorGUILayout.EndHorizontal();
 
         DrawDefaultInspector();
         
         if (RavelEditor.DevUser && GUILayout.Button("copy UUID")) {
-            GUILayout.Space(RavelBranding.SPACING_SMALL);
+            GUILayout.Space(RavelEditorStying.GUI_SPACING_MICRO);
             GUIUtility.systemCopyBuffer = _instance.environment.environmentUuid;
             Debug.Log("UUID copied!");
         }
         
-        GUILayout.Space(RavelBranding.SPACING_SMALL);
+        GUILayout.Space(RavelEditorStying.GUI_SPACING_MICRO);
 
         //used to determine what image to download.
         _size = (ImageSize)EditorGUILayout.EnumPopup("image url size:", _size);
         GUIDataUrls();
 
-        GUILayout.Space(RavelBranding.SPACING_SMALL);
+        GUILayout.Space(RavelEditorStying.GUI_SPACING_MICRO);
 
         if (!(_instance.environment.published || _instance.environment.submissionInProgress)) {
             //upload and publish
@@ -97,13 +121,13 @@ public class EnvironmentSOEditor : Editor
                 GUILayout.Label("Upload only available for unpublished environments.");
 
                 if (!_instance.environment.isPublic) {
-                    GUILayout.Space(RavelBranding.SPACING_MED);
+                    GUILayout.Space(RavelEditorStying.GUI_SPACING_MILLI);
                     _accessOpen = EditorGUILayout.Foldout(_accessOpen, "Manage access");
                     if (_accessOpen) {
-                        RavelEditor.GUIBeginIndent(RavelBranding.INDENT_SMALL);
+                        RavelEditor.GUIBeginIndent(RavelEditorStying.GUI_SPACING_MILLI);
 
                         GUIChangeAccess();
-                        GUILayout.Space(RavelBranding.SPACING_SMALL);
+                        GUILayout.Space(RavelEditorStying.GUI_SPACING_MICRO);
 
                         GUIDrawAccess();
 
@@ -130,11 +154,11 @@ public class EnvironmentSOEditor : Editor
     private void GUITitle() {
         EditorGUILayout.BeginHorizontal();
         int fontSize = GUI.skin.label.fontSize;
-        GUI.skin.label.fontSize = RavelBranding.FONT_TITLE;
+        GUI.skin.label.fontSize = RavelBranding.titleFont;
 
         GUILayout.Label(_instance.environment.name);
-        if (GUILayout.Button("Refresh", GUILayout.Width(RavelBranding.HORI_BTN_SMALL))) {
-            _instance.RefreshEnvironment();
+        if (GUILayout.Button("Refresh", GUILayout.Width(RavelEditorStying.GUI_SPACING))) {
+            RefreshEnvironment();
         }
 
         GUI.skin.label.fontSize = fontSize;
@@ -164,18 +188,19 @@ public class EnvironmentSOEditor : Editor
         EditorGUILayout.BeginHorizontal();
         GUI.enabled = false;
         if (empty) {
-            GUILayout.TextField(url, GUILayout.Width(EditorGUIUtility.currentViewWidth - RavelBranding.HORI_BTN_SMALL * 2f));
+            GUILayout.TextField(url, GUILayout.Width(EditorGUIUtility.currentViewWidth - RavelEditorStying.GUI_SPACING * 2f));
         }
         else {
-            GUILayout.TextField($"{label}: \t\t{url}", GUILayout.Width(EditorGUIUtility.currentViewWidth - RavelBranding.HORI_BTN_SMALL * 2f));
+            GUILayout.TextField($"{label}: \t\t{url}", GUILayout.Width(EditorGUIUtility.currentViewWidth - RavelEditorStying.GUI_SPACING * 2f));
         }
         
         GUI.enabled = !empty && enabled;
 
         if (GUILayout.Button("Save")) {
-            string path = EditorUtility.SaveFilePanel("Save", Application.dataPath,fileName, extension);
+            string path = EditorUtility.SaveFilePanel("Save", RavelEditor.CreatorConfig.GetFilePath(),fileName, extension);
 
             if (!string.IsNullOrEmpty(path)) {
+                RavelEditor.CreatorConfig.SetFilePath(path);
                 RavelWebRequest req = new RavelWebRequest(url, RavelWebRequest.Method.Get);
                 EditorWebRequests.DownloadAndSave(req, path, false, _instance);
             }
@@ -195,9 +220,10 @@ public class EnvironmentSOEditor : Editor
     /// </summary>
     private void GUIServerFunctions() {
         if (GUILayout.Button("Upload preview")) {
-            string path = EditorUtility.OpenFilePanel("Upload new preview", Application.dataPath, "jpg,jpeg,png");
+            string path = EditorUtility.OpenFilePanel("Upload new preview", RavelEditor.CreatorConfig.GetFilePath(), RavelEditorStying.IMAGE_EXTENSIONS);
 
             if (!string.IsNullOrEmpty(path)) {
+                RavelEditor.CreatorConfig.SetFilePath(path);
                 RavelWebRequest req = CreatorRequest.UploadPreview(_instance.environment.environmentUuid, path);
                 EditorWebRequests.SendWebRequest(req, OnImageUploaded, this);
                 _uploadingFile = true;
@@ -205,9 +231,10 @@ public class EnvironmentSOEditor : Editor
         }
 
         if (GUILayout.Button("Upload bundle")) {
-            string path = EditorUtility.OpenFilePanel("Upload new asset bundle", Application.dataPath, "");
+            string path = EditorUtility.OpenFilePanel("Upload new asset bundle", RavelEditor.CreatorConfig.GetFilePath(), "");
 
             if (!string.IsNullOrEmpty(path)) {
+                RavelEditor.CreatorConfig.SetFilePath(path);
                 RavelWebRequest req = CreatorRequest.UploadBundle(_instance.environment.environmentUuid, path);
                 EditorWebRequests.SendWebRequest(req, OnBundleUploaded, this);
                 _uploadingFile = true;
@@ -246,10 +273,10 @@ public class EnvironmentSOEditor : Editor
         if (GUILayout.Button("Add user") && !string.IsNullOrEmpty(_userMail)) {
             RavelWebRequest req =
                 EnvironmentAccessRequest.AddAccessUser(_instance.environment.environmentUuid, _userMail);
-            EditorWebRequests.SendWebRequest(req, _instance.OnAccessUpdateReceived, this);
+            EditorWebRequests.SendWebRequest(req, OnAccessUpdateReceived, this);
         }
 
-        GUILayout.Space(RavelBranding.SPACING_SMALL);
+        GUILayout.Space(RavelEditorStying.GUI_SPACING_MICRO);
 
         if (_orgNames == null) {
             RavelEditor.GetUserOrganisations(OnOrganisationsRetrieved, this);
@@ -261,7 +288,7 @@ public class EnvironmentSOEditor : Editor
                 RavelWebRequest req = EnvironmentAccessRequest.AddAccessOrganisation(
                     _instance.environment.environmentUuid,
                     RavelEditor.User.Organisations[_selOrg].organizationId);
-                EditorWebRequests.SendWebRequest(req, _instance.OnAccessUpdateReceived, this);
+                EditorWebRequests.SendWebRequest(req, OnAccessUpdateReceived, this);
             }
         }
     }
@@ -301,11 +328,11 @@ public class EnvironmentSOEditor : Editor
         GUILayout.TextField(name);
         GUI.enabled = pEnabled;
 
-        if (GUILayout.Button("Remove", GUILayout.Width(RavelBranding.HORI_BTN_SMALL))) {
+        if (GUILayout.Button("Remove", GUILayout.Width(RavelEditorStying.GUI_SPACING))) {
             RavelWebRequest req = (isUser)
                 ? EnvironmentAccessRequest.DeleteAccessUser(_instance.environment.environmentUuid, id)
                 : EnvironmentAccessRequest.DeleteAccessOrganisation(_instance.environment.environmentUuid, id);
-            EditorWebRequests.SendWebRequest(req, _instance.OnAccessUpdateReceived, this);
+            EditorWebRequests.SendWebRequest(req, OnAccessUpdateReceived, this);
         }
 
         GUILayout.EndHorizontal();
@@ -328,6 +355,68 @@ public class EnvironmentSOEditor : Editor
 #endregion
 
     /// <summary>
+    /// Deletes the scriptable object reference.
+    /// </summary>
+    public void DeleteLocalAsset() {
+        AssetDatabase.DeleteAsset(AssetDatabase.GetAssetPath(this));
+        AssetDatabase.Refresh();
+    }
+    
+    /// <summary>
+    /// Make call to backend to refresh this environment.
+    /// </summary>
+    public void RefreshEnvironment() {
+        RavelWebRequest req = CreatorRequest.GetCreatorEnvironment(_instance.environment.environmentUuid);
+        EditorWebRequests.SendWebRequest(req, OnEnvironmentUpdateReceived, this);
+    }
+    
+    /// <summary>
+    /// Callback for when new environment data has been recieved from the server. 
+    /// </summary>
+    /// <param name="res">Server response data.</param>
+    private void OnEnvironmentUpdateReceived(RavelWebResponse res) {
+        if (res.Success) {
+            res.DataString = EnvironmentExtensions.RenameStringFromBackend(res.DataString);
+
+            if (res.TryGetData(out Environment env)) {
+                _instance.environment = env;
+            }
+
+            RavelWebRequest req = EnvironmentAccessRequest.GetEnvironmentAccessData(_instance.environment.environmentUuid);
+            EditorWebRequests.GetDataRequest<Environment>(req, UpdateEnvironmentAccess, this);
+        }
+        else {
+            networkError = res.Error.FullMessage;
+            Debug.LogError($"Error refreshing environment {_instance.environment.name}");
+        }
+    }
+    
+    /// <summary>
+    /// Callback from the server when updating the access to a private environment.
+    /// </summary>
+    /// <param name="res">WebResponse data</param>
+    public void OnAccessUpdateReceived(RavelWebResponse res) {
+        if (res.Success) {
+            RavelWebRequest req = EnvironmentAccessRequest.GetEnvironmentAccessData(_instance.environment.environmentUuid);
+            EditorWebRequests.GetDataRequest<Environment>(req, UpdateEnvironmentAccess, this);
+        }
+    }
+    
+    /// <summary>
+    /// Update user or organisation access to this environment.
+    /// </summary>
+    /// <param name="toCopy">Environment containing the updated acces</param>
+    /// <param name="success"></param>
+    private void UpdateEnvironmentAccess(Environment toCopy, bool success) {
+        //error in webcall
+        if (!success)
+            return;
+        
+        _instance.environment.userList = toCopy.userList;
+        _instance.environment.organizations = toCopy.organizations;
+    }
+    
+    /// <summary>
     /// Called by image retrieval service, updates the image of the connected environment.
     /// </summary>
     private void OnPreviewRetrieved(Sprite spr, ImageSize size) {
@@ -342,7 +431,7 @@ public class EnvironmentSOEditor : Editor
         if (res.Success) {
             EditorUtility.DisplayDialog("Delete environment",
                 "Environment was deleted on server, deleting reference in project as well.", "ok");
-            _instance.DeleteLocalAsset();
+            DeleteLocalAsset();
         }
         else {
             Debug.LogError($"There was an error publishing this environment: ({res.Error.FullMessage})!");
@@ -355,7 +444,7 @@ public class EnvironmentSOEditor : Editor
     private void OnRemoteEnvironmentPublished(RavelWebResponse res) {
         if (res.Success) {
             EditorUtility.DisplayDialog("Publish environment", "Environment was published successfully!", "ok");
-            _instance.RefreshEnvironment();
+            RefreshEnvironment();
         }
         else {
             Debug.LogError($"There was an error publishing this environment: ({res.Error.FullMessage})!");
@@ -371,7 +460,7 @@ public class EnvironmentSOEditor : Editor
         }
 
         _uploadingFile = false;
-        _instance.RefreshEnvironment();
+        RefreshEnvironment();
     }
 
     /// <summary>
@@ -383,6 +472,6 @@ public class EnvironmentSOEditor : Editor
         }
 
         _uploadingFile = false;
-        _instance.RefreshEnvironment();
+        RefreshEnvironment();
     }
 }

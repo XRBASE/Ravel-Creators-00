@@ -12,6 +12,10 @@ namespace Base.Ravel.Networking {
     /// Base class for overriding and creating web requests.
     /// </summary>
     public class RavelWebRequest {
+        public string Url {
+            get { return _url; }
+        }
+
         public UnityWebRequest Request {
             get { return _request; }
         }

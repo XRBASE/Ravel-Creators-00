@@ -15,7 +15,7 @@ public class Environment
     public string environmentUuid;
     
     [ReadOnly]
-    public new string name;
+    public string name;
     [ReadOnly] 
     public string shortSummary;
     [ReadOnly]

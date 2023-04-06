@@ -10,11 +10,53 @@ using UnityEngine;
 /// </summary>
 public static class RavelEditor
 {
+    /// <summary>
+    /// Project configuration.
+    /// </summary>
+    public static CreatorConfig CreatorConfig {
+        get {
+            if (_creatorConfig == null) {
+                _creatorConfig = CreatorConfig.LoadCurrent();
+            }
+
+            return _creatorConfig;
+        }
+        set { _creatorConfig = value; }
+    }
+    private static CreatorConfig _creatorConfig;
+    
+    /// <summary>
+    /// Per-bundle configurations, mostly version numbers.
+    /// </summary>
+    public static BundleConfig BundleConfig {
+        get {
+            if (_bundleConfig == null) {
+                _bundleConfig = BundleConfig.LoadCurrent();
+            }
+
+            return _bundleConfig;
+        }
+        set { _bundleConfig = value; }
+    }
+    private static BundleConfig _bundleConfig;
+
+    /// <summary>
+    /// Checks if the user is set.
+    /// </summary>
     public static bool LoggedIn {
         get { return User != null; }
     }
+    
+    /// <summary>
+    /// Currently logged-in user.
+    /// </summary>
     public static  User User { get; set; }
+    
+    /// <summary>
+    /// Does the current user have dev:access? enables UUID copy buttons.
+    /// </summary>
     public static bool DevUser { get; private set; }
+    
     
     private static bool _retrievingOrganisations;
     private static Action<Organisation[], bool> _onOrgsRetrieved;
@@ -35,12 +77,21 @@ public static class RavelEditor
         }
     }
     private static RavelBranding _branding;
+    
+    [MenuItem("Ravel/Clear editor cache", false)]
+    public static void ClearCache() {
+        if (EditorUtility.DisplayDialog("Clear cache",
+                "This will delete all configuration data and version numbering, are you sure?", "Yes", "No")) {
+            EditorCache.Clear();
+        }
+    }
 
     /// <summary>
     /// Sets the user (creator) after login.
     /// </summary>
     public static void OnLogin(User user) {
         User = user;
+        RavelToolbar.RefreshConfig();
     }
 
     /// <summary>
@@ -58,11 +109,12 @@ public static class RavelEditor
     /// <summary>
     /// Logs out the user.
     /// </summary>
-    public static void OnLogout() {
+    public static void OnLogout(bool log) {
         User = null;
         PlayerCache.DeleteKey(LoginRequest.SYSTEMS_TOKEN_KEY);
         
-        Debug.LogError("Not logged in, please open the account window and log in (Topbar, Ravel, Account).");
+        if (log)
+            Debug.LogWarning("Not logged in, please open the account window and log in (Topbar, Ravel, Account).");
     }
     
     /// <summary>
@@ -169,7 +221,19 @@ public static class RavelEditor
     /// <param name="tex">Texture to draw.</param>
     /// <param name="poi">Point of interest, zooms in on this position.</param>
     /// <param name="addSpace">Adds a guilayout space with the height of the image, to ensure layout items are placed below the image.</param>
-    public static void DrawTextureScaledCropGUI(Rect mask, Texture2D tex, Vector2 poi, bool addSpace = true) {
+    /// <returns>Texture coords that show how the image was scaled</returns>
+    public static Rect DrawTextureScaledCropGUI(Rect mask, Texture2D tex, Vector2 poi, bool addSpace = true) {
+        Rect coords = GetScaleCropCoords(mask, tex, poi);
+		
+        GUI.DrawTextureWithTexCoords(mask, tex, coords);
+        if (addSpace) {
+            EditorGUILayout.Space(mask.height);
+        }
+
+        return coords;
+    }
+
+    public static Rect GetScaleCropCoords(Rect mask, Texture2D tex, Vector2 poi) {
         Vector2 res = new Vector2(tex.width, tex.height);
         Rect coords = new Rect(0,0,1,1);
 
@@ -179,7 +243,10 @@ public static class RavelEditor
 
         float m = mask.width / mask.height;
         float t = (float)tex.width / tex.height;
-		
+
+        if (Mathf.Abs(m - t) <= MathBuddy.FloatingPoints.LABDA) {
+            return coords;
+        }
         if (m > t) {
             //match x, scale y
             //find res y, when x has mask res
@@ -198,14 +265,11 @@ public static class RavelEditor
 			
             //find decimal of image shown
             dec = mask.width / px;
-            pos = Mathf.Max(0.5f - dec / 2f, poi.x - dec / 2f);
+            pos = Mathf.Clamp(poi.x - dec / 2f, 0, 1f - dec);
             coords = new Rect(pos, 0, dec, 1);
         }
-		
-        GUI.DrawTextureWithTexCoords(mask, tex, coords);
-        if (addSpace) {
-            EditorGUILayout.Space(mask.height);
-        }
+
+        return coords;
     }
     
     /// <summary>
@@ -247,6 +311,11 @@ public static class RavelEditor
         }
     }
 
+    /// <summary>
+    /// Gets an array of names for the enum, removes values outside of start and length, if those values are set, otherwise returns all names.
+    /// </summary>
+    /// <param name="start">start index.</param>
+    /// <param name="length">amount of names to return (0 returns all)</param>
     public static string[] GetEnumNames<T>(int start = 0, int length = 0) where T : Enum {
         T[] values = (T[]) Enum.GetValues(typeof(T));
         if (values.Length == 0)
@@ -262,6 +331,21 @@ public static class RavelEditor
         }
 
         return names;
+    }
+
+    /// <summary>
+    /// Searches the project for files (outside of the scene) of this type, and returns them.
+    /// </summary>
+    /// <param name="filter">additional filtering, apart from the type.</param>
+    public static T[] GetAllAssetsOfType<T>(string filter = "") where T : UnityEngine.Object {
+        string[] paths = AssetDatabase.FindAssets($"t:{typeof(T)} {filter}");
+        T[] data = new T[paths.Length];
+        for (int i = 0; i < paths.Length; i++) {
+            paths[i] = AssetDatabase.GUIDToAssetPath(paths[i]);
+            data[i] = (T) AssetDatabase.LoadAssetAtPath(paths[i], typeof(T));
+        }
+
+        return data;
     }
 }
 

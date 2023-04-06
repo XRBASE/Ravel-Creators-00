@@ -1,5 +1,6 @@
 using System;
 using System.IO;
+using Base.Ravel.Config;
 using Base.Ravel.Networking;
 using Newtonsoft.Json;
 using UnityEngine;
@@ -14,8 +15,7 @@ public class CreatorRequest : TokenWebRequest
         _url += "environments/" + postfix;
     }
 
-    public CreatorRequest(Method method, string postfix, string data, string version) : base(method, "api/",
-        version) {
+    public CreatorRequest(Method method, string postfix, string data, string version) : base(method, "api/", version) {
         _url += "environments/" + postfix;
         _data = data;
     }
@@ -93,5 +93,13 @@ public class CreatorRequest : TokenWebRequest
     /// </summary>
     public static CreatorRequest GetCreatorEnvironment(string envUuid) {
         return new CreatorRequest(Method.Get, $"single/{envUuid}");
+    }
+
+    public static string GetPreviewUrl(Environment env) {
+        string url = AppConfig.Networking.DataServiceBaseUrl;
+        url = url.Replace("systems", "world");
+        url += $"creators/environments/preview/{env.environmentUuid}";
+
+        return url;
     }
 }
