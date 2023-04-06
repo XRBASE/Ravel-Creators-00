@@ -96,7 +96,7 @@ public class RavelToolbar
         if (GUILayout.Button(new GUIContent("Build", "Build asset bundle"), RavelEditorStying.txtBtnSmall)) {
             bool cleanup = RavelEditor.CreatorConfig.autoClean;
 
-            BundleBuilder.BuildOpenScene(bundleName, false, cleanup);
+            BundleBuilder.BuildOpenScene(bundleName, false, false);
         }
         GUI.enabled = true;
 

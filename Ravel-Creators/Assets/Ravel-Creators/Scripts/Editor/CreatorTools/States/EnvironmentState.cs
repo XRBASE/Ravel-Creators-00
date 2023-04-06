@@ -72,6 +72,9 @@ public class EnvironmentState : CreatorWindowState
                 GUISaveSelectEnv();
                 GUISaveEnvImage();
                 GUISaveEnvBundle();
+                if (_location is Location.Project or Location.Unpublished) {
+                    GUIDeleteEnvironment();
+                }
                 GUILayout.EndHorizontal();
                 
                 GUILayout.Space(RavelEditorStying.GUI_SPACING_MILLI);
@@ -113,15 +116,7 @@ public class EnvironmentState : CreatorWindowState
         EditorGUI.BeginChangeCheck();
         _location = (Location) GUILayout.SelectionGrid((int)_location - 1, GetLocationNames(), (int)Location.Length - 1) + 1;
         if (EditorGUI.EndChangeCheck() || forceRefresh) {
-            switch (_location) {
-                case Location.Local:
-                    FetchLocalEnvironments();
-                    break;
-                case Location.Remote:
-                case Location.Published:
-                    FetchRemoteEnvironments(_location == Location.Published);
-                    break;
-            }
+            RefreshEnvironments();
         }
         
         if (!foldout) {
@@ -170,7 +165,7 @@ public class EnvironmentState : CreatorWindowState
     /// </summary>
     private void GUISaveSelectEnv() {
         //Scriptable object tool
-        if (_location == Location.Local) {
+        if (_location == Location.Project) {
             if (GUILayout.Button("Select asset")) {
                 if (TryGetLocalEnvironmentSO(CurEnv, out EnvironmentSO so)) {
                     Selection.activeObject = so;
@@ -203,6 +198,7 @@ public class EnvironmentState : CreatorWindowState
                         
                         AssetDatabase.CreateAsset(so, path);
                         AssetDatabase.Refresh();
+                        Selection.activeObject = so;
                     }
                 }
             }
@@ -236,12 +232,48 @@ public class EnvironmentState : CreatorWindowState
             if (!string.IsNullOrEmpty(path)) {
                 RavelEditor.CreatorConfig.SetFilePath(path);
                 RavelWebRequest req = new RavelWebRequest(CurEnv.metadataAssetBundle.assetBundleUrl, RavelWebRequest.Method.Get);
-                EditorWebRequests.DownloadAndSave(req, path, true, this);
+                EditorWebRequests.DownloadAndSave(req, path, false, this);
             }
         }
     }
 
+    private void GUIDeleteEnvironment() {
+        Color prevCol = GUI.backgroundColor;
+        GUI.backgroundColor = Color.red;
+        if (GUILayout.Button("Delete bundle") && EditorUtility.DisplayDialog( "Delete environment","Are you sure you want to permanently delete this environment?", "Yes", "No")) {
+            if (TryGetLocalEnvironmentSO(CurEnv, out EnvironmentSO envObj)) {
+                AssetDatabase.DeleteAsset(AssetDatabase.GetAssetPath(envObj));
+                AssetDatabase.Refresh();
+            }
+            
+            RavelWebRequest req = CreatorRequest.DeleteEnvironment(CurEnv);
+            EditorWebRequests.SendWebRequest(req, OnEnvironmentDeletedResponse, this);
+        }
+        GUI.backgroundColor = prevCol;
+    }
+
 #endregion
+
+    private void OnEnvironmentDeletedResponse(RavelWebResponse res) {
+        if (res.Success) {
+            RefreshEnvironments();
+        }
+        else {
+            Debug.LogError($"Error refreshing environments: {res.Error.FullMessage}");
+        }
+    }
+
+    private void RefreshEnvironments() {
+        switch (_location) {
+            case Location.Project:
+                FetchLocalEnvironments();
+                break;
+            case Location.Unpublished:
+            case Location.Published:
+                FetchRemoteEnvironments(_location == Location.Published);
+                break;
+        }
+    }
     
     /// <summary>
     /// Fetches all local environments, based on the scriptable objects in the project.
@@ -361,8 +393,8 @@ public class EnvironmentState : CreatorWindowState
     private enum Location
     {
         None = 0,
-        Local,
-        Remote,
+        Project,
+        Unpublished,
         Published,
         Length
     }

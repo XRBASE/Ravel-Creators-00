@@ -78,10 +78,13 @@ public class EnvironmentSOEditor : Editor
                 RefreshEnvironment();
             }
 
+            Color prevCol = GUI.backgroundColor;
+            GUI.backgroundColor = Color.red;
             if (GUILayout.Button("Delete local file") && EditorUtility.DisplayDialog("Delete environment",
                     "Are you sure you want to delete this environment", "Yes", "No")) {
                 DeleteLocalAsset();
             }
+            GUI.backgroundColor = prevCol;
 
             GUILayout.EndHorizontal();
             return;
@@ -253,12 +256,15 @@ public class EnvironmentSOEditor : Editor
     /// Delete file button with dialog.
     /// </summary>
     private void GUIDelete() {
+        Color prevCol = GUI.backgroundColor;
+        GUI.backgroundColor = Color.red;
         if (GUILayout.Button("Delete environment") && EditorUtility.DisplayDialog("Delete environment",
                 "Are you sure you want to delete this environment?", "Delete", "Keep")) {
 
             RavelWebRequest req = CreatorRequest.DeleteEnvironment(_instance.environment);
             EditorWebRequests.SendWebRequest(req, OnRemoteEnvironmentDeleted, this);
         }
+        GUI.backgroundColor = prevCol;
     }
 
     /// <summary>

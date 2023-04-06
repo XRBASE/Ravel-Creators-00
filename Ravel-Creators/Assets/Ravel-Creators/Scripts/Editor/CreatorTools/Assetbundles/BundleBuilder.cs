@@ -40,7 +40,7 @@ public static class BundleBuilder
 		//check for multiple scenes (if so, only the active one will be build).
 		if (EditorSceneManager.loadedSceneCount > 1) {
 			if (EditorUtility.DisplayDialog("Build open scene",
-				    $"There are mutliple scene's open, only the active scene ({s.name}), will actually be built into the bundle",
+				    $"There are multiple scene's open, only the active scene ({s.name}), will actually be built into the bundle",
 				    "Build", "Cancel")) {
 				//unload all other scene's
 				EditorSceneManager.OpenScene(s.path, OpenSceneMode.Single);
@@ -84,11 +84,17 @@ public static class BundleBuilder
 			EditorSceneManager.SaveModifiedScenesIfUserWantsTo(new[] { s });
 		}
 
+		string buildMsg;
+		if (preview) {
+			buildMsg = $"Building scene {s.name} and uploading it to environment " +
+			           $"{config.environmentSO.environment.name}, this will override the previous assetbundle. Are you sure?";
+		}
+		else {
+			buildMsg = $"Building scene {s.name} in folder {RavelEditor.CreatorConfig.bundlePath}, are you sure?";
+		}
+		
 		//Last chance for user to cancel. This dialog shows what scene is assigned into what environment.
-		if (!EditorUtility.DisplayDialog("Build confirmation",
-			    $"Building scene {s.name} and uploading it to environment " +
-			    $"{config.environmentSO.environment.name}, this will override the previous assetbundle. Are you sure?",
-			    "Yes", "Cancel build")) {
+		if (!EditorUtility.DisplayDialog("Build confirmation", buildMsg, "Yes", "Cancel build")) {
 			return;
 		}
 		
@@ -152,6 +158,10 @@ public static class BundleBuilder
 		//always delete the streaming assets bundle
 		if (File.Exists(path + "/StreamingAssets")) {
 			DeleteBundle(path + "/StreamingAssets");
+		}
+
+		if (!autoCleanFiles) {
+			AssetDatabase.Refresh();
 		}
 	}
 
