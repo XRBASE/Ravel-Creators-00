@@ -88,7 +88,12 @@ public class RavelToolbar
         GUI.enabled = canBuild;
         
         //preview environment in ravel web
-        if (GUILayout.Button("Preview", RavelEditorStying.txtBtnSmall)) {
+        if (GUILayout.Button(new GUIContent("Preview", "Build and preview asset bundle"), RavelEditorStying.txtBtnSmall)) {
+            bool cleanup = RavelEditor.CreatorConfig.autoClean;
+
+            BundleBuilder.BuildAndPreviewOpenScene(bundleName, cleanup);
+        }
+        if (GUILayout.Button(new GUIContent("Build", "Build asset bundle"), RavelEditorStying.txtBtnSmall)) {
             bool cleanup = RavelEditor.CreatorConfig.autoClean;
 
             BundleBuilder.BuildAndPreviewOpenScene(bundleName, cleanup);
@@ -96,7 +101,7 @@ public class RavelToolbar
         GUI.enabled = true;
 
         //Refreshes the configuration file
-        if (GUILayout.Button("Refresh", RavelEditorStying.txtBtnSmall)) {
+        if (GUILayout.Button(new GUIContent("Refresh", "Refresh configuration"), RavelEditorStying.txtBtnSmall)) {
             RefreshConfig();
         }
 
