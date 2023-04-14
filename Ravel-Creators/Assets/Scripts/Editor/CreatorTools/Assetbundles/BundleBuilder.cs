@@ -80,21 +80,25 @@ public static class BundleBuilder
 		}
 		
 		//If scene contains changes, ask the creator if she wants to save them.
-		if (s.isDirty) {
-			EditorSceneManager.SaveModifiedScenesIfUserWantsTo(new[] { s });
+		if (s.isDirty && !EditorUtility.DisplayDialog("Unsaved changes in scene",
+				    "The scene contains unsaved changed, but the build progress requires saving. If you don't want to save the scene, the preview will be cancelled",
+				    "Save", "Don't save")) {
+				return;
 		}
+		IDProvider.SetSceneIDs();
+		EditorSceneManager.SaveScene(s);
 
-		string buildMsg;
+		string dialogMsg;
 		if (preview) {
-			buildMsg = $"Building scene {s.name} and uploading it to environment " +
+			dialogMsg = $"Building scene {s.name} and uploading it to environment " +
 			           $"{config.environmentSO.environment.name}, this will override the previous assetbundle. Are you sure?";
 		}
 		else {
-			buildMsg = $"Building scene {s.name} in folder {RavelEditor.CreatorConfig.bundlePath}, are you sure?";
+			dialogMsg = $"Building scene {s.name} in folder {RavelEditor.CreatorConfig.bundlePath}, are you sure?";
 		}
 		
 		//Last chance for user to cancel. This dialog shows what scene is assigned into what environment.
-		if (!EditorUtility.DisplayDialog("Build confirmation", buildMsg, "Yes", "Cancel build")) {
+		if (!EditorUtility.DisplayDialog("Build confirmation", dialogMsg, "Yes", "Cancel build")) {
 			return;
 		}
 		
