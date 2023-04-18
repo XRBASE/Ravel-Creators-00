@@ -1,6 +1,9 @@
 using System;
 using UnityEngine;
 using UnityEngine.Events;
+#if UNITY_EDITOR
+using UnityEditor;
+#endif
 
 namespace Base.Ravel.Creator.Components
 {
@@ -19,11 +22,11 @@ namespace Base.Ravel.Creator.Components
 			set { _data.id = value; }
 		}
 		
-		protected override ComponentData Data {
+		public override ComponentData Data {
 			get { return _data; }
 		}
 		
-		[SerializeField] private InteractableData _data;
+		[SerializeField, HideInInspector] private InteractableData _data;
 
 		protected override void BuildComponents() { }
 		protected override void DisposeData() { }
@@ -31,6 +34,103 @@ namespace Base.Ravel.Creator.Components
 		public void Activate() { }
 		public void EnableSwitch() { }
 		public void DisableSwitch() { }
+
+#if UNITY_EDITOR
+		[CustomEditor(typeof(InteractableComponent))]
+		private class InteractableComponentEditor : Editor
+		{
+			private InteractableComponent _instance;
+			private SerializedProperty _data;
+			private SerializedProperty _evtProperty;
+
+			private void OnEnable() {
+				_instance = (InteractableComponent)target;
+				_data = serializedObject.FindProperty("_data");
+			}
+
+			public override void OnInspectorGUI() {
+				DrawDefaultInspector();
+				_instance._data.type = (InteractableData.Type)EditorGUILayout.EnumPopup("Interaction type", _instance._data.type);
+				
+				_instance._data.networked = EditorGUILayout.Toggle("Networked interaction", _instance._data.networked);
+				
+				EditorGUILayout.Space();
+				_instance._data.delayed = EditorGUILayout.Toggle("Delayed response", _instance._data.delayed);
+				if (_instance._data.delayed) {
+					_instance._data.delayTime = EditorGUILayout.FloatField("Duration", _instance._data.delayTime);
+				}
+				
+				EditorGUILayout.Space();
+				_instance._data.hasHover = EditorGUILayout.Toggle("Has hover interactions", _instance._data.hasHover);
+				if (_instance._data.hasHover) {
+					_evtProperty = _data.FindPropertyRelative("onHoverEnter");
+					EditorGUILayout.PropertyField(_evtProperty);
+					serializedObject.ApplyModifiedProperties();
+					
+					_evtProperty = _data.FindPropertyRelative("onHoverExit");
+					EditorGUILayout.PropertyField(_evtProperty);
+					serializedObject.ApplyModifiedProperties();
+				}
+
+				switch (_instance._data.type) {
+					case InteractableData.Type.Click:
+						_evtProperty = _data.FindPropertyRelative("onClick");
+						EditorGUILayout.PropertyField(_evtProperty);
+						serializedObject.ApplyModifiedProperties();
+						break;
+					case InteractableData.Type.Collider:
+						_evtProperty = _data.FindPropertyRelative("onEnter");
+						EditorGUILayout.PropertyField(_evtProperty);
+						serializedObject.ApplyModifiedProperties();
+						
+						_evtProperty = _data.FindPropertyRelative("onExit");
+						EditorGUILayout.PropertyField(_evtProperty);
+						serializedObject.ApplyModifiedProperties();
+						break;
+					case InteractableData.Type.Switch:
+						_evtProperty = _data.FindPropertyRelative("onSwitchOn");
+						EditorGUILayout.PropertyField(_evtProperty);
+						serializedObject.ApplyModifiedProperties();
+						
+						_evtProperty = _data.FindPropertyRelative("onSwitchOff");
+						EditorGUILayout.PropertyField(_evtProperty);
+						serializedObject.ApplyModifiedProperties();
+						break;
+				}
+
+				ClearCallbacks();
+			}
+
+			private void ClearCallbacks() {
+				if (!_instance._data.hasHover) {
+					_instance._data.onHoverEnter = null;
+					_instance._data.onHoverExit = null;
+				}
+				
+				switch (_instance._data.type) {
+					case InteractableData.Type.Click:
+						_instance._data.onEnter = null;
+						_instance._data.onExit = null;
+						
+						_instance._data.onSwitchOn = null;
+						_instance._data.onSwitchOff = null;
+						break;
+					case InteractableData.Type.Collider:
+						_instance._data.onClick = null;
+						
+						_instance._data.onSwitchOn = null;
+						_instance._data.onSwitchOff = null;
+						break;
+					case InteractableData.Type.Switch:
+						_instance._data.onClick = null;
+						
+						_instance._data.onEnter = null;
+						_instance._data.onExit = null;
+						break;
+				}
+			}
+		}
+#endif
 	}
 	
 	[Serializable]

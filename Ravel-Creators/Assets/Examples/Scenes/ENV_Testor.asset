@@ -1,0 +1,35 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 06960f5091c0ff34497c172458b206ec, type: 3}
+  m_Name: ENV_Testor
+  m_EditorClassIdentifier: 
+  environment:
+    environmentUuid: 78638c73-8832-47a6-b49d-01ea29d6de9b
+    name: Testor
+    shortSummary: '-'
+    longSummary: '-'
+    metadataPreviewImage:
+      url256: https://cdn.ravel.world/environments/dev/qPjQNn/nwbApg/image/256/34197c6e-8f80-445b-9835-3e8421343ae9
+      url512: https://cdn.ravel.world/environments/dev/qPjQNn/nwbApg/image/512/4ef73531-544b-45ce-8c2b-48803c1fcf07
+      url1024: https://cdn.ravel.world/environments/dev/qPjQNn/nwbApg/image/1024/86b5eb95-178f-4be7-b800-00a9e3c19ccc
+      url1280: https://cdn.ravel.world/environments/dev/qPjQNn/nwbApg/image/1280/0ddfb3ad-98fb-451e-b045-68b05931ebea
+      url1920: https://cdn.ravel.world/environments/dev/qPjQNn/nwbApg/image/1920/eba36b47-d5b2-4028-9419-c9f6b1eadfa0
+    metadataAssetBundle:
+      assetBundleUrl: https://cdn.ravel.world/environments/dev/qPjQNn/nwbApg/asset-bundles/c2e2935b-035a-49f8-8875-8abb3571a90f
+    isPublic: 0
+    published: 0
+    submissionInProgress: 0
+    userList: []
+    organizations: []
+    previewSize: 0
+    preview: {fileID: 0}
+  bundleName: 

@@ -1,6 +1,5 @@
 using System;
 using UnityEngine;
-using Object = UnityEngine.Object;
 
 namespace Base.Ravel.Creator.Components
 {
@@ -12,7 +11,7 @@ namespace Base.Ravel.Creator.Components
     /// </summary>
     public abstract class ComponentBase : MonoBehaviour
     {
-        protected abstract ComponentData Data { get; }
+        public abstract ComponentData Data { get; }
 
         protected void Awake() {
             BuildComponents();
@@ -27,6 +26,17 @@ namespace Base.Ravel.Creator.Components
         /// Should be called after building the components has finished, to clear up the used memory
         /// </summary>
         protected abstract void DisposeData();
+        
+#if UNITY_EDITOR
+        public virtual GizmoIconType Icon {
+            get { return GizmoIconType.Default; }
+        }
+        
+        public enum GizmoIconType
+        {
+            Default = 0,
+        }
+#endif
     }
 
     /// <summary>
