@@ -7,6 +7,7 @@ using UnityEditor;
 
 namespace Base.Ravel.Creator.Components
 {
+	[RequireComponent(typeof(Collider))]
 	public partial class SeatComponent : ComponentBase, INetworkId
 	{
 		public override ComponentData Data { get; }
@@ -65,11 +66,11 @@ namespace Base.Ravel.Creator.Components
 						EditorGUILayout.HelpBox($"The perfect height between the chair and the floor is {SeatData.PERFECT_BUTT_HEIGHT}. Do you want to set this height?",
 							MessageType.Warning);
 						EditorGUILayout.BeginHorizontal();
-						if (GUILayout.Button($"Fix child ({_instance._data.seat.gameObject.name})")) {
-							_instance._data.seat.position += Vector3.down * (distance - SeatData.PERFECT_BUTT_HEIGHT);
-						}
 						if (GUILayout.Button($"Fix parent ({_instance.gameObject.name})")) {
 							_instance.transform.position += Vector3.down * (distance - SeatData.PERFECT_BUTT_HEIGHT);
+						}
+						if (GUILayout.Button($"Fix child ({_instance._data.seat.gameObject.name})")) {
+							_instance._data.seat.position += Vector3.down * (distance - SeatData.PERFECT_BUTT_HEIGHT);
 						}
 						EditorGUILayout.EndHorizontal();
 					}
