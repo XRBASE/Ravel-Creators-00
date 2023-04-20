@@ -54,6 +54,15 @@ public static class BundleBuilder
 			}
 		}
 
+		Camera[] cams = GameObject.FindObjectsOfType<Camera>();
+		List<int> camInstIds = new List<int>();
+		for (int i = 0; i < cams.Length; i++) {
+			if (cams[i].gameObject.activeSelf) {
+				cams[i].gameObject.SetActive(false);
+				camInstIds.Add(cams[i].GetInstanceID());
+			}
+		}
+
 		//See if there is an active scene configuration in the scene, otherwise cancel the build.
 		if (!TryGetConfig(out SceneConfiguration config)) {
 			return;
@@ -166,6 +175,13 @@ public static class BundleBuilder
 
 		if (!autoCleanFiles) {
 			AssetDatabase.Refresh();
+		}
+		
+		cams = GameObject.FindObjectsOfType<Camera>(true);
+		for (int i = 0; i < cams.Length; i++) {
+			if (camInstIds.Contains(cams[i].GetInstanceID())) {
+				cams[i].gameObject.SetActive(true);
+			}
 		}
 	}
 
