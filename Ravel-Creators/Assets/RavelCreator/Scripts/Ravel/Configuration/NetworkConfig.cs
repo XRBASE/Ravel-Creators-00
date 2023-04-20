@@ -16,6 +16,10 @@ namespace Base.Ravel.Config
             get { return GetBaseUrl(_mode, true); }
         }
         
+        public string SiteUrl {
+            get { return GetSiteUrl(_mode); }
+        }
+        
         /// <summary>
         /// Realtime app id for photon
         /// </summary>
@@ -83,6 +87,28 @@ namespace Base.Ravel.Config
             
             if (debugValue)
                 Debug.Log($"Using backend mode {mode} url: ({url})");
+            return url;
+        }
+
+        private string GetSiteUrl(AppMode mode) {
+            string url;
+            switch (mode) {
+                case AppMode.PersistentSample:
+                case AppMode.Development:
+                    url = "https://dev.ravel.world/";
+                    break;
+                case AppMode.Test:
+                    url = "https://demo.ravel.world/";
+                    break;
+                case AppMode.Live:
+                    url = "https://app.ravel.world/";
+                    break;
+                case AppMode.LocalHost:
+                    url = "http://localhost:8080/";
+                    break;
+                default:
+                    throw new MissingFieldException($"No baseurl (Dataservices) for appMode {mode} found!");
+            }
             return url;
         }
 

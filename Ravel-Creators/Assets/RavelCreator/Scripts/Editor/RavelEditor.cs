@@ -2,6 +2,7 @@ using System;
 using Base.Ravel.Networking.Authorization;
 using Base.Ravel.Networking.Organisations;
 using Base.Ravel.Users;
+using MathBuddy.Strings;
 using UnityEditor;
 using UnityEngine;
 
@@ -327,7 +328,7 @@ public static class RavelEditor
         
         string[] names = new string[length];
         for (int i = 0, j = start; i < length; i++, j++) {
-            names[i] = values[j].ToString();
+            names[i] = values[j].ToString(StringExtentions.NamingCastType.UpperCamelCase, StringExtentions.NamingCastType.UserFormatting);
         }
 
         return names;

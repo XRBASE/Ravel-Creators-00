@@ -15,4 +15,4 @@ MonoBehaviour:
   reconnectOnDisconnect: 1
   reconnectDuration: 1
   maxReconnectTries: 5
-  _mode: 3
+  _mode: 2

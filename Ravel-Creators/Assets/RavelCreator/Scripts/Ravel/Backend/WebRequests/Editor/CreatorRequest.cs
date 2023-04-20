@@ -95,8 +95,7 @@ public class CreatorRequest : TokenWebRequest
     }
 
     public static string GetPreviewUrl(Environment env) {
-        string url = AppConfig.Networking.DataServiceBaseUrl;
-        url = url.Replace("systems", "world");
+        string url = AppConfig.Networking.SiteUrl;
         url += $"creators/environments/preview/{env.environmentUuid}";
 
         return url;

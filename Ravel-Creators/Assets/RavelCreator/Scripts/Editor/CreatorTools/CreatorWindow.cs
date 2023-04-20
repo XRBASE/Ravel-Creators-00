@@ -39,9 +39,9 @@ public class CreatorWindow : EditorWindow
 		GetWindow(State.Environments);
 	}
 	
-	[MenuItem("Ravel/Creator/Previews", false)]
+	[MenuItem("Ravel/Creator/Loading image", false)]
 	public static void OpenImages() {
-		GetWindow(State.Preview);
+		GetWindow(State.LoadingImage);
 	}
 	
 	[MenuItem("Ravel/Creator/Bundles", false)]
@@ -95,7 +95,7 @@ public class CreatorWindow : EditorWindow
 				return new AccountState(this);
 			case State.Environments:
 				return new EnvironmentState(this);
-			case State.Preview:
+			case State.LoadingImage:
 				return new ImageState(this);
 			case State.Bundles:
 				return new BundleState(this);
@@ -142,7 +142,7 @@ public class CreatorWindow : EditorWindow
 		None = 0,
 		Account,
 		Environments,
-		Preview,
+		LoadingImage,
 		Bundles,
 		Configuration,
 	}

@@ -12,7 +12,7 @@ public class ImageState : CreatorWindowState
 	private const int RESOLUTION_Y = 1080;
 
 	public override CreatorWindow.State State {
-		get { return CreatorWindow.State.Preview; }
+		get { return CreatorWindow.State.LoadingImage; }
 	}
 	protected override Vector2 MinSize {
 		get { return new Vector2(230, 230); }
