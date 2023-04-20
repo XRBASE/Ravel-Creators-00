@@ -7,8 +7,5 @@ using UnityEngine;
 public class EnvironmentSO : ScriptableObject
 {
     public Environment environment;
-
-#if UNITY_EDITOR
     [HideInInspector] public string bundleName;
-#endif
 }

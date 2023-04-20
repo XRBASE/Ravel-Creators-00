@@ -30,6 +30,6 @@ MonoBehaviour:
     submissionInProgress: 0
     userList: []
     organizations: []
-    previewSize: 0
+    previewSize: 2
     preview: {fileID: 0}
-  bundleName: 
+  bundleName: Testor

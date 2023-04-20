@@ -156,7 +156,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _data:
-    id: 2
+    id: 1
     seat: {fileID: 412157200}
 --- !u!65 &154329249
 BoxCollider:
@@ -563,7 +563,7 @@ MonoBehaviour:
             m_BoolArgument: 0
           m_CallState: 2
     networked: 1
-    id: 3
+    id: 2
 --- !u!65 &417495227
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -694,7 +694,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
   m_Color: {r: 0.16981131, g: 0.16981131, b: 0.16981131, a: 1}
-  m_RaycastTarget: 1
+  m_RaycastTarget: 0
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
   m_OnCullStateChanged:
@@ -1091,7 +1091,7 @@ MonoBehaviour:
       m_PersistentCalls:
         m_Calls: []
     networked: 1
-    id: 4
+    id: 3
 --- !u!65 &827885620
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -1269,7 +1269,7 @@ MonoBehaviour:
       m_PersistentCalls:
         m_Calls: []
     networked: 1
-    id: 5
+    id: 4
 --- !u!65 &873563251
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -1396,7 +1396,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _data:
-    id: 6
+    id: 5
     type: 1
     name: Model
     description: Modont
@@ -1809,7 +1809,7 @@ MonoBehaviour:
       m_PersistentCalls:
         m_Calls: []
     networked: 1
-    id: 7
+    id: 6
 --- !u!65 &1273639375
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -2137,7 +2137,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _data:
-    id: 8
+    id: 7
     type: 0
     name: Naam
     description: Niet naam
@@ -2160,7 +2160,7 @@ BoxCollider:
   m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Size: {x: 1920, y: 1080, z: 1}
+  m_Size: {x: 1920, y: 1080, z: 10}
   m_Center: {x: 0, y: 540, z: 0}
 --- !u!114 &1328150544
 MonoBehaviour:
@@ -2277,7 +2277,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _data:
-    id: 1
+    id: 8
     seat: {fileID: 1553990653}
 --- !u!65 &1505343738
 BoxCollider:

@@ -94,9 +94,14 @@ public class EnvironmentSOEditor : Editor
         EditorGUILayout.BeginHorizontal();
         if (string.IsNullOrEmpty(_instance.bundleName)) {
             _instance.bundleName = _instance.environment.name;
+            EditorUtility.SetDirty(_instance);
         }
         GUILayout.Label("Assetbundle name:", GUILayout.Width(RavelEditorStying.GUI_SPACING_DECA));
+        EditorGUI.BeginChangeCheck();
         _instance.bundleName = GUILayout.TextField(_instance.bundleName);
+        if (EditorGUI.EndChangeCheck()) {
+            EditorUtility.SetDirty(_instance);
+        }
         EditorGUILayout.EndHorizontal();
 
         DrawDefaultInspector();
