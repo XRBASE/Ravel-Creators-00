@@ -119,6 +119,9 @@ public class RavelToolbar
             CreatorWindow.OpenAccount();
             
             AppConfig.Networking.Mode = (pickedMode) ? NetworkConfig.AppMode.Live : NetworkConfig.AppMode.Development;
+            
+            EditorUtility.SetDirty(AppConfig.Networking);
+            AssetDatabase.SaveAssets();
         }
         GUI.enabled = true;
 
