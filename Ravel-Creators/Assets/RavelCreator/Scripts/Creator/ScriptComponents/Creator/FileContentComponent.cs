@@ -74,7 +74,7 @@ namespace Base.Ravel.Creator.Components
 				EditorGUILayout.Space();
 				if (_instance._data.type == FileContentData.Type.Screen_2D) {
 					_instance._data.canvas =
-						EditorGUILayout.ObjectField("Canvas", _instance._data.canvas, typeof(Canvas)) as Canvas;
+						EditorGUILayout.ObjectField("Canvas", _instance._data.canvas, typeof(Canvas), true) as Canvas;
 					
 					if (_instance._data.canvas == null) {
 						EditorGUILayout.HelpBox("File content (Screen_2D) is missing a canvas reference, the component won't work.",
@@ -83,7 +83,7 @@ namespace Base.Ravel.Creator.Components
 				}
 
 				_instance._data.collider =
-					EditorGUILayout.ObjectField("Collider, selector", _instance._data.collider, typeof(BoxCollider)) as
+					EditorGUILayout.ObjectField("Collider, selector", _instance._data.collider, typeof(BoxCollider), true) as
 						BoxCollider;
 				if (_instance._data.collider == null) {
 					EditorGUILayout.HelpBox($"File content ({_instance._data.type}) is missing a collider reference, the component won't work.",

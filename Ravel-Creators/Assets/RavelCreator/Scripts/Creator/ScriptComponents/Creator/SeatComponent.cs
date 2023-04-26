@@ -37,7 +37,7 @@ namespace Base.Ravel.Creator.Components
 			public override void OnInspectorGUI() {
 				DrawDefaultInspector();
 				
-				_instance._data.seat = EditorGUILayout.ObjectField("Seat", _instance._data.seat, typeof(Transform)) as Transform;
+				_instance._data.seat = EditorGUILayout.ObjectField("Seat", _instance._data.seat, typeof(Transform), true) as Transform;
 				
 				bool found = false;
 				float distance = Mathf.Infinity;
