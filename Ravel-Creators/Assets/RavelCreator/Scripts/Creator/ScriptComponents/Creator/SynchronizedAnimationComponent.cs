@@ -6,6 +6,9 @@ using UnityEditor;
 
 namespace Base.Ravel.Creator.Components
 {
+    /// <summary>
+    /// Synchronized animation, no data needed, all data is retrieved from the animation Monobehaviour.
+    /// </summary>
     [RequireComponent(typeof(Animation))]
     public partial class SynchronizedAnimationComponent : ComponentBase, INetworkId
     {
@@ -28,10 +31,21 @@ namespace Base.Ravel.Creator.Components
 
         protected override void DisposeData() { }
 
+        /// <summary>
+        /// Play animation
+        /// </summary>
         public void Play() { }
+
+        /// <summary>
+        /// Pause animation.
+        /// </summary>
         public void Pause() { }
-        public void Stop(){}
-        
+
+        /// <summary>
+        /// Stop animation (next play wil reset and start from zero).
+        /// </summary>
+        public void Stop() { }
+
 #if UNITY_EDITOR
         [CustomEditor(typeof(SynchronizedAnimationComponent))]
         private class SynchronizedAnimationComponentEditor : Editor
@@ -51,6 +65,7 @@ namespace Base.Ravel.Creator.Components
                                 "It does require the play, pause and stop callbacks to be executed through this script.");
                 
                 if (_anim != null) {
+                    //shows error when there are either no clips, or multiple clips in the animation component.
                     int c = _anim.GetClipCount();
                     if (c == 0) {
                         EditorGUILayout.HelpBox(

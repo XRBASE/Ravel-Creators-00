@@ -8,6 +8,9 @@ using UnityEditor;
 
 namespace Base.Ravel.Creator.Components
 {
+	/// <summary>
+	/// Adds oe or multiple hints to the hint panel when the ShowHints method is called.
+	/// </summary>
 	public partial class HintComponent : ComponentBase
 	{
 		public override ComponentData Data {
@@ -19,7 +22,10 @@ namespace Base.Ravel.Creator.Components
 
 		protected override void DisposeData() { }
 
-		public void TriggerHint() { }
+		/// <summary>
+		/// Activates the hint(s) and places them in the list of shown hints.
+		/// </summary>
+		public void ShowHints() { }
 
 #if UNITY_EDITOR
 		[CustomEditor(typeof(HintComponent))]
@@ -38,13 +44,18 @@ namespace Base.Ravel.Creator.Components
 			public override void OnInspectorGUI() {
 				DrawDefaultInspector();
 
+				EditorGUI.BeginChangeCheck();
 				_instance._data.showOnAwake = EditorGUILayout.Toggle("Show hints on awake", _instance._data.showOnAwake);
 				
 				EditorGUILayout.PropertyField(_hints);
 				serializedObject.ApplyModifiedProperties();
 
+				//Creates and selects a new hint scriptable object, which is automatically added to the hint list.
 				if (GUILayout.Button("Create new hint") && Hint.CreateAndSaveHintEditor(out Hint hint)) {
 					_instance._data.hints.Add(hint);
+				}
+				if (EditorGUI.EndChangeCheck()) {
+					EditorUtility.SetDirty(_instance);
 				}
 			}
 		}

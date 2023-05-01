@@ -6,6 +6,9 @@ using UnityEditor;
 
 namespace Base.Ravel.Creator.Components
 {
+    /// <summary>
+    /// This component offers a spawnpoint (0 is where all players start). These points are also reused for in space teleporting of players.
+    /// </summary>
     public partial class SpawnPointComponent : ComponentBase
     {
         public int ID {
@@ -16,15 +19,25 @@ namespace Base.Ravel.Creator.Components
             get { return _data; }
         }
         [SerializeField, HideInInspector] private SpawnPointData _data;
-        
-        protected override void BuildComponents() {}
+
+        protected override void BuildComponents() { }
 
         protected override void DisposeData() { }
 
+        /// <summary>
+        /// Teleports player to this spawnpoint
+        /// </summary>
         public void TeleportHere() { }
+
+        /// <summary>
+        /// Walks the player to this spawnpoint (if distance is big enough, the teleport will still be triggered).
+        /// </summary>
         public void WalkHere() { }
 
 #if UNITY_EDITOR
+        /// <summary>
+        /// Retrieves spawnpoint based on the given id and outs the result, or returns false.
+        /// </summary>
         public static bool TryGetById(int id, out SpawnPointComponent spawn) {
             SpawnPointComponent[] spawns = FindObjectsOfType<SpawnPointComponent>();
             for (int i = 0; i < spawns.Length; i++) {
@@ -38,6 +51,9 @@ namespace Base.Ravel.Creator.Components
             return false;
         }
 
+        /// <summary>
+        /// Snaps transform to closest collider below it.
+        /// </summary>
         public void SnapToCollider() {
             if (Physics.Raycast(transform.position, Vector3.down, out RaycastHit hit)) {
                 transform.position = hit.point;
@@ -48,12 +64,16 @@ namespace Base.Ravel.Creator.Components
         private class SpawnPointComponentEditor : Editor
         {
             public override void OnInspectorGUI() {
-                SpawnPointComponent instance = (SpawnPointComponent)target;
-
+                SpawnPointComponent instance = (SpawnPointComponent)target; 
                 DrawDefaultInspector();
 
                 EditorGUI.BeginChangeCheck();
                 instance._data.id = EditorGUILayout.IntField("(Unique) spawn index", instance._data.id);
+                //show which spawn point is the default
+                GUI.enabled = false;
+                EditorGUILayout.Toggle("Is default spawnpoint", instance._data.id == 0);
+                GUI.enabled = true;
+                
                 if (EditorGUI.EndChangeCheck()) {
                     EditorUtility.SetDirty(instance);
                 }

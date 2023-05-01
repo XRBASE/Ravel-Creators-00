@@ -1,4 +1,5 @@
 using System;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Events;
 #if UNITY_EDITOR
@@ -10,6 +11,7 @@ namespace Base.Ravel.Creator.Components
 	/// <summary>
 	/// Skeleton part of the class, contains code and methods for creators, but no implementation
 	/// </summary>
+	[RequireComponent(typeof(Collider))]
 	public partial class InteractableComponent : ComponentBase, INetworkId
 	{
 		public bool Networked { 
@@ -31,10 +33,22 @@ namespace Base.Ravel.Creator.Components
 		protected override void BuildComponents() { }
 		protected override void DisposeData() { }
 
+		/// <summary>
+		/// Triggers the interactable (as if it was triggered naturally).
+		/// </summary>
 		public void Activate() { }
-		public void EnableSwitch() { }
-		public void DisableSwitch() { }
 
+		/// <summary>
+		/// Set's component of switch type to enabled
+		/// </summary>
+		public void EnableSwitch() { }
+
+		/// <summary>
+		/// Set's component of switch type to disabled.
+		/// </summary>
+		public void DisableSwitch() { }
+		
+		
 #if UNITY_EDITOR
 		[CustomEditor(typeof(InteractableComponent))]
 		private class InteractableComponentEditor : Editor
@@ -50,58 +64,65 @@ namespace Base.Ravel.Creator.Components
 
 			public override void OnInspectorGUI() {
 				DrawDefaultInspector();
+				EditorGUI.BeginChangeCheck();
+				//Determine type of interaction
 				_instance._data.type = (InteractableData.Type)EditorGUILayout.EnumPopup("Interaction type", _instance._data.type);
 				
+				//Should trigger be networked. 
 				_instance._data.networked = EditorGUILayout.Toggle("Networked interaction", _instance._data.networked);
 				
 				EditorGUILayout.Space();
+				//option for delaying reaction.
 				_instance._data.delayed = EditorGUILayout.Toggle("Delayed response", _instance._data.delayed);
 				if (_instance._data.delayed) {
 					_instance._data.delayTime = EditorGUILayout.FloatField("Duration", _instance._data.delayTime);
 				}
-				
+
 				EditorGUILayout.Space();
+				//hover activation and callbacks.
 				_instance._data.hasHover = EditorGUILayout.Toggle("Has hover interactions", _instance._data.hasHover);
 				if (_instance._data.hasHover) {
-					_evtProperty = _data.FindPropertyRelative("onHoverEnter");
-					EditorGUILayout.PropertyField(_evtProperty);
-					serializedObject.ApplyModifiedProperties();
+					GUIDrawCallback("onHoverEnter");
 					
-					_evtProperty = _data.FindPropertyRelative("onHoverExit");
-					EditorGUILayout.PropertyField(_evtProperty);
-					serializedObject.ApplyModifiedProperties();
+					GUIDrawCallback("onHoverExit");
 				}
 
+				//Specific callbacks for the type of interaction.
 				switch (_instance._data.type) {
 					case InteractableData.Type.Click:
-						_evtProperty = _data.FindPropertyRelative("onClick");
-						EditorGUILayout.PropertyField(_evtProperty);
-						serializedObject.ApplyModifiedProperties();
+						GUIDrawCallback("onClick");
 						break;
-					case InteractableData.Type.Collider:
-						_evtProperty = _data.FindPropertyRelative("onEnter");
-						EditorGUILayout.PropertyField(_evtProperty);
-						serializedObject.ApplyModifiedProperties();
+					case InteractableData.Type.Trigger:
+						GUIDrawCallback("onEnter");
 						
-						_evtProperty = _data.FindPropertyRelative("onExit");
-						EditorGUILayout.PropertyField(_evtProperty);
-						serializedObject.ApplyModifiedProperties();
+						GUIDrawCallback("onExit");
 						break;
 					case InteractableData.Type.Switch:
-						_evtProperty = _data.FindPropertyRelative("onSwitchOn");
-						EditorGUILayout.PropertyField(_evtProperty);
-						serializedObject.ApplyModifiedProperties();
-						
-						_evtProperty = _data.FindPropertyRelative("onSwitchOff");
-						EditorGUILayout.PropertyField(_evtProperty);
-						serializedObject.ApplyModifiedProperties();
+						GUIDrawCallback("onSwitchOn");
+
+						GUIDrawCallback("onSwitchOff");
 						break;
 				}
 
-				ClearCallbacks();
+				ClearUnusedCallbacks();
+				if (EditorGUI.EndChangeCheck()) {
+					EditorUtility.SetDirty(_instance);
+				}
 			}
 
-			private void ClearCallbacks() {
+			/// <summary>
+			/// Draws event property with given name in GUI.
+			/// </summary>
+			private void GUIDrawCallback(string propertyName) {
+				_evtProperty = _data.FindPropertyRelative(propertyName);
+				EditorGUILayout.PropertyField(_evtProperty);
+				serializedObject.ApplyModifiedProperties();
+			}
+
+			/// <summary>
+			/// Removes any callback data that is not connected to the selected type of interaction.
+			/// </summary>
+			private void ClearUnusedCallbacks() {
 				if (!_instance._data.hasHover) {
 					_instance._data.onHoverEnter = null;
 					_instance._data.onHoverExit = null;
@@ -115,7 +136,7 @@ namespace Base.Ravel.Creator.Components
 						_instance._data.onSwitchOn = null;
 						_instance._data.onSwitchOff = null;
 						break;
-					case InteractableData.Type.Collider:
+					case InteractableData.Type.Trigger:
 						_instance._data.onClick = null;
 						
 						_instance._data.onSwitchOn = null;
@@ -150,7 +171,7 @@ namespace Base.Ravel.Creator.Components
 		//click data
 		public UnityEvent onClick;
 
-		//collider data
+		//Trigger data
 		public UnityEvent onEnter;
 		public UnityEvent onExit;
 
@@ -165,7 +186,7 @@ namespace Base.Ravel.Creator.Components
 		public enum Type
 		{
 			Click,
-			Collider,
+			Trigger,
 			Switch,
 		}
 	}

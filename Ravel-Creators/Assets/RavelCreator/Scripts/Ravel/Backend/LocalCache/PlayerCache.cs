@@ -1,3 +1,5 @@
+using System.Collections.Generic;
+using Base.Ravel.Networking.Authorization;
 using UnityEngine;
 
 /// <summary>
@@ -5,6 +7,9 @@ using UnityEngine;
 /// </summary>
 public static class PlayerCache
 {
+    //even when clearing all playercache data, do not clear the token (as it will destroy webrequest behaviours)
+    private static readonly KeyData[] NEVER_REMOVE_KEYS = new[] { new KeyData(LoginRequest.SYSTEMS_TOKEN_KEY, KeyData.DataType.String) };
+    
     /// <summary>
     /// Set string in playerprefs under key.
     /// </summary>
@@ -94,6 +99,61 @@ public static class PlayerCache
     }
 
     public static void Clear() {
+        List<object> doNotRemoveData = new List<object>();
+        foreach (var key in NEVER_REMOVE_KEYS) {
+            doNotRemoveData.Add(key.GetData());
+        }
+        
+        Debug.Log("Player cache cleared");
         PlayerPrefs.DeleteAll();
+
+        for (int i = 0; i < NEVER_REMOVE_KEYS.Length; i++) {
+            NEVER_REMOVE_KEYS[i].SetData(doNotRemoveData[i]);
+        }
+    }
+
+    private struct KeyData
+    {
+        public string key;
+        public DataType type;
+
+        public KeyData(string key, DataType type) {
+            this.key = key;
+            this.type = type;
+        }
+
+        public object GetData() {
+            switch (type) {
+                case KeyData.DataType.Int:
+                    return GetInt(key);
+                case KeyData.DataType.Float:
+                    return GetFloat(key);
+                case KeyData.DataType.String:
+                    return GetString(key);
+                default:
+                    return null;
+            }
+        }
+        
+        public void SetData(object value) {
+            switch (type) {
+                case DataType.Int:
+                    SetInt(key, (int) value);
+                    break;
+                case DataType.Float:
+                    SetFloat(key, (float)value);
+                    break;
+                case DataType.String:
+                    SetString(key, (string)value);
+                    break;
+            }
+        }
+
+        public enum DataType
+        {
+            Int,
+            Float,
+            String
+        }
     }
 }

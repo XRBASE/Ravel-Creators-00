@@ -7,6 +7,10 @@ using UnityEditor;
 
 namespace Base.Ravel.Creator.Components
 {
+	/// <summary>
+	/// This component creates a chair where the seat transform is the position that the player sits down and the collider
+	/// is the interactable that the player needs to click on to sit down.
+	/// </summary>
 	[RequireComponent(typeof(Collider))]
 	public partial class SeatComponent : ComponentBase, INetworkId
 	{
@@ -37,12 +41,14 @@ namespace Base.Ravel.Creator.Components
 			public override void OnInspectorGUI() {
 				DrawDefaultInspector();
 				
+				EditorGUI.BeginChangeCheck();
 				_instance._data.seat = EditorGUILayout.ObjectField("Seat", _instance._data.seat, typeof(Transform), true) as Transform;
 				
 				bool found = false;
 				float distance = Mathf.Infinity;
 				string name = "";
 				if (_instance._data.seat != null) {
+					//searches for collider that is neither chair nor seat transform, to determine how high the seat is. 
 					RaycastHit[] hits = Physics.RaycastAll(_instance._data.seat.position, Vector3.down, 10);
 					
 					if (hits.Length > 0) {
@@ -61,6 +67,7 @@ namespace Base.Ravel.Creator.Components
 					GUILayout.Label("No floor found");
 				}
 				else {
+					//offers option to move the seat (child) or parent object to adjust the seat height to the correct height.
 					GUILayout.Label($"Floor ({name}) found at distance {distance}");
 					if (Mathf.Abs(distance - SeatData.PERFECT_BUTT_HEIGHT) > MathBuddy.FloatingPoints.LABDA) {
 						EditorGUILayout.HelpBox($"The perfect height between the chair and the floor is {SeatData.PERFECT_BUTT_HEIGHT}. Do you want to set this height?",
@@ -75,6 +82,10 @@ namespace Base.Ravel.Creator.Components
 						EditorGUILayout.EndHorizontal();
 					}
 				}
+				
+				if (EditorGUI.EndChangeCheck()) {
+					EditorUtility.SetDirty(_instance);
+				}
 			}
 		}
 #endif
@@ -86,6 +97,6 @@ namespace Base.Ravel.Creator.Components
 		public const float PERFECT_BUTT_HEIGHT = 0.6f;
 		
 		public int id;
-		public Transform seat = null;
+		public Transform seat;
 	}
 }

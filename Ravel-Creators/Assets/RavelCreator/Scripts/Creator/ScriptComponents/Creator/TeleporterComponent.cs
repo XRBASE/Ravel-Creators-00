@@ -7,6 +7,9 @@ using UnityEditor;
 namespace Base.Ravel.Creator.Components
 {
 
+    /// <summary>
+    /// Teleport component used for teleporting the player to different spawnpoints in the scene.
+    /// </summary>
     public partial class TeleporterComponent : ComponentBase
     {
         public override ComponentData Data {
@@ -18,8 +21,15 @@ namespace Base.Ravel.Creator.Components
 
         protected override void DisposeData() { }
 
+        /// <summary>
+        /// Teleport player to spawnposition set in inspector.
+        /// </summary>
         public void Teleport() { }
 
+        /// <summary>
+        /// Teleport player to spawnpoint with given ID.
+        /// </summary>
+        /// <param name="id">index of spawnpoint to teleport to.</param>
         public void TeleportToId(int id) { }
 
 #if UNITY_EDITOR
@@ -36,6 +46,8 @@ namespace Base.Ravel.Creator.Components
                 DrawDefaultInspector();
                 
                 EditorGUI.BeginChangeCheck();
+                //two part system, either the id is used to retrieve the reference, or the refrence is used to retrieve the id.
+                
                 _instance._data.locationId = EditorGUILayout.IntField("Location id", _instance._data.locationId);
                 if (EditorGUI.EndChangeCheck()) {
                     if (SpawnPointComponent.TryGetById(_instance._data.locationId, out SpawnPointComponent spawn)) {
@@ -73,11 +85,6 @@ namespace Base.Ravel.Creator.Components
                         MessageType.Warning);
                 }
             }
-
-            private void UpdateSpawnId() {
-                _instance._data.locationId = _instance._data.location.ID;
-                EditorUtility.SetDirty(_instance);
-            }
         }
 #endif
     }
@@ -87,6 +94,7 @@ namespace Base.Ravel.Creator.Components
     {
         public int locationId = -1;
 #if UNITY_EDITOR
+        //location is only used to clarify the behaviour for creators, not needed outside of the editor.
         public SpawnPointComponent location;
 
 #endif

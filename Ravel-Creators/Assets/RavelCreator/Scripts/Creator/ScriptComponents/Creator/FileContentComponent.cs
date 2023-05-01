@@ -7,7 +7,9 @@ using UnityEditor;
 
 namespace Base.Ravel.Creator.Components
 {
-	[Serializable]
+	/// <summary>
+	/// Used to create a container for loading files in, either 2D or 3D.
+	/// </summary>
 	public partial class FileContentComponent : ComponentBase, INetworkId
 	{
 		public override ComponentData Data {
@@ -16,13 +18,7 @@ namespace Base.Ravel.Creator.Components
 
 		[SerializeField, HideInInspector] protected FileContentData _data;
 
-		public bool Networked {
-			get { return true; }
-			set {
-				Debug.LogWarning(
-					$"Cannot set networked state for ({gameObject.name}), filecontent is always networked.");
-			}
-		}
+		public bool Networked { get { return true; } }
 
 		public int ID {
 			get { return _data.id; }
@@ -32,16 +28,17 @@ namespace Base.Ravel.Creator.Components
 		protected override void BuildComponents() { }
 		protected override void DisposeData() { }
 
+		/// <summary>
+		/// This resets the visuals to the original visuals in the scene.
+		/// </summary>
 		public void CloseFile() { }
+
+		/// <summary>
+		/// This changes the current file into another file (pop-up opens for selecting what file)
+		/// </summary>
 		public void ChangeFile() { }
-		public void LockFile(bool locked) { }
 
 #if UNITY_EDITOR
-
-		public void OnValidate() {
-			//Code for CMS checking should come in this method
-		}
-
 		[CustomEditor(typeof(FileContentComponent))]
 		private class FileContentComponentEditor : Editor
 		{
@@ -59,19 +56,21 @@ namespace Base.Ravel.Creator.Components
 			}
 
 			public override void OnInspectorGUI() {
-				 
-
 				DrawDefaultInspector();
 
+				EditorGUI.BeginChangeCheck();
+				//2D or 3D file
 				_instance._data.type =
 					(FileContentData.Type)EditorGUILayout.EnumPopup("Content type", _instance._data.type);
 
 				EditorGUILayout.Space();
+				//used for future implementation of CMS
 				_instance._data.name = EditorGUILayout.TextField("Name", _instance._data.name);
 				GUILayout.Label("Description");
 				_instance._data.description = EditorGUILayout.TextArea(_instance._data.description);
 
 				EditorGUILayout.Space();
+				//screens need a canvas
 				if (_instance._data.type == FileContentData.Type.Screen_2D) {
 					_instance._data.canvas =
 						EditorGUILayout.ObjectField("Canvas", _instance._data.canvas, typeof(Canvas), true) as Canvas;
@@ -82,6 +81,7 @@ namespace Base.Ravel.Creator.Components
 					}
 				}
 
+				//Selection collider.
 				_instance._data.collider =
 					EditorGUILayout.ObjectField("Collider, selector", _instance._data.collider, typeof(BoxCollider), true) as
 						BoxCollider;
@@ -91,11 +91,13 @@ namespace Base.Ravel.Creator.Components
 				}
 				
 				EditorGUILayout.Space();
+				//Event for open and closing file.
 				EditorGUILayout.PropertyField(_fileLoadedEvent);
 				EditorGUILayout.PropertyField(_fileClosedEvent);
 				serializedObject.ApplyModifiedProperties();
 				
 				EditorGUILayout.Space();
+				//Canvas needs specific alignment, this shows an error and fix button if that alignment is not used.
 				if (_instance._data.type == FileContentData.Type.Screen_2D && _instance._data.canvas != null &&
 				    (((RectTransform)_instance._data.canvas.transform).pivot - new Vector2(0.5f, 0f)).magnitude >
 				    0.001f) {
@@ -106,6 +108,9 @@ namespace Base.Ravel.Creator.Components
 						((RectTransform)_instance._data.canvas.transform).pivot = new Vector2(0.5f, 0f);
 						EditorUtility.SetDirty(_instance._data.canvas);
 					}
+				}
+				if (EditorGUI.EndChangeCheck()) {
+					EditorUtility.SetDirty(_instance);
 				}
 			}
 		}
@@ -125,6 +130,7 @@ namespace Base.Ravel.Creator.Components
 
 		//screen only
 		public Canvas canvas;
+		
 
 		public enum Type
 		{

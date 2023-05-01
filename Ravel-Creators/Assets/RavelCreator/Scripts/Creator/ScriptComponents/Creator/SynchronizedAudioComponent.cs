@@ -1,4 +1,3 @@
-using System;
 using UnityEngine;
 #if UNITY_EDITOR
 using UnityEditor;
@@ -6,31 +5,35 @@ using UnityEditor;
 
 namespace Base.Ravel.Creator.Components
 {
+	/// <summary>
+	/// Syncronized audio component, no data needed all data retrieved based on the audiosource Monobehaviour
+	/// </summary>
 	[RequireComponent(typeof(AudioSource))]
-	public partial class SynchronizedAudioComponent : ComponentBase, INetworkId
+	public partial class SynchronizedAudioComponent : ComponentBase
 	{
+		//no networked interface, as the id is calculated by the internal ravel systems for audio. 
+		
 		public override ComponentData Data {
 			get { return null; }
-		}
-		
-		/// <summary>
-		/// The component is always networked, but it's id is set through the audio source management system and so this
-		/// bool is false to prevent the id from beind accessed. the component just changes the network status of the audio source.
-		/// </summary>
-		public bool Networked {
-			get { return false; }
-		}
-		public int ID {
-			get { return -1;}
-			set { throw new Exception("ID for synced audio is set internally!"); }
 		}
 
 		protected override void BuildComponents() { }
 
 		protected override void DisposeData() { }
 
+		/// <summary>
+		/// Play the audio file.
+		/// </summary>
 		public void Play() { }
+
+		/// <summary>
+		/// Pauses the audio file.
+		/// </summary>
 		public void Pause() { }
+
+		/// <summary>
+		/// Stop the audio file (next play will play from start of file).
+		/// </summary>
 		public void Stop() { }
 
 #if UNITY_EDITOR
