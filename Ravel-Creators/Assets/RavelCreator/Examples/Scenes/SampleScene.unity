@@ -521,7 +521,6 @@ MonoBehaviour:
     hasHover: 0
     delayed: 0
     delayTime: 0
-    collider: {fileID: 0}
     onHoverEnter:
       m_PersistentCalls:
         m_Calls: []
@@ -1070,7 +1069,6 @@ MonoBehaviour:
     hasHover: 0
     delayed: 0
     delayTime: 0
-    collider: {fileID: 399384820}
     onHoverEnter:
       m_PersistentCalls:
         m_Calls: []
@@ -1539,7 +1537,6 @@ MonoBehaviour:
     hasHover: 0
     delayed: 0
     delayTime: 0
-    collider: {fileID: 417495227}
     onHoverEnter:
       m_PersistentCalls:
         m_Calls: []
@@ -2283,7 +2280,6 @@ MonoBehaviour:
     hasHover: 0
     delayed: 1
     delayTime: 0.5
-    collider: {fileID: 827885620}
     onHoverEnter:
       m_PersistentCalls:
         m_Calls: []
@@ -2455,7 +2451,6 @@ MonoBehaviour:
     hasHover: 1
     delayed: 1
     delayTime: 1
-    collider: {fileID: 873563251}
     onHoverEnter:
       m_PersistentCalls:
         m_Calls:
@@ -2631,8 +2626,7 @@ MonoBehaviour:
   _data:
     id: 5
     type: 1
-    name: Model
-    description: Modont
+    name: PillarModel
     collider: {fileID: 892037140}
     onFileLoaded:
       m_PersistentCalls:
@@ -3385,7 +3379,6 @@ MonoBehaviour:
     hasHover: 0
     delayed: 0
     delayTime: 0
-    collider: {fileID: 1273639375}
     onHoverEnter:
       m_PersistentCalls:
         m_Calls: []
@@ -3736,8 +3729,7 @@ MonoBehaviour:
   _data:
     id: 7
     type: 0
-    name: Naam
-    description: Niet naam
+    name: TheBigScreen
     collider: {fileID: 1328150543}
     onFileLoaded:
       m_PersistentCalls:

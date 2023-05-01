@@ -95,6 +95,9 @@ public static class BundleBuilder
 				return;
 		}
 		IDProvider.SetSceneIDs();
+
+		UpdateDynamicContent();
+		
 		EditorSceneManager.SaveScene(s);
 
 		string dialogMsg;
@@ -182,6 +185,22 @@ public static class BundleBuilder
 			if (camInstIds.Contains(cams[i].GetInstanceID())) {
 				cams[i].gameObject.SetActive(true);
 			}
+		}
+	}
+	
+	public static void UpdateDynamicContent(Environment env, Action onComplete, Action onFailure) {
+		string json = FileManagement.GetDynamicContentJson();
+		RavelWebRequest req = CreatorRequest.AddDynamicContentRequest(env, json);
+		EditorWebRequests.SendWebRequest(req, (res) => OnDynamicContentResponse(res, onComplete, onFailure), this);
+	}
+
+	private static void OnDynamicContentResponse(RavelWebResponse res, Action onComplete, Action onFailure) {
+		if (res.Success) {
+			onComplete?.Invoke();
+		}
+		else {
+			Debug.LogError($"Dynamic content error: {res.Error.FullMessage}!");
+			onFailure?.Invoke();
 		}
 	}
 

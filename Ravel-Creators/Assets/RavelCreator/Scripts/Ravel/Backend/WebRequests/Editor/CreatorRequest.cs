@@ -100,4 +100,12 @@ public class CreatorRequest : TokenWebRequest
 
         return url;
     }
+
+    public static CreatorRequest AddDynamicContentRequest(Environment environment, string contentJson) {
+        return  new CreatorRequest(Method.PostJSON, $"dynamic-contents/{environment.environmentUuid}", contentJson, "v1/");
+    }
+    
+    public static CreatorRequest DeleteDynamicContentRequest(Environment environment, string contentJson) {
+        return  new CreatorRequest(Method.DeleteJSON, $"dynamic-contents/{environment.environmentUuid}", contentJson, "v1/");
+    }
 }
