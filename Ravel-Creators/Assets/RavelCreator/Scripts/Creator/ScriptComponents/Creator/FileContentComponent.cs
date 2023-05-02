@@ -1,4 +1,5 @@
 using System;
+using Base.Ravel.BackendData.DynamicContent;
 using TMPro;
 using UnityEngine;
 using UnityEngine.Events;
@@ -12,18 +13,11 @@ namespace Base.Ravel.Creator.Components
 	/// Used to create a container for loading files in, either 2D or 3D.
 	/// </summary>
 	public partial class FileContentComponent : ComponentBase, INetworkId
-	{
+	{ 
 		public override ComponentData Data {
 			get { return _data; }
 		}
-
-		public FileComponentMetaData MetaData {
-			get { return metaData; }
-		}
-
-		[SerializeField, HideInInspector] protected FileContentData _data;
-		[SerializeField, HideInInspector] protected FileComponentMetaData metaData;
-
+		
 		public bool Networked { get { return true; } }
 
 		public int ID {
@@ -38,6 +32,13 @@ namespace Base.Ravel.Creator.Components
 		public FileContentData.Type Type {
 			get { return _data.type; }
 		}
+		
+		public DynamicContentMetaData MetaData {
+			get { return metaData; }
+		}
+
+		[SerializeField, HideInInspector] protected FileContentData _data;
+		[SerializeField, HideInInspector] protected DynamicContentMetaData metaData;
 
 		protected override void BuildComponents() { }
 		protected override void DisposeData() { }
@@ -87,7 +88,7 @@ namespace Base.Ravel.Creator.Components
 					EditorGUILayout.HelpBox("No name set for filecomponent, file components require a unique name for content managenent!", MessageType.Error);
 					return;
 				} if (_instance._data.name != _nameCache) {
-					if (FileManagement.FileContentNameAvailable(_instance._data.name, _instance)) {
+					if (DynamicContentManagement.FileContentNameAvailable(_instance._data.name, _instance)) {
 						_nameCache = _instance._data.name;
 					}
 					else {

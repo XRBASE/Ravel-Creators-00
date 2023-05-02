@@ -1,8 +1,11 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using Base.Ravel.BackendData.DynamicContent;
 using Base.Ravel.Networking;
+using Unity.EditorCoroutines.Editor;
 using UnityEditor;
 using UnityEditor.SceneManagement;
 using UnityEngine;
@@ -53,7 +56,11 @@ public static class BundleBuilder
 				return;
 			}
 		}
+		
+		EditorCoroutineUtility.StartCoroutine(BuildScene(s, bundleName, preview, autoCleanFiles), s);
+	}
 
+	private static IEnumerator BuildScene(Scene s, string bundleName, bool preview, bool autoCleanFiles) {
 		Camera[] cams = GameObject.FindObjectsOfType<Camera>();
 		List<int> camInstIds = new List<int>();
 		for (int i = 0; i < cams.Length; i++) {
@@ -64,13 +71,15 @@ public static class BundleBuilder
 		}
 
 		//See if there is an active scene configuration in the scene, otherwise cancel the build.
+		//Missing config errors are shown to the user.
 		if (!TryGetConfig(out SceneConfiguration config)) {
-			return;
+			yield break;
 		}
 
+		//this data contains the version numbering of the bundle, as saved in editor prefs.
 		BundleConfig.BundleData data = RavelEditor.BundleConfig.GetBundleData(config.environmentSO);
 		
-		//Check if the buil name was set, if not try to set the name that is set in the environment, if even that fails, 
+		//Check if the build name was set, if not try to set the name that is set in the environment, if even that fails, 
 		//assign a guid to the bundle as name. GUID builds are always auto cleaned up.
 		if (string.IsNullOrEmpty(bundleName)) {
 			if (string.IsNullOrEmpty(config.environmentSO.bundleName)) {
@@ -92,14 +101,39 @@ public static class BundleBuilder
 		if (s.isDirty && !EditorUtility.DisplayDialog("Unsaved changes in scene",
 				    "The scene contains unsaved changed, but the build progress requires saving. If you don't want to save the scene, the preview will be cancelled",
 				    "Save", "Don't save")) {
-				return;
+				yield break;
 		}
+		//Sets the id's for all networked components
 		IDProvider.SetSceneIDs();
 
-		UpdateDynamicContent();
-		
-		EditorSceneManager.SaveScene(s);
+		bool error = false;
+		RavelWebRequest req;
+		//Upload file content to backend, using names in scene.
+		if (DynamicContentManagement.TryGetDynamicContentJson(out string json)) {
+			req = CreatorRequest.AddDynamicContentRequest(config.environmentSO.environment, json);
+		}
+		else {
+			req = CreatorRequest.DeleteDynamicContentRequest(config.environmentSO.environment, json);
+		}
+		yield return req.Send();
+		RavelWebResponse res = new RavelWebResponse(req);
+		if (!res.Success) {
+			Debug.LogError($"Dynamic content error: {res.Error.FullMessage}!");
+			EditorUtility.DisplayDialog("Error setting dynamic content",
+				$"There was an error setting the dynamic content: {res.Error.FullMessage}!", "Ok");
 
+			error = true;
+		}
+		
+		//always save, but cancel build if dynamic content fails 
+		EditorSceneManager.SaveScene(s);
+		if (error) {
+			yield break;
+		}
+		
+		
+
+		//Dialog for what is being build and last change to cancel it.
 		string dialogMsg;
 		if (preview) {
 			dialogMsg = $"Building scene {s.name} and uploading it to environment " +
@@ -111,7 +145,7 @@ public static class BundleBuilder
 		
 		//Last chance for user to cancel. This dialog shows what scene is assigned into what environment.
 		if (!EditorUtility.DisplayDialog("Build confirmation", dialogMsg, "Yes", "Cancel build")) {
-			return;
+			yield break;
 		}
 		
 		//Other asset-bundles are being cleared in preparation of the bundle build.
@@ -145,8 +179,7 @@ public static class BundleBuilder
 		}
 		
 		//build the actual bundle
-		var assetBundleManifest = BuildPipeline.BuildAssetBundles(path, BuildAssetBundleOptions.None,
-			BuildTarget.WebGL);
+		BuildPipeline.BuildAssetBundles(path, BuildAssetBundleOptions.None, BuildTarget.WebGL);
 		
 		//increment version numbers.
 		if(RavelEditor.CreatorConfig.incrementMinorVersionOnBuild){
@@ -157,17 +190,21 @@ public static class BundleBuilder
 		if (preview) {
 			//send result to webserver.
 			Debug.Log("Uploading bundle!");
-			RavelWebRequest req = CreatorRequest.UploadBundle(config.environmentSO.environment.environmentUuid,
+			req = CreatorRequest.UploadBundle(config.environmentSO.environment.environmentUuid,
 				Path.Combine(path, bundleName));
 
-			//only send delete action along if auto cleanup is enabled
-			if (autoCleanFiles) {
-				EditorWebRequests.SendWebRequest(req, 
-					(res) => OnBundleUploaded(res, config.environmentSO.environment, () => DeleteBundle(path + bundleName)), config);
+			yield return req.Send();
+			res = new RavelWebResponse(req);
+
+			if (!res.Success) {
+				Debug.LogError($"Error uploading bundle: {res.Error.FullMessage}");
 			}
-			else {
-				EditorWebRequests.SendWebRequest(req, 
-					(res) => OnBundleUploaded(res, config.environmentSO.environment, null), config);
+
+			Debug.Log("Opening preview in browser!");
+			Application.OpenURL(CreatorRequest.GetPreviewUrl(config.environmentSO.environment));
+			
+			if (autoCleanFiles) {
+				DeleteBundle(path + bundleName);
 			}
 		}
 		
@@ -186,39 +223,6 @@ public static class BundleBuilder
 				cams[i].gameObject.SetActive(true);
 			}
 		}
-	}
-	
-	public static void UpdateDynamicContent(Environment env, Action onComplete, Action onFailure) {
-		string json = FileManagement.GetDynamicContentJson();
-		RavelWebRequest req = CreatorRequest.AddDynamicContentRequest(env, json);
-		EditorWebRequests.SendWebRequest(req, (res) => OnDynamicContentResponse(res, onComplete, onFailure), this);
-	}
-
-	private static void OnDynamicContentResponse(RavelWebResponse res, Action onComplete, Action onFailure) {
-		if (res.Success) {
-			onComplete?.Invoke();
-		}
-		else {
-			Debug.LogError($"Dynamic content error: {res.Error.FullMessage}!");
-			onFailure?.Invoke();
-		}
-	}
-
-	/// <summary>
-	/// Called as result of the bundle upload. When the bundle has been successfully uploaded, this opens the preview URL.
-	/// </summary>
-	/// <param name="res">web response of the serven.</param>
-	/// <param name="env">environment that the build was pushed to.</param>
-	/// <param name="onComplete">callback for when the build has opened.</param>
-	private static void OnBundleUploaded(RavelWebResponse res, Environment env, Action onComplete) {
-		if (res.Success) {
-			Debug.Log("Opening preview in browser!");
-			Application.OpenURL(CreatorRequest.GetPreviewUrl(env));
-		}
-		else {
-			Debug.LogError($"Error uploading build {res.Error.FullMessage}!");
-		}
-		onComplete?.Invoke();
 	}
 
 	/// <summary>
