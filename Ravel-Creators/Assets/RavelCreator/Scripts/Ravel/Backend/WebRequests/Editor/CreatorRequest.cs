@@ -101,11 +101,21 @@ public class CreatorRequest : TokenWebRequest
         return url;
     }
 
+    /// <summary>
+    /// Adds all entries specified in the json to the environment.
+    /// </summary>
     public static CreatorRequest AddDynamicContentRequest(Environment environment, string contentJson) {
         return  new CreatorRequest(Method.PostJSON, $"dynamic-contents/{environment.environmentUuid}", contentJson, "v1/");
     }
     
+    /// <summary>
+    /// Removes all entries specified in the json from the environment.
+    /// </summary>
     public static CreatorRequest DeleteDynamicContentRequest(Environment environment, string contentJson) {
         return  new CreatorRequest(Method.DeleteJSON, $"dynamic-contents/{environment.environmentUuid}", contentJson, "v1/");
+    }
+    
+    public static CreatorRequest ClearDynamicContentRequest(Environment environment) {
+        return  new CreatorRequest(Method.Post, $"dynamic-contents/{environment.environmentUuid}/clear");
     }
 }

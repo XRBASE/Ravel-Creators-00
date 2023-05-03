@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Threading.Tasks.Sources;
 using Base.Ravel.BackendData.DynamicContent;
 using Base.Ravel.Networking;
 using Unity.EditorCoroutines.Editor;
@@ -61,6 +62,31 @@ public static class BundleBuilder
 	}
 
 	private static IEnumerator BuildScene(Scene s, string bundleName, bool preview, bool autoCleanFiles) {
+		//See if there is an active scene configuration in the scene, otherwise cancel the build.
+		//Missing config errors are shown to the user.
+		if (!TryGetConfig(out SceneConfiguration config)) {
+			yield break;
+		}
+
+		if (config.environmentSO == null) {
+			EditorUtility.DisplayDialog("Missing environment!",
+				"This scene requires an environment to which the build can be uploaded, please link the environment " +
+				"asset to the scene configuration object.",
+				"Ok");
+
+			Selection.activeObject = config;
+			yield break;
+		}
+		
+		if (config.environmentSO.environment.published) {
+			EditorUtility.DisplayDialog("Environment already published",
+				"Cannot rebuild environments that have already published. Please link another environment to this scene.",
+				"Ok");
+			
+			yield break;
+		}
+		
+		
 		Camera[] cams = GameObject.FindObjectsOfType<Camera>();
 		List<int> camInstIds = new List<int>();
 		for (int i = 0; i < cams.Length; i++) {
@@ -68,12 +94,6 @@ public static class BundleBuilder
 				cams[i].gameObject.SetActive(false);
 				camInstIds.Add(cams[i].GetInstanceID());
 			}
-		}
-
-		//See if there is an active scene configuration in the scene, otherwise cancel the build.
-		//Missing config errors are shown to the user.
-		if (!TryGetConfig(out SceneConfiguration config)) {
-			yield break;
 		}
 
 		//this data contains the version numbering of the bundle, as saved in editor prefs.
@@ -105,34 +125,37 @@ public static class BundleBuilder
 		}
 		//Sets the id's for all networked components
 		IDProvider.SetSceneIDs();
-
-		bool error = false;
+		
 		RavelWebRequest req;
+		//clear current dynamic content
+		req = CreatorRequest.ClearDynamicContentRequest(config.environmentSO.environment);
+		yield return req.Send();
+		
+		RavelWebResponse res = new RavelWebResponse(req);
+		if (!res.Success) {
+			EditorUtility.DisplayDialog("Error clearing dynamic content",
+				$"Could not clear previously used dynamic content: \n{res.Error.FullMessage}!", "Ok");
+			
+			throw new Exception($"Could not clear previously used dynamic content: \n{res.Error.FullMessage}!");
+		}
+		
 		//Upload file content to backend, using names in scene.
 		if (DynamicContentManagement.TryGetDynamicContentJson(out string json)) {
 			req = CreatorRequest.AddDynamicContentRequest(config.environmentSO.environment, json);
-		}
-		else {
-			req = CreatorRequest.DeleteDynamicContentRequest(config.environmentSO.environment, json);
-		}
-		yield return req.Send();
-		RavelWebResponse res = new RavelWebResponse(req);
-		if (!res.Success) {
-			Debug.LogError($"Dynamic content error: {res.Error.FullMessage}!");
-			EditorUtility.DisplayDialog("Error setting dynamic content",
-				$"There was an error setting the dynamic content: {res.Error.FullMessage}!", "Ok");
-
-			error = true;
+			yield return req.Send();
+			
+			res = new RavelWebResponse(req);
+			if (!res.Success) {
+				EditorUtility.DisplayDialog("Error setting dynamic content",
+					$"There was an error setting the dynamic content: \n{res.Error.FullMessage}!", "Ok");
+				
+				throw new Exception($"Dynamic content error: \n{res.Error.FullMessage}!");
+			}
 		}
 		
 		//always save, but cancel build if dynamic content fails 
 		EditorSceneManager.SaveScene(s);
-		if (error) {
-			yield break;
-		}
 		
-		
-
 		//Dialog for what is being build and last change to cancel it.
 		string dialogMsg;
 		if (preview) {

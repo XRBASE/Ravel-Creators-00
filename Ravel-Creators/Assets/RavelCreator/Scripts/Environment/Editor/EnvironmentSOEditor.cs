@@ -123,6 +123,8 @@ public class EnvironmentSOEditor : Editor
         if (GUILayout.Button(new GUIContent("Preview current", "Preview currently uploaded bundle"))) {
             Application.OpenURL(CreatorRequest.GetPreviewUrl(_instance.environment));
         }
+        
+        GUILayout.Space(RavelEditorStying.GUI_SPACING_MICRO);
         if (!(_instance.environment.published || _instance.environment.submissionInProgress)) {
             //upload and publish
             GUIServerFunctions();
