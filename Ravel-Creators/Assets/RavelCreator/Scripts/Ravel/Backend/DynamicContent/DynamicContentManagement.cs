@@ -5,8 +5,17 @@ using UnityEngine;
 
 namespace Base.Ravel.BackendData.DynamicContent
 {
+	/// <summary>
+	/// Creator tools for dynamic content to enable usage of components in editor too.
+	/// </summary>
 	public static class DynamicContentManagement
 	{
+		/// <summary>
+		/// Checks current scene for dynamic content holders, and checks whether given name has already been used.
+		/// </summary>
+		/// <param name="name">Name to check other content holders against.</param>
+		/// <param name="owner">owner component, so this component can be skipped.</param>
+		/// <returns>True/False can the currently given name, be used for the owner component?</returns>
 		public static bool FileContentNameAvailable(string name, FileContentComponent owner) {
 			FileContentComponent[] components = GameObject.FindObjectsOfType<FileContentComponent>(true);
 			for (int i = 0; i < components.Length; i++) {
@@ -20,6 +29,13 @@ namespace Base.Ravel.BackendData.DynamicContent
 			return true;
 		}
 
+		/// <summary>
+		/// Tries to extract a content json string out of the currently open scene, which contains the dynamic content.
+		/// Returns false if there is no content at all and the entries should just be cleared. 
+		/// </summary>
+		/// <param name="json">content string output.</param>
+		/// <returns>True/False scene contained any dynamic content</returns>
+		/// <exception cref="Exception">Missing type of content.</exception>
 		public static bool TryGetDynamicContentJson(out string json) {
 			FileContentComponent[] components = GameObject.FindObjectsOfType<FileContentComponent>(true);
 			

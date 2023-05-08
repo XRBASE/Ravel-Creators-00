@@ -3,7 +3,6 @@ using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Threading.Tasks.Sources;
 using Base.Ravel.BackendData.DynamicContent;
 using Base.Ravel.Networking;
 using Unity.EditorCoroutines.Editor;
@@ -128,7 +127,7 @@ public static class BundleBuilder
 		
 		RavelWebRequest req;
 		//clear current dynamic content
-		req = CreatorRequest.ClearDynamicContentRequest(config.environmentSO.environment);
+		req = DynamicContentRequest.ClearDynamicContentRequest(config.environmentSO.environment);
 		yield return req.Send();
 		
 		RavelWebResponse res = new RavelWebResponse(req);
@@ -141,7 +140,7 @@ public static class BundleBuilder
 		
 		//Upload file content to backend, using names in scene.
 		if (DynamicContentManagement.TryGetDynamicContentJson(out string json)) {
-			req = CreatorRequest.AddDynamicContentRequest(config.environmentSO.environment, json);
+			req = DynamicContentRequest.AddDynamicContentRequest(config.environmentSO.environment, json);
 			yield return req.Send();
 			
 			res = new RavelWebResponse(req);
