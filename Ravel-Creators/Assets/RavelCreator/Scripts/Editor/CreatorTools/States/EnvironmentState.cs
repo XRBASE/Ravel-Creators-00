@@ -233,7 +233,7 @@ public class EnvironmentState : CreatorWindowState
     private void GUIDeleteEnvironment() {
         Color prevCol = GUI.backgroundColor;
         GUI.backgroundColor = Color.red;
-        if (GUILayout.Button("Delete bundle") && EditorUtility.DisplayDialog( "Delete environment","Are you sure you want to permanently delete this environment?", "Yes", "No")) {
+        if (GUILayout.Button("Delete environment") && EditorUtility.DisplayDialog( "Delete environment","Are you sure you want to permanently delete this environment?", "Yes", "No")) {
             if (TryGetLocalEnvironmentSO(CurEnv, out EnvironmentSO envObj)) {
                 AssetDatabase.DeleteAsset(AssetDatabase.GetAssetPath(envObj));
                 AssetDatabase.Refresh();
