@@ -34,11 +34,11 @@ namespace Base.Ravel.Creator.Components
 		}
 		
 		public DynamicContentMetaData MetaData {
-			get { return metaData; }
+			get { return _metaData; }
 		}
 
 		[SerializeField, HideInInspector] protected FileContentData _data;
-		[SerializeField, HideInInspector] protected DynamicContentMetaData metaData;
+		[SerializeField, HideInInspector] protected DynamicContentMetaData _metaData;
 
 		protected override void BuildComponents() { }
 		protected override void DisposeData() { }

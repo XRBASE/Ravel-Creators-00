@@ -124,10 +124,9 @@ public static class BundleBuilder
 		}
 		//Sets the id's for all networked components
 		IDProvider.SetSceneIDs();
-		
-		RavelWebRequest req;
+
 		//clear current dynamic content
-		req = DynamicContentRequest.ClearDynamicContentRequest(config.environmentSO.environment);
+		RavelWebRequest req = DynamicContentRequest.ClearDynamicContentRequest(config.environmentSO.environment);
 		yield return req.Send();
 		
 		RavelWebResponse res = new RavelWebResponse(req);
@@ -277,21 +276,21 @@ public static class BundleBuilder
 			return;
 		}
 		
-		List<string> kill = new List<string>();
+		List<string> toDelete = new List<string>();
 
 		string name;
 		string bundlesDisplay = "";
 		for (int i = 0; i < files.Count; i++) {
 			name = files[i];
 
-			//only kill files without extention, with a manifest file, and kill the meta files too
+			//only delete files without extention, with a manifest file, and delete the meta files too
 			if (Path.GetExtension(name) == "" && files.Contains(name + ".manifest")) {
-				kill.Add(name);
+				toDelete.Add(name);
 				bundlesDisplay += $"{name},";
 			}
 		}
 
-		if (kill.Count == 0) {
+		if (toDelete.Count == 0) {
 			//no bundles found
 			Debug.LogWarning($"Cannot delete bundles, no bundles found at {RavelEditor.CreatorConfig.bundlePath}");
 			return;
@@ -304,8 +303,8 @@ public static class BundleBuilder
 			return;
 		}
 
-		for (int i = 0; i < kill.Count; i++) {
-			File.Delete(kill[i]);
+		for (int i = 0; i < toDelete.Count; i++) {
+			File.Delete(toDelete[i]);
 		}
 		AssetDatabase.Refresh();
 	}
