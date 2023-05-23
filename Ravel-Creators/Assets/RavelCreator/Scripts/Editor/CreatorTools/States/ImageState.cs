@@ -1,4 +1,5 @@
 using System.IO;
+using MathBuddy.Strings;
 using UnityEditor;
 using UnityEngine;
 
@@ -113,7 +114,7 @@ public class ImageState : CreatorWindowState
 		
 		AssetDatabase.Refresh();
 
-		if (path.Contains(Application.dataPath)) {
+		if (path.IsSubpathOf(Application.dataPath)) {
 			//split path from asset folder (-6 ensures the asset folder is included in the path).
 			Selection.activeObject = AssetDatabase.LoadAssetAtPath<Texture2D>(path.Substring(Application.dataPath.Length - 6));
 		}
@@ -199,12 +200,12 @@ public class ImageState : CreatorWindowState
 	private void GUIImageTools() {
 		//crop only enabled when the image is not already correctly sized.
 		GUI.enabled = !_sizeMatch;
-		string cropPath = RavelEditor.CreatorConfig.GetFilePath();
 		if (GUILayout.Button("Scale/Crop image")) {
+			string cropPath = RavelEditor.CreatorConfig.GetFilePath();
 			//Save file on location
 			cropPath = EditorUtility.SaveFilePanel("Scale/Crop image", cropPath, $"{_image.name}_Crop", "jpg");
 			if (!string.IsNullOrEmpty(cropPath)) {
-				RavelEditor.CreatorConfig.SetFilePath(Path.GetDirectoryName(cropPath));
+				RavelEditor.CreatorConfig.SetFilePath(cropPath);
 				ScaleCropAndSaveImage(cropPath);
 			}
 		}
@@ -226,7 +227,7 @@ public class ImageState : CreatorWindowState
 
 			selectPath = EditorUtility.OpenFilePanel("Select image", selectPath, RavelEditorStying.IMAGE_EXTENSIONS);
 			if (!string.IsNullOrEmpty(selectPath)) {
-				RavelEditor.CreatorConfig.SetFilePath(Path.GetDirectoryName(selectPath));
+				RavelEditor.CreatorConfig.SetFilePath(selectPath);
 				LoadFile(selectPath);
 				
 				_wnd.EnableBanner(_image == null);

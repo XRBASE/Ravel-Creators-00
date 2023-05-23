@@ -1,4 +1,6 @@
+using System.IO;
 using Base.Ravel.Networking;
+using MathBuddy.Strings;
 using UnityEditor;
 using UnityEngine;
 using Object = UnityEngine.Object;
@@ -102,7 +104,7 @@ public class CreateEnvironmentWindow : EditorWindow
 			if (!string.IsNullOrEmpty(path)) {
 				RavelEditor.CreatorConfig.SetFilePath(path);
 
-				if (!path.Contains(Application.dataPath)) {
+				if (!path.IsSubpathOf(Application.dataPath)) {
 					Debug.LogError("Chosen path should be inside of the project for environment asset files.");
 					return;
 				}

@@ -142,8 +142,7 @@ public static class BundleBuilder
 		}
 		
 		//build the actual bundle
-		var assetBundleManifest = BuildPipeline.BuildAssetBundles(path, BuildAssetBundleOptions.None,
-			BuildTarget.WebGL);
+		BuildPipeline.BuildAssetBundles(path, BuildAssetBundleOptions.None, BuildTarget.WebGL);
 		
 		//increment version numbers.
 		if(RavelEditor.CreatorConfig.incrementMinorVersionOnBuild){

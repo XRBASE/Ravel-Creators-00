@@ -12,6 +12,7 @@ namespace Base.Ravel.Creator.Components
 	/// is the interactable that the player needs to click on to sit down.
 	/// </summary>
 	[RequireComponent(typeof(Collider))]
+	[AddComponentMenu("Ravel/Seat")]
 	public partial class SeatComponent : ComponentBase, INetworkId
 	{
 		public override ComponentData Data { get; }
@@ -69,15 +70,15 @@ namespace Base.Ravel.Creator.Components
 				else {
 					//offers option to move the seat (child) or parent object to adjust the seat height to the correct height.
 					GUILayout.Label($"Floor ({name}) found at distance {distance}");
-					if (Mathf.Abs(distance - SeatData.PERFECT_BUTT_HEIGHT) > MathBuddy.FloatingPoints.LABDA) {
-						EditorGUILayout.HelpBox($"The perfect height between the chair and the floor is {SeatData.PERFECT_BUTT_HEIGHT}. Do you want to set this height?",
+					if (Mathf.Abs(distance - SeatData.PERFECT_SEAT_HEIGHT) > MathBuddy.FloatingPoints.LABDA) {
+						EditorGUILayout.HelpBox($"The perfect height between the chair and the floor is {SeatData.PERFECT_SEAT_HEIGHT}. Do you want to set this height?",
 							MessageType.Warning);
 						EditorGUILayout.BeginHorizontal();
 						if (GUILayout.Button($"Fix parent ({_instance.gameObject.name})")) {
-							_instance.transform.position += Vector3.down * (distance - SeatData.PERFECT_BUTT_HEIGHT);
+							_instance.transform.position += Vector3.down * (distance - SeatData.PERFECT_SEAT_HEIGHT);
 						}
 						if (GUILayout.Button($"Fix child ({_instance._data.seat.gameObject.name})")) {
-							_instance._data.seat.position += Vector3.down * (distance - SeatData.PERFECT_BUTT_HEIGHT);
+							_instance._data.seat.position += Vector3.down * (distance - SeatData.PERFECT_SEAT_HEIGHT);
 						}
 						EditorGUILayout.EndHorizontal();
 					}
@@ -94,7 +95,7 @@ namespace Base.Ravel.Creator.Components
 	[Serializable]
 	public class SeatData : ComponentData
 	{
-		public const float PERFECT_BUTT_HEIGHT = 0.6f;
+		public const float PERFECT_SEAT_HEIGHT = 0.6f;
 		
 		public int id;
 		public Transform seat;

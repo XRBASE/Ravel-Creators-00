@@ -1,4 +1,5 @@
 #if UNITY_EDITOR
+using System.IO;
 using Base.Ravel.Networking;
 using UnityEditor;
 using UnityEngine;
@@ -228,8 +229,8 @@ public class EnvironmentSOEditor : Editor
     /// Draw upload bundle and image and publish button.
     /// </summary>
     private void GUIServerFunctions() {
-        if (GUILayout.Button("Upload preview")) {
-            string path = EditorUtility.OpenFilePanel("Upload new preview", RavelEditor.CreatorConfig.GetFilePath(), RavelEditorStying.IMAGE_EXTENSIONS);
+        if (GUILayout.Button("Upload loading image")) {
+            string path = EditorUtility.OpenFilePanel("Upload new loading image", RavelEditor.CreatorConfig.GetFilePath(), RavelEditorStying.IMAGE_EXTENSIONS);
 
             if (!string.IsNullOrEmpty(path)) {
                 RavelEditor.CreatorConfig.SetFilePath(path);

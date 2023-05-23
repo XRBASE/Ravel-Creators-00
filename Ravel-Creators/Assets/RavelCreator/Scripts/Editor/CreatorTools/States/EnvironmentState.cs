@@ -1,5 +1,7 @@
 using System;
+using System.IO;
 using Base.Ravel.Networking;
+using MathBuddy.Strings;
 using Unity.EditorCoroutines.Editor;
 using UnityEditor;
 using UnityEngine;
@@ -96,18 +98,10 @@ public class EnvironmentState : CreatorWindowState
     /// </summary>
     private void GUIEnvLocation() {
         //none counts as foldout closed, otherwise one of the tabs is used and selected
-        bool foldout = _location != Location.None;
         bool forceRefresh = false;
+
+        EditorGUILayout.LabelField("Existing");
         
-        if (!EditorGUILayout.Foldout(foldout, "Existing")) {
-            _location = Location.None;
-            
-            if (foldout) {
-                //foldout closed
-                SetMinSize();
-            }
-            return;
-        }
         if (_location == Location.None) {
             _location = (Location)1;
             forceRefresh = true;
@@ -117,11 +111,6 @@ public class EnvironmentState : CreatorWindowState
         _location = (Location) GUILayout.SelectionGrid((int)_location - 1, GetLocationNames(), (int)Location.Length - 1) + 1;
         if (EditorGUI.EndChangeCheck() || forceRefresh) {
             RefreshEnvironments();
-        }
-        
-        if (!foldout) {
-            //foldout opened
-            SetMinSize();
         }
     }
 
@@ -194,6 +183,10 @@ public class EnvironmentState : CreatorWindowState
                         so = ScriptableObject.CreateInstance<EnvironmentSO>();
                         so.environment = CurEnv;
 
+                        if (!path.IsSubpathOf(Application.dataPath)) {
+                            Debug.LogError("Cannot save environment asset outside of project!");
+                            return;
+                        }
                         path = path.Substring(path.IndexOf("Assets", StringComparison.Ordinal));
                         
                         AssetDatabase.CreateAsset(so, path);

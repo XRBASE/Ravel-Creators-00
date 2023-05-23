@@ -10,6 +10,7 @@ namespace Base.Ravel.Creator.Components
     /// <summary>
     /// Displays user data of the local user, using callbacks to send the data to an image, TMP or something else.
     /// </summary>
+    [AddComponentMenu("Ravel/Display player info")]
     public partial class DisplayPlayerInfoComponent : ComponentBase
     {
         public override ComponentData Data {
