@@ -370,7 +370,8 @@ public class EnvironmentSOEditor : Editor
     /// Deletes the scriptable object reference.
     /// </summary>
     public void DeleteLocalAsset() {
-        AssetDatabase.DeleteAsset(AssetDatabase.GetAssetPath(this));
+        string path = AssetDatabase.GetAssetPath(_instance);
+        AssetDatabase.DeleteAsset(path);
         AssetDatabase.Refresh();
     }
     
