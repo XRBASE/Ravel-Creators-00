@@ -93,7 +93,9 @@ public class BundleState : CreatorWindowState
         
         //versioning string input
         GUIDrawVersioning(position);
-        
+
+        GUILayout.Space(RavelEditorStying.GUI_SPACING_MICRO);
+        GUIDrawRefreshButton();
         //all bundles and their version numbers 
         for (int i = 0; i < Config.bundles.Count; i++) {
             GUIDrawBundleInfo(Config.bundles[i], position);
@@ -104,6 +106,16 @@ public class BundleState : CreatorWindowState
     
 #region #region draw GUI methods
 
+    private void GUIDrawRefreshButton() {
+        EditorGUILayout.BeginHorizontal();
+        GUILayout.FlexibleSpace();
+        
+        if (GUILayout.Button("Refresh", GUILayout.Width(RavelEditorStying.GUI_SPACING * 2))) {
+            Config.UpdateValues();
+        }
+        EditorGUILayout.EndHorizontal();
+    }
+    
     /// <summary>
     /// Drawn in version screen, but saved in the creator config, as that contains all user settings.
     /// </summary>

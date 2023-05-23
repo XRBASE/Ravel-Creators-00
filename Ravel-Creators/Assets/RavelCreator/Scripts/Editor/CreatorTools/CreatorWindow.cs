@@ -9,6 +9,7 @@ using UnityEngine;
 /// </summary>
 public class CreatorWindow : EditorWindow
 {
+	private const string WND_NAME = "Ravel creator window";
 	/// <summary>
 	/// Currently open tab.
 	/// </summary>
@@ -60,7 +61,7 @@ public class CreatorWindow : EditorWindow
 	/// <param name="tab">tab on which to open the creator window.</param>
 	/// <param name="show">Should the window be opened, or just retrieved.</param>
 	public static CreatorWindow GetWindow(State tab, bool show = true) {
-		CreatorWindow wnd = GetWindow<CreatorWindow>();
+		CreatorWindow wnd = GetWindow<CreatorWindow>(WND_NAME);
 		wnd.SwitchTab(tab);
 		
 		if (show) {

@@ -1,3 +1,5 @@
+using System;
+using UnityEditor;
 using UnityEngine;
 
 /// <summary>
@@ -24,8 +26,23 @@ public class RavelBranding : ScriptableObject
     public Texture2D logoSquare;
 
     [Space]
-    [Tooltip("Used for checks that pass")]
-    public Texture2D passCheck;
-    [Tooltip("Used for checks that fail")]
-    public Texture2D failCheck;
+    [Tooltip("Used for pass checks and perfect conditions")]
+    public Texture2D checkPass;
+    [Tooltip("Used for warning checks, which still pass conditions")]
+    public Texture2D checkWarning;
+    [Tooltip("Used for error checks and failing conditions")]
+    public Texture2D checkError;
+
+    public Texture2D GetCheck(MessageType checkType) {
+        switch (checkType) {
+            case MessageType.Info:
+                return checkPass;
+            case MessageType.Warning:
+                return checkWarning;
+            case MessageType.Error:
+                return checkError;
+            default:
+                throw new Exception($"No check found for type {checkType}. please use info(pass) or warning or error!");
+        }
+    }
 }
