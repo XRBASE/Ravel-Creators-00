@@ -7,6 +7,13 @@ namespace MathBuddy.Strings
 {
     public static class StringExtentions
     {
+        public static bool IsSubpathOf(this string subDir, string rootDir) {
+            subDir = subDir.Replace('/', '\\');
+            rootDir = rootDir.Replace('/', '\\');
+
+            return subDir.StartsWith(rootDir);
+        }
+        
         public static string ToCsv(IEnumerable<string> data)
         {
             string output = "";

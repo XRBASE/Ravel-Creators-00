@@ -1,5 +1,4 @@
 using System;
-using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Events;
 #if UNITY_EDITOR
@@ -12,6 +11,7 @@ namespace Base.Ravel.Creator.Components
 	/// Skeleton part of the class, contains code and methods for creators, but no implementation
 	/// </summary>
 	[RequireComponent(typeof(Collider))]
+	[AddComponentMenu("Ravel/Interactable")]
 	public partial class InteractableComponent : ComponentBase, INetworkId
 	{
 		public bool Networked { 

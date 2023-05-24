@@ -1,4 +1,5 @@
 #if UNITY_EDITOR
+using System.IO;
 using Base.Ravel.Networking;
 using UnityEditor;
 using UnityEngine;
@@ -119,7 +120,12 @@ public class EnvironmentSOEditor : Editor
         GUIDataUrls();
 
         GUILayout.Space(RavelEditorStying.GUI_SPACING_MICRO);
-
+        
+        if (GUILayout.Button(new GUIContent("Preview current", "Preview currently uploaded bundle"))) {
+            Application.OpenURL(CreatorRequest.GetPreviewUrl(_instance.environment));
+        }
+        
+        GUILayout.Space(RavelEditorStying.GUI_SPACING_MICRO);
         if (!(_instance.environment.published || _instance.environment.submissionInProgress)) {
             //upload and publish
             GUIServerFunctions();
@@ -228,8 +234,8 @@ public class EnvironmentSOEditor : Editor
     /// Draw upload bundle and image and publish button.
     /// </summary>
     private void GUIServerFunctions() {
-        if (GUILayout.Button("Upload preview")) {
-            string path = EditorUtility.OpenFilePanel("Upload new preview", RavelEditor.CreatorConfig.GetFilePath(), RavelEditorStying.IMAGE_EXTENSIONS);
+        if (GUILayout.Button("Upload loading image")) {
+            string path = EditorUtility.OpenFilePanel("Upload new loading image", RavelEditor.CreatorConfig.GetFilePath(), RavelEditorStying.IMAGE_EXTENSIONS);
 
             if (!string.IsNullOrEmpty(path)) {
                 RavelEditor.CreatorConfig.SetFilePath(path);
@@ -249,7 +255,6 @@ public class EnvironmentSOEditor : Editor
                 _uploadingFile = true;
             }
         }
-
         if (GUILayout.Button("Publish") && EditorUtility.DisplayDialog("Publish environment",
                 "Are you sure you want to publish the current version of this environment?", "Publish", "Cancel")) {
 

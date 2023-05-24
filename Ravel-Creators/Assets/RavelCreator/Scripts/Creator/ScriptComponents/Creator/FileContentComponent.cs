@@ -1,4 +1,6 @@
 using System;
+using Base.Ravel.BackendData.DynamicContent;
+using TMPro;
 using UnityEngine;
 using UnityEngine.Events;
 #if UNITY_EDITOR
@@ -10,20 +12,34 @@ namespace Base.Ravel.Creator.Components
 	/// <summary>
 	/// Used to create a container for loading files in, either 2D or 3D.
 	/// </summary>
+	[AddComponentMenu("Ravel/File content")]
 	public partial class FileContentComponent : ComponentBase, INetworkId
-	{
+	{ 
 		public override ComponentData Data {
 			get { return _data; }
 		}
-
-		[SerializeField, HideInInspector] protected FileContentData _data;
-
+		
 		public bool Networked { get { return true; } }
 
 		public int ID {
 			get { return _data.id; }
 			set { _data.id = value; }
 		}
+
+		public string Name {
+			get { return _data.name; }
+		}
+
+		public FileContentData.Type Type {
+			get { return _data.type; }
+		}
+		
+		public DynamicContentMetaData MetaData {
+			get { return _metaData; }
+		}
+
+		[SerializeField, HideInInspector] protected FileContentData _data;
+		[SerializeField, HideInInspector] protected DynamicContentMetaData _metaData;
 
 		protected override void BuildComponents() { }
 		protected override void DisposeData() { }
@@ -46,6 +62,7 @@ namespace Base.Ravel.Creator.Components
 			private SerializedProperty _fileLoadedEvent;
 			private SerializedProperty _fileClosedEvent;
 			private FileContentComponent _instance;
+			private string _nameCache;
 
 			public void OnEnable() {
 				_instance = (FileContentComponent)target;
@@ -65,9 +82,21 @@ namespace Base.Ravel.Creator.Components
 
 				EditorGUILayout.Space();
 				//used for future implementation of CMS
+				
 				_instance._data.name = EditorGUILayout.TextField("Name", _instance._data.name);
-				GUILayout.Label("Description");
-				_instance._data.description = EditorGUILayout.TextArea(_instance._data.description);
+				if (string.IsNullOrEmpty(_instance._data.name)) {
+					_nameCache = _instance._data.name;
+					EditorGUILayout.HelpBox("No name set for filecomponent, file components require a unique name for content managenent!", MessageType.Error);
+					return;
+				} if (_instance._data.name != _nameCache) {
+					if (DynamicContentManagement.FileContentNameAvailable(_instance._data.name, _instance)) {
+						_nameCache = _instance._data.name;
+					}
+					else {
+						Debug.LogError($"File content name: {_instance._data.name} is already taken, please use unique names for file content!");
+						_instance._data.name = _nameCache;
+					}
+				}
 
 				EditorGUILayout.Space();
 				//screens need a canvas
@@ -114,6 +143,12 @@ namespace Base.Ravel.Creator.Components
 				}
 			}
 		}
+		
+		[Serializable]
+		public class FileComponentMetaData
+		{
+			
+		}
 #endif
 	}
 
@@ -122,7 +157,7 @@ namespace Base.Ravel.Creator.Components
 	{
 		public int id;
 		public Type type;
-		public string name, description;
+		public string name;
 		public BoxCollider collider;
 		
 		public UnityEvent onFileLoaded;
