@@ -10,9 +10,8 @@ namespace Base.Ravel.Creator.Components.Gizmo
 			OnDrawDefaultGizmo(component, component.Icon, type);
 		}
 
-		private static void OnDrawDefaultGizmo(ComponentBase component, ComponentBase.GizmoIconType icon,
-		                                       GizmoType type) {
-			string name = $"Default.png";
+		private static void OnDrawDefaultGizmo(ComponentBase component, ComponentBase.GizmoIconType icon, GizmoType type) {
+			string name = $"Ravel/{icon}.png";
 			Gizmos.DrawIcon(component.transform.position, name, true);
 		}
 	}

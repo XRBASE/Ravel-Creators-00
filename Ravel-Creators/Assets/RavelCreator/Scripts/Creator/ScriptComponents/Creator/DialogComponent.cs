@@ -12,6 +12,7 @@ namespace Base.Ravel.Creator.Components
     /// Adds a conversation to the bundle, in which messages can be saved and by using triggers to call next or previous
     /// the conversation can be held.
     /// </summary>
+    [AddComponentMenu("Ravel/Dialog")]
     public partial class DialogComponent : ComponentBase
     {
         public override ComponentData Data {
