@@ -120,7 +120,12 @@ public class EnvironmentSOEditor : Editor
         GUIDataUrls();
 
         GUILayout.Space(RavelEditorStying.GUI_SPACING_MICRO);
-
+        
+        if (GUILayout.Button(new GUIContent("Preview current", "Preview currently uploaded bundle"))) {
+            Application.OpenURL(CreatorRequest.GetPreviewUrl(_instance.environment));
+        }
+        
+        GUILayout.Space(RavelEditorStying.GUI_SPACING_MICRO);
         if (!(_instance.environment.published || _instance.environment.submissionInProgress)) {
             //upload and publish
             GUIServerFunctions();
@@ -250,7 +255,6 @@ public class EnvironmentSOEditor : Editor
                 _uploadingFile = true;
             }
         }
-
         if (GUILayout.Button("Publish") && EditorUtility.DisplayDialog("Publish environment",
                 "Are you sure you want to publish the current version of this environment?", "Publish", "Cancel")) {
 
@@ -371,7 +375,8 @@ public class EnvironmentSOEditor : Editor
     /// Deletes the scriptable object reference.
     /// </summary>
     public void DeleteLocalAsset() {
-        AssetDatabase.DeleteAsset(AssetDatabase.GetAssetPath(this));
+        string p = AssetDatabase.GetAssetPath(_instance);
+        AssetDatabase.DeleteAsset(p);
         AssetDatabase.Refresh();
     }
     
