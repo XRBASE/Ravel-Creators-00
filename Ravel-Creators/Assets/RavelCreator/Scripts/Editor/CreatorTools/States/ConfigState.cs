@@ -44,11 +44,10 @@ public class ConfigState : CreatorWindowState
         GUIDrawBuildConfig();
 
         GUILayout.Space(RavelEditorStying.GUI_SPACING_MICRO);
-        EditorGUILayout.EndScrollView();
-        
         if (GUILayout.Button("Reset")) {
             Config = new CreatorConfig();
         }
+        EditorGUILayout.EndScrollView();
     }
 
 #region #region draw GUI methods
@@ -58,7 +57,7 @@ public class ConfigState : CreatorWindowState
     /// </summary>
     private void GUIDrawMailCaching(Rect position) {
         EditorGUI.BeginChangeCheck();
-        Config.saveUserMail = GUILayout.Toggle(Config.saveUserMail, "Save email");
+        Config.saveUserMail = GUILayout.Toggle(Config.saveUserMail, "Save e-mail");
         if (EditorGUI.EndChangeCheck() && !Config.saveUserMail) {
             Config.userMail = "";
         }
@@ -80,7 +79,7 @@ public class ConfigState : CreatorWindowState
     /// </summary>
     private void GUIDrawBundlePath(Rect position) {
         GUILayout.BeginHorizontal();
-        GUILayout.Label("Asset bundle path:", GUILayout.Width(RavelEditorStying.GUI_SPACING_DECA));
+        GUILayout.Label("Assetbundle path:", GUILayout.Width(RavelEditorStying.GUI_SPACING_DECA));
         
         //18f is spacing between elements
         GUI.enabled = false;
@@ -113,7 +112,7 @@ public class ConfigState : CreatorWindowState
     /// Draws configuration settings for the build process.
     /// </summary>
     private void GUIDrawBuildConfig() {
-        Config.autoClean = GUILayout.Toggle(Config.autoClean, "auto cleanup build files");
+        Config.autoClean = GUILayout.Toggle(Config.autoClean, "auto cleanup bundle files");
     }
 
 #endregion

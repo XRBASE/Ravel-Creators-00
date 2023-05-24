@@ -63,17 +63,48 @@ public class CreateEnvironmentWindow : EditorWindow
 		EditorGUILayout.Space(RavelEditorStying.GUI_SPACING_MICRO);
 		GUI.enabled = canCreate;
 		if (GUILayout.Button("Create")) {
-			CreatorRequest req = CreatorRequest.CreateEnvironment(RavelEditor.User.userUUID, _environment);
-			EditorWebRequests.SendWebRequest(req, OnCreateResponse, this);
+			OnCreatePressed();
 		}
 		GUI.enabled = true;
+	}
+
+	private void OnCreatePressed() {
+		//Open saving dialogs, so user can save the file at her chosen location, or cancel saving.
+		string path = EditorUtility.SaveFilePanel("Save environment", RavelEditor.CreatorConfig.GetFilePath(), 
+			$"ENV_{_environment.name}", "asset");
+		while (string.IsNullOrEmpty(path)) {
+			if (EditorUtility.DisplayDialog("Cancel create?",
+				    "Do you want to cancel creating the environment?",
+				    "No (create)", "Yes (cancel)")) 
+			{
+				//Don't cancel save
+				path = EditorUtility.SaveFilePanel("Save environment", RavelEditor.CreatorConfig.GetFilePath(), 
+					$"ENV_{_environment.name}", "asset");
+				
+				if (!string.IsNullOrEmpty(path) && !path.IsSubpathOf(Application.dataPath)) {
+					EditorUtility.DisplayDialog("Location outside of the project",
+						"Environments have to be saved in a subfolder of the projects assets folder", "ok");
+					path = "";
+				}
+			}
+			else {
+				return;
+			}
+		}
+		RavelEditor.CreatorConfig.SetFilePath(path);
+		//Remove path before assets (AssetDatabase tools use relative path).
+		path = path.Substring(Application.dataPath.Length - 6);
+
+		CreatorRequest req = CreatorRequest.CreateEnvironment(RavelEditor.User.userUUID, _environment);
+		EditorWebRequests.SendWebRequest(req, (res) => OnCreateResponse(res, path), this);
 	}
 
 	/// <summary>
 	/// Callback from server after calling create environment.
 	/// </summary>
-	/// <param name="res">WebResponse data</param>
-	private void OnCreateResponse(RavelWebResponse res) {
+	/// <param name="res">WebResponse data.</param>
+	/// <param name="path">path where environment should be created.</param>
+	private void OnCreateResponse(RavelWebResponse res, string path) {
 		if (res.Success) {
 			//renames public var so it can be used in dotnet
 			string json = EnvironmentExtensions.RenameStringFromBackend(res.DataString);
@@ -82,45 +113,17 @@ public class CreateEnvironmentWindow : EditorWindow
 			EnvironmentSO so = CreateInstance<EnvironmentSO>();
 			so.environment = newEnv;
 
-			//Open saving dialogs, so user can save the file at her chosen location, or cancel saving.
-			string path = EditorUtility.SaveFilePanel("Save environment", RavelEditor.CreatorConfig.GetFilePath(), 
-				$"ENV_{newEnv.name}", "asset");
-
-			if (string.IsNullOrEmpty(path)) {
-				if (EditorUtility.DisplayDialog("Cancel save?",
-					    "Do you want to cancel saving?" +
-					    "The environment has already been created, you are only cancelling saving the file." +
-					    "To delete this environment, use the environment tab of the ravel window or the website.",
-					    "Save environment", "Cancel save")) {
-
-					path = EditorUtility.SaveFilePanel("Save environment", RavelEditor.CreatorConfig.GetFilePath(),
-						$"ENV_{newEnv.name}", "asset");
-				} else {
-					Debug.LogWarning("Environment created, but not saved.");
-				}
-			}
-
-			//Cache chosen path, create asset and refresh asset database
-			if (!string.IsNullOrEmpty(path)) {
-				RavelEditor.CreatorConfig.SetFilePath(path);
-
-				if (!path.IsSubpathOf(Application.dataPath)) {
-					Debug.LogError("Chosen path should be inside of the project for environment asset files.");
-					return;
-				}
-				path = path.Substring(Application.dataPath.Length - 6);
-				
-				AssetDatabase.CreateAsset(so, path);
-				AssetDatabase.Refresh();
-
-				Selection.activeObject = AssetDatabase.LoadAssetAtPath<Object>(path);
-				Close();
-			}
 			
+			AssetDatabase.CreateAsset(so, path);
+			AssetDatabase.Refresh();
+			Selection.activeObject = AssetDatabase.LoadAssetAtPath<Object>(path);
+			Close();
+			
+			//clear data in winow
 			_environment = new Environment();
 		}
 		else {
-			Debug.LogError($"Failed to create environment ({res.Error.FullMessage}) ({res.DataString})");
+			Debug.LogError($"Failed to create environment: {res.Error.FullMessage}.");
 		}
 	}
 }
