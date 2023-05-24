@@ -1,4 +1,6 @@
 using System;
+using System.IO;
+using MathBuddy.Strings;
 using UnityEngine;
 
 /// <summary>
@@ -69,6 +71,7 @@ public class CreatorConfig
 	/// Returns the currently cached file path.
 	/// </summary>
 	public string GetFilePath() {
+		
 		if (string.IsNullOrEmpty(prevFilePath)) {
 			return DEFAULT_FILE_PATH;
 		}
@@ -81,6 +84,12 @@ public class CreatorConfig
 	/// Callback to cache a filepath, so it will be used in the next file prompt.
 	/// </summary>
 	public void SetFilePath(string path) {
-		prevFilePath = path;
+		if (File.Exists(path)) {
+			path = Path.GetDirectoryName(path);
+		}
+		
+		if (path.IsSubpathOf(Application.dataPath)) {
+			prevFilePath = path;
+		}
 	}
 }

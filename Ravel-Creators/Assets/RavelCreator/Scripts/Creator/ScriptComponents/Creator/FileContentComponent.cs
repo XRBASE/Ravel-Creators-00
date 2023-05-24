@@ -12,6 +12,7 @@ namespace Base.Ravel.Creator.Components
 	/// <summary>
 	/// Used to create a container for loading files in, either 2D or 3D.
 	/// </summary>
+	[AddComponentMenu("Ravel/File content")]
 	public partial class FileContentComponent : ComponentBase, INetworkId
 	{ 
 		public override ComponentData Data {

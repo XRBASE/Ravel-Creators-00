@@ -10,6 +10,7 @@ namespace Base.Ravel.Creator.Components
     /// Synchronized animation, no data needed, all data is retrieved from the animation Monobehaviour.
     /// </summary>
     [RequireComponent(typeof(Animation))]
+    [AddComponentMenu("Ravel/Synchronized animation")]
     public partial class SynchronizedAnimationComponent : ComponentBase, INetworkId
     {
         public override ComponentData Data {

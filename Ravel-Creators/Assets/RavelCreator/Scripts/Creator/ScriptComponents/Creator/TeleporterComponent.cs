@@ -10,6 +10,7 @@ namespace Base.Ravel.Creator.Components
     /// <summary>
     /// Teleport component used for teleporting the player to different spawnpoints in the scene.
     /// </summary>
+    [AddComponentMenu("Ravel/Teleporter")]
     public partial class TeleporterComponent : ComponentBase
     {
         public override ComponentData Data {
@@ -62,9 +63,6 @@ namespace Base.Ravel.Creator.Components
                         EditorUtility.SetDirty(_instance);
                         Debug.LogWarning($"Spawnposition with ID {_instance._data.locationId} not found!");
                     }
-                }
-                else if (_instance._data.location != null) {
-                    _instance._data.locationId = _instance._data.location.ID;
                 }
                 
                 EditorGUI.BeginChangeCheck();

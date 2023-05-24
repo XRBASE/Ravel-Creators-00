@@ -9,6 +9,7 @@ namespace Base.Ravel.Creator.Components
 	/// Syncronized audio component, no data needed all data retrieved based on the audiosource Monobehaviour
 	/// </summary>
 	[RequireComponent(typeof(AudioSource))]
+	[AddComponentMenu("Ravel/Synchronized audio")]
 	public partial class SynchronizedAudioComponent : ComponentBase
 	{
 		//no networked interface, as the id is calculated by the internal ravel systems for audio. 
