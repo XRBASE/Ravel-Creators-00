@@ -21,6 +21,8 @@ namespace Base.Ravel.Creator.Components
         protected override void BuildComponents() { }
 
         protected override void DisposeData() { }
+        
+        public void GetData() { }
 
 #if UNITY_EDITOR
         [CustomEditor(typeof(DisplayPlayerInfoComponent))]
