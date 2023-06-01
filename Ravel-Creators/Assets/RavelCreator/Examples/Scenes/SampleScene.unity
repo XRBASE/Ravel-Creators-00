@@ -841,7 +841,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _data:
-    id: 2
+    id: 1
     seat: {fileID: 412157200}
 --- !u!65 &154329249
 BoxCollider:
@@ -1680,7 +1680,7 @@ MonoBehaviour:
             m_BoolArgument: 0
           m_CallState: 2
     networked: 1
-    id: 3
+    id: 2
 --- !u!65 &417495227
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -2767,7 +2767,7 @@ MonoBehaviour:
       m_PersistentCalls:
         m_Calls: []
     networked: 1
-    id: 4
+    id: 3
 --- !u!65 &827885620
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -2938,7 +2938,7 @@ MonoBehaviour:
       m_PersistentCalls:
         m_Calls: []
     networked: 1
-    id: 5
+    id: 4
 --- !u!65 &873563251
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -3065,7 +3065,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _data:
-    id: 6
+    id: 5
     type: 1
     name: PillarModel
     collider: {fileID: 892037140}
@@ -3428,7 +3428,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _data:
-    id: 7
+    id: 6
     type: 0
     name: Text
     collider: {fileID: 978214070}
@@ -3912,7 +3912,7 @@ MonoBehaviour:
       m_PersistentCalls:
         m_Calls: []
     networked: 1
-    id: 8
+    id: 7
 --- !u!65 &1202278937
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -4235,7 +4235,7 @@ MonoBehaviour:
       m_PersistentCalls:
         m_Calls: []
     networked: 1
-    id: 1
+    id: 8
 --- !u!65 &1222507601
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -5959,7 +5959,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ce5a57e2c44181840a3c981281a0d009, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  environmentSO: {fileID: 11400000, guid: ec5ecf85d7a999844ac6d768e42e244b, type: 2}
+  environmentSO: {fileID: 11400000, guid: ea77a4c38b3a06e489c7ab43d4152576, type: 2}
 --- !u!4 &1765377040
 Transform:
   m_ObjectHideFlags: 0
