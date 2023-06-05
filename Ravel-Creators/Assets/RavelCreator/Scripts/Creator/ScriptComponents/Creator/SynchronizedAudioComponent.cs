@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 #if UNITY_EDITOR
 using UnityEditor;
@@ -10,13 +11,21 @@ namespace Base.Ravel.Creator.Components
 	/// </summary>
 	[RequireComponent(typeof(AudioSource))]
 	[AddComponentMenu("Ravel/Synchronized audio")]
-	public partial class SynchronizedAudioComponent : ComponentBase
+	public partial class SynchronizedAudioComponent : ComponentBase, INetworkId
 	{
-		//no networked interface, as the id is calculated by the internal ravel systems for audio. 
+		public bool Networked {
+			get { return true; }
+		}
+		public int ID {
+			get { return _data.id;}
+			set { _data.id = value; }
+		}
 		
 		public override ComponentData Data {
-			get { return null; }
+			get { return _data; }
 		}
+
+		[SerializeField, HideInInspector] private PlayableData _data;
 
 		protected override void BuildComponents() { }
 
@@ -49,5 +58,11 @@ namespace Base.Ravel.Creator.Components
 			}
 		}
 #endif
+	}
+	
+	[Serializable]
+	public class PlayableData : ComponentData
+	{
+		public int id;
 	}
 }

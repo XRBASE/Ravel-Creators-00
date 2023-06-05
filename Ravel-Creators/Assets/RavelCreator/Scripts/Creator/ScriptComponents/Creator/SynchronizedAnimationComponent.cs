@@ -1,4 +1,3 @@
-using System;
 using UnityEngine;
 #if UNITY_EDITOR
 using UnityEditor;
@@ -17,7 +16,7 @@ namespace Base.Ravel.Creator.Components
             get { return null; }
         }
 
-        [SerializeField, HideInInspector] protected AnimationData _data;
+        [SerializeField, HideInInspector] protected PlayableData _data;
 		
         public bool Networked {
             get { return true; }
@@ -98,11 +97,5 @@ namespace Base.Ravel.Creator.Components
             }
         }
 #endif
-    }
-
-    [Serializable]
-    public class AnimationData : ComponentData
-    {
-        public int id;
     }
 }
