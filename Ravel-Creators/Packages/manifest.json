@@ -1,6 +1,6 @@
 {
   "dependencies": {
-    "com.marijnzwemmer.unity-toolbar-extender": "file:unity-toolbar-extender-master/",
+    "com.marijnzwemmer.unity-toolbar-extender": "file:../Assets/unity-toolbar-extender-master/",
     "com.unity.cinemachine": "2.8.9",
     "com.unity.collab-proxy": "2.0.3",
     "com.unity.editorcoroutines": "1.0.0",

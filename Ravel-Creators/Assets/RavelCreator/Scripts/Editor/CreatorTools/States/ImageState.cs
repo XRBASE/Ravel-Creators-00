@@ -8,6 +8,9 @@ public class ImageState : CreatorWindowState
 	//references for file output format
 	private const float ASPECT_W = 16;
 	private const float ASPECT_H = 9;
+
+	//margin px for drawing check marks
+	private const float CHECK_MARGIN = 2;
 	
 	private const int RESOLUTION_X = 1920;
 	private const int RESOLUTION_Y = 1080;
@@ -166,18 +169,33 @@ public class ImageState : CreatorWindowState
 		float imgY = GUILayoutUtility.GetLastRect().yMax;
 		EditorGUILayout.BeginHorizontal();
 		//check image size
-		_sizeMatch = _image.width == RESOLUTION_X && _image.height == RESOLUTION_Y;
+		MessageType result;
+		string msg;
+		if (_image.width == RESOLUTION_X && _image.height == RESOLUTION_Y) {
+			_sizeMatch = true;
+			result = MessageType.Info;
+			msg = "size is correct. This image can be uploaded as is.";
+		} else
+		{
+			_sizeMatch = false;
+			if (_image.width < 1920 || _image.height < 1080) {
+				result = MessageType.Error;
+				msg = "size is too small. This image will need to be rescaled and will lose quality.";
+			}
+			else {
+				result = MessageType.Warning;
+				msg = "size is too big. This image will need to be cropped, but won't lose quality.";
+			}
+		}
 		//draw green/red image of correct size
-		GUIDrawCheckMark(_sizeMatch, $"Image size ({_image.width},{_image.height})", imgY);
+		GUIDrawCheckMark(result, $"Resolution: ({_image.width},{_image.height})", imgY);
 		if (!_sizeMatch) {
 			GUILayout.Label("Drag the image to change the crop", new GUIStyle("label") {alignment = TextAnchor.MiddleRight});
-			EditorGUILayout.EndHorizontal();
 			
-			EditorGUILayout.HelpBox("Only images with a 1920x1080 resolution are accepted, scale and crop would result in the image above", MessageType.Error);
 		}
-		else {
-			EditorGUILayout.EndHorizontal();
-		}
+		
+		EditorGUILayout.EndHorizontal();
+		EditorGUILayout.HelpBox(msg, result);
 	}
 	
 	/// <summary>
@@ -186,11 +204,12 @@ public class ImageState : CreatorWindowState
 	/// <param name="pass">True or False sprite?</param>
 	/// <param name="label">Text label after checkmark</param>
 	/// <param name="imgY">(top) y position of the image.</param>
-	private void GUIDrawCheckMark(bool pass, string label, float imgY) {
-		Texture2D mark = (pass) ? RavelEditor.Branding.passCheck : RavelEditor.Branding.failCheck;
-		RavelEditor.DrawTextureScaleWidthGUI(new Vector2(0, imgY), RavelEditorStying.GUI_SPACING_MILLI, mark, false);
-		
-		GUILayout.Space(RavelEditorStying.GUI_SPACING_MILLI);
+	private void GUIDrawCheckMark(MessageType passType, string label, float imgY) {
+		RavelEditor.DrawTextureScaleWidthGUI(new Vector2(CHECK_MARGIN, imgY), RavelEditorStying.GUI_SPACING_MILLI,
+			RavelEditor.Branding.GetCheck(passType), false);
+		//EditorGUILayout.Space(RavelEditorStying.GUI_SPACING_MILLI);
+
+		GUILayout.Space(RavelEditorStying.GUI_SPACING_MILLI + CHECK_MARGIN);
 		GUILayout.Label(label, new GUIStyle("label") {alignment = TextAnchor.MiddleLeft});
 	}
 

@@ -17,5 +17,6 @@ MonoBehaviour:
   bannerPOI: {x: 0.5, y: 0.5}
   overlayLogo: {fileID: 2800000, guid: f7be58c150b0045499b48c1d09f1c3f5, type: 3}
   logoSquare: {fileID: 2800000, guid: bbc9312e5d5799045b6d5ef5538b8065, type: 3}
-  passCheck: {fileID: 2800000, guid: 6d0c965157c85c3419f73854c34fa8d5, type: 3}
-  failCheck: {fileID: 2800000, guid: e02a07b0040a0c4478399a566519bfb8, type: 3}
+  checkPass: {fileID: 2800000, guid: 7792e71f34e1b464eb88e01f06e7d0d7, type: 3}
+  checkWarning: {fileID: 2800000, guid: 822ff764116d5aa4398442302ba8b72f, type: 3}
+  checkError: {fileID: 2800000, guid: 39e5de203d458e64d9e9b10f34bf2f7d, type: 3}
