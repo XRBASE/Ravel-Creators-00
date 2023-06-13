@@ -1,9 +1,9 @@
 {
   "dependencies": {
     "com.marijnzwemmer.unity-toolbar-extender": {
-      "version": "file:unity-toolbar-extender-master",
+      "version": "file:../Assets/unity-toolbar-extender-master/",
       "depth": 0,
-      "source": "embedded",
+      "source": "local",
       "dependencies": {}
     },
     "com.unity.burst": {
