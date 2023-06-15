@@ -39,7 +39,7 @@ public partial class ConditionComponent : ComponentBase
 
 		public override void OnInspectorGUI() {
 			DrawDefaultInspector();
-			
+
 			EditorGUI.BeginChangeCheck();
 			_instance._data.type = (ConditionType)EditorGUILayout.EnumPopup("Condition type", _instance._data.type);
 			if (EditorGUI.EndChangeCheck()) {
@@ -80,11 +80,16 @@ public class ConditionComponentData : ComponentData
 	public bool autoCheck;
 	
 	public UnityEvent<bool> onConditionChange;
+	public UnityEvent onConditionSuccess;
+	public UnityEvent onConditionFail;
 
 	public ConditionComponentData() { }
 	
 	public ConditionComponentData(ConditionComponentData copy) {
 		onConditionChange = copy.onConditionChange;
+		
+		onConditionSuccess = copy.onConditionSuccess;
+		onConditionFail = copy.onConditionFail;
 	}
 
 	#if UNITY_EDITOR
@@ -93,10 +98,21 @@ public class ConditionComponentData : ComponentData
 			new GUIContent("Auto check",
 				"Should condition check its value automatically or is the check called manually"), autoCheck);
 		
-		SerializedProperty evtProperty = dataProp.FindPropertyRelative("onConditionChange");
+		GUIDrawCallback("onConditionChange", serializedObject, dataProp);
+		
+		GUIDrawCallback("onConditionSuccess", serializedObject, dataProp);
+		GUIDrawCallback("onConditionFail", serializedObject, dataProp);
+	}
+	
+	/// <summary>
+	/// Draws event property with given name in GUI.
+	/// </summary>
+	private void GUIDrawCallback(string propertyName, SerializedObject serializedObject, SerializedProperty dataProp) {
+		SerializedProperty evtProperty = dataProp.FindPropertyRelative(propertyName);
 		EditorGUILayout.PropertyField(evtProperty);
 		serializedObject.ApplyModifiedProperties();
 	}
+	
 	#endif
 }
 

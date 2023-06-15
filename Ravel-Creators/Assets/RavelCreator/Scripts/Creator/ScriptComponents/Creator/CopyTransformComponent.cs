@@ -9,6 +9,7 @@ using UnityEditor;
 /// <summary>
 /// Copies the values of one objects transform onto another object, based on component input.
 /// </summary>
+[AddComponentMenu("Ravel/Copy transform")]
 public partial class CopyTransformComponent : ComponentBase
 {
 	public override ComponentData Data {

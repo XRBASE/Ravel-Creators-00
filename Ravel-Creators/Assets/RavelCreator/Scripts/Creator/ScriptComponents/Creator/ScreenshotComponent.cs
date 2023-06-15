@@ -6,6 +6,7 @@ using UnityEngine.Events;
 using UnityEditor;
 #endif
 
+[AddComponentMenu("Ravel/Screenshot downloader")]
 public partial class ScreenshotComponent : ComponentBase
 {
 	public override ComponentData Data {
