@@ -71,12 +71,14 @@ namespace Base.Ravel.Creator.Components
             private SerializedProperty _onTrackStarted;
             private SerializedProperty _onTrackEnded;
             private SerializedProperty _trackTargets;
+            private SerializedProperty _run;
 
             public void OnEnable()
             {
                 _instance = (TrackComponent) target;
                 _data = serializedObject.FindProperty("_data");
                 _trackTargets = _data.FindPropertyRelative("trackTargets");
+                _run = _data.FindPropertyRelative("run");
                 _onTrackStarted = _data.FindPropertyRelative("onTrackStarted");
                 _onTrackEnded = _data.FindPropertyRelative("onTrackEnded");
             }
@@ -92,12 +94,14 @@ namespace Base.Ravel.Creator.Components
 
                 _instance._data.autoWalk = EditorGUILayout.Toggle("Auto Walk", _instance._data.autoWalk);
 
+                _instance._data.run = EditorGUILayout.Toggle("Run", _instance._data.run);
+                
                 EditorGUILayout.PropertyField(_onTrackStarted);
 
                 EditorGUILayout.PropertyField(_onTrackEnded);
 
                 EditorGUILayout.PropertyField(_trackTargets);
-
+                
                 serializedObject.ApplyModifiedProperties();
 
                 if (EditorGUI.EndChangeCheck())
@@ -115,6 +119,7 @@ namespace Base.Ravel.Creator.Components
         public UnityEvent onTrackStarted, onTrackEnded;
         public bool finishTrackOnStartReached;
         public bool autoWalk;
+        public bool run;
         public List<Transform> trackTargets;
     }
 }
