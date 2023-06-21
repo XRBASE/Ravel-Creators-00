@@ -71,14 +71,12 @@ namespace Base.Ravel.Creator.Components
             private SerializedProperty _onTrackStarted;
             private SerializedProperty _onTrackEnded;
             private SerializedProperty _trackTargets;
-            private SerializedProperty _run;
 
             public void OnEnable()
             {
                 _instance = (TrackComponent) target;
                 _data = serializedObject.FindProperty("_data");
                 _trackTargets = _data.FindPropertyRelative("trackTargets");
-                _run = _data.FindPropertyRelative("run");
                 _onTrackStarted = _data.FindPropertyRelative("onTrackStarted");
                 _onTrackEnded = _data.FindPropertyRelative("onTrackEnded");
             }
