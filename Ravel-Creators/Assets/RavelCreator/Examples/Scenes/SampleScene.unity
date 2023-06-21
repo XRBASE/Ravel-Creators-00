@@ -994,6 +994,21 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 8212054918115379257, guid: e0524cedeca33ed42a11a611fa979bdf,
+        type: 3}
+      propertyPath: _data.run
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8212054918115379257, guid: e0524cedeca33ed42a11a611fa979bdf,
+        type: 3}
+      propertyPath: _data.onTrackEnded.m_PersistentCalls.m_Calls.Array.size
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8212054918115379257, guid: e0524cedeca33ed42a11a611fa979bdf,
+        type: 3}
+      propertyPath: _data.onTrackStarted.m_PersistentCalls.m_Calls.Array.size
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 8212054918115379259, guid: e0524cedeca33ed42a11a611fa979bdf,
         type: 3}
       propertyPath: m_Name
@@ -1185,7 +1200,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _data:
-    id: 0
+    id: 2
 --- !u!114 &399384818
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1717,7 +1732,7 @@ MonoBehaviour:
             m_BoolArgument: 0
           m_CallState: 2
     networked: 1
-    id: 2
+    id: 3
 --- !u!65 &417495227
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -2804,7 +2819,7 @@ MonoBehaviour:
       m_PersistentCalls:
         m_Calls: []
     networked: 1
-    id: 3
+    id: 4
 --- !u!65 &827885620
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -2975,7 +2990,7 @@ MonoBehaviour:
       m_PersistentCalls:
         m_Calls: []
     networked: 1
-    id: 4
+    id: 5
 --- !u!65 &873563251
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -3102,7 +3117,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _data:
-    id: 5
+    id: 6
     type: 1
     name: PillarModel
     collider: {fileID: 892037140}
@@ -3465,7 +3480,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _data:
-    id: 6
+    id: 7
     type: 0
     name: Text
     collider: {fileID: 978214070}
@@ -3949,7 +3964,7 @@ MonoBehaviour:
       m_PersistentCalls:
         m_Calls: []
     networked: 1
-    id: 7
+    id: 8
 --- !u!65 &1202278937
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -4272,7 +4287,7 @@ MonoBehaviour:
       m_PersistentCalls:
         m_Calls: []
     networked: 1
-    id: 8
+    id: 9
 --- !u!65 &1222507601
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -4504,7 +4519,7 @@ MonoBehaviour:
       m_PersistentCalls:
         m_Calls: []
     networked: 1
-    id: 9
+    id: 10
 --- !u!65 &1273639375
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -4818,7 +4833,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _data:
-    id: 10
+    id: 11
     type: 0
     name: TheBigScreen
     collider: {fileID: 1328150543}
@@ -5129,7 +5144,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _data:
-    id: 11
+    id: 12
     seat: {fileID: 1553990653}
 --- !u!65 &1505343738
 BoxCollider:
@@ -5996,7 +6011,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ce5a57e2c44181840a3c981281a0d009, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  environmentSO: {fileID: 11400000, guid: 86d978dfaa1c4604b8d57b68a163e3a3, type: 2}
+  environmentSO: {fileID: 11400000, guid: efe364bd7e242c0459c0cee9b568d56b, type: 2}
 --- !u!4 &1765377040
 Transform:
   m_ObjectHideFlags: 0
@@ -6103,7 +6118,7 @@ MonoBehaviour:
       m_PersistentCalls:
         m_Calls: []
     networked: 1
-    id: 12
+    id: 13
 --- !u!65 &1794211160
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -6745,7 +6760,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _data:
-    id: 13
+    id: 14
 --- !u!111 &2034219646
 Animation:
   m_ObjectHideFlags: 0
