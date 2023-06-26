@@ -6,7 +6,6 @@ using UnityEditor;
 
 namespace Base.Ravel.Creator.Components
 {
-
     /// <summary>
     /// Teleport component used for teleporting the player to different spawnpoints in the scene.
     /// </summary>
@@ -64,6 +63,9 @@ namespace Base.Ravel.Creator.Components
                         Debug.LogWarning($"Spawnposition with ID {_instance._data.locationId} not found!");
                     }
                 }
+                else if (_instance._data.location != null) {
+                    _instance._data.locationId = _instance._data.location.ID;
+                }
                 
                 EditorGUI.BeginChangeCheck();
                 _instance._data.location = EditorGUILayout.ObjectField("Location spawnpoint", _instance._data.location,
@@ -94,7 +96,6 @@ namespace Base.Ravel.Creator.Components
 #if UNITY_EDITOR
         //location is only used to clarify the behaviour for creators, not needed outside of the editor.
         public SpawnPointComponent location;
-
 #endif
     }
 }
