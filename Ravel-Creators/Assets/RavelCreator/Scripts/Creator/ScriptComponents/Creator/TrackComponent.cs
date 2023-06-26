@@ -92,12 +92,14 @@ namespace Base.Ravel.Creator.Components
 
                 _instance._data.autoWalk = EditorGUILayout.Toggle("Auto Walk", _instance._data.autoWalk);
 
+                _instance._data.run = EditorGUILayout.Toggle("Run", _instance._data.run);
+                
                 EditorGUILayout.PropertyField(_onTrackStarted);
 
                 EditorGUILayout.PropertyField(_onTrackEnded);
 
                 EditorGUILayout.PropertyField(_trackTargets);
-
+                
                 serializedObject.ApplyModifiedProperties();
 
                 if (EditorGUI.EndChangeCheck())
@@ -115,6 +117,7 @@ namespace Base.Ravel.Creator.Components
         public UnityEvent onTrackStarted, onTrackEnded;
         public bool finishTrackOnStartReached;
         public bool autoWalk;
+        public bool run;
         public List<Transform> trackTargets;
     }
 }
