@@ -69,14 +69,12 @@ namespace Base.Ravel.Creator.Components
             private NPCComponent _instance;
             private SerializedProperty _data;
             private SerializedProperty _animator;
-            private SerializedProperty _anchor;
 
             public void OnEnable()
             {
                 _instance = (NPCComponent) target;
                 _data = serializedObject.FindProperty("_data");
                 _animator = _data.FindPropertyRelative("animator");
-                _anchor = _data.FindPropertyRelative("anchor");
             }
 
             public override void OnInspectorGUI()
@@ -92,8 +90,6 @@ namespace Base.Ravel.Creator.Components
                     _instance._data.idleWalkUpdateTimeOut);
 
                 EditorGUILayout.PropertyField(_animator);
-                
-                EditorGUILayout.PropertyField(_anchor);
                 
                 serializedObject.ApplyModifiedProperties();
 
@@ -113,6 +109,5 @@ namespace Base.Ravel.Creator.Components
         public float walkRadius = 3f;
         public float idleWalkUpdateTimeOut = 5f;
         public Animator animator;
-        public Transform anchor;
     }
 }
