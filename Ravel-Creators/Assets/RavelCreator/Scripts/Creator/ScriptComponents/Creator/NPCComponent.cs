@@ -22,7 +22,12 @@ namespace Base.Ravel.Creator.Components
         {
         }
 
-        public void FollowPlayer()
+        public void Follow(Transform target)
+        {
+            
+        }
+
+        public void FollowLocalPlayer()
         {
         }
 
@@ -32,6 +37,11 @@ namespace Base.Ravel.Creator.Components
 
         public void LookAtLocalPlayer()
         {
+        }
+
+        public void LookAtTarget(Transform target)
+        {
+            
         }
 
         public void Idle()
