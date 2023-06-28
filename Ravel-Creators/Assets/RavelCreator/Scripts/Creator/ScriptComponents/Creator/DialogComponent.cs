@@ -32,7 +32,7 @@ namespace Base.Ravel.Creator.Components
         /// <summary>
         /// Start dialog at message first message (resets if this needs to happen)
         /// </summary>
-        public void StartDialog() { }
+        public void StartDialog(){ }
 
         /// <summary>
         /// Move to the next message in the conversation.
@@ -207,7 +207,6 @@ namespace Base.Ravel.Creator.Components
             /// that the audio is. Otherwise it will throw an error because of the missing clip.
             /// </summary>
             private bool CheckMessagesForAudio() {
-                bool hasAudio = false;
                 for (int i = 0; i < _instance._data.messages.Length; i++) {
                     if (_instance._data.messages[i].HasAudio) {
                         return true;

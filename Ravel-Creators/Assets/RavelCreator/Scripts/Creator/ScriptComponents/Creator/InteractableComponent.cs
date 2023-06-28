@@ -47,8 +47,13 @@ namespace Base.Ravel.Creator.Components
 		/// Set's component of switch type to disabled.
 		/// </summary>
 		public void DisableSwitch() { }
-		
-		
+
+		/// <summary>
+		/// Set whether the player can interact with this component.
+		/// </summary>
+		public void SetInteractable(bool isInteractable) { }
+
+
 #if UNITY_EDITOR
 		[CustomEditor(typeof(InteractableComponent))]
 		private class InteractableComponentEditor : Editor
@@ -77,7 +82,7 @@ namespace Base.Ravel.Creator.Components
 				if (_instance._data.delayed) {
 					_instance._data.delayTime = EditorGUILayout.FloatField("Duration", _instance._data.delayTime);
 				}
-
+				
 				EditorGUILayout.Space();
 				//hover activation and callbacks.
 				_instance._data.hasHover = EditorGUILayout.Toggle("Has hover interactions", _instance._data.hasHover);
@@ -182,6 +187,8 @@ namespace Base.Ravel.Creator.Components
 		//network data
 		public bool networked = false;
 		[HideInInspector] public int id = -1;
+
+		public bool interactable = true;
 
 		public enum Type
 		{
