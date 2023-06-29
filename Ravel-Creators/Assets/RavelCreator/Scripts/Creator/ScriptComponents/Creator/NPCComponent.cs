@@ -31,8 +31,9 @@ namespace Base.Ravel.Creator.Components
         {
         }
 
-        public void MoveToPlayer()
+        public void MoveToLocalPlayer()
         {
+            
         }
 
         public void LookAtLocalPlayer()
@@ -64,11 +65,19 @@ namespace Base.Ravel.Creator.Components
         {
         }
 
+        /// <summary>
+        /// Anchor functions as a returning or target transform for the NPC, once the anchor is set, you can walk/run/teleport or IdleWalk on this anchor
+        /// </summary>
+        /// <param name="transform">anchor position</param>
         public void SetAnchor(Transform transform)
         {
         }
 
         public void Jump()
+        {
+        }
+
+        public void MoveToAnchor()
         {
         }
 

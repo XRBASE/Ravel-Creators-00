@@ -9823,7 +9823,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ce5a57e2c44181840a3c981281a0d009, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  environmentSO: {fileID: 11400000, guid: 04001fd8c5742ca4e8d25a206ba32093, type: 2}
+  environmentSO: {fileID: 11400000, guid: c99583c42b8aa5a4bbf723df907a0dec, type: 2}
 --- !u!4 &1765377040
 Transform:
   m_ObjectHideFlags: 0
