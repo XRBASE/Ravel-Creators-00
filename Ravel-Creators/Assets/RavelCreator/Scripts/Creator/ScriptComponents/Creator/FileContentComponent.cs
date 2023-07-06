@@ -1,6 +1,6 @@
 using System;
 using Base.Ravel.BackendData.DynamicContent;
-using TMPro;
+using Base.Ravel.Creator.Components.Naming;
 using UnityEngine;
 using UnityEngine.Events;
 #if UNITY_EDITOR
@@ -13,13 +13,13 @@ namespace Base.Ravel.Creator.Components
 	/// Used to create a container for loading files in, either 2D or 3D.
 	/// </summary>
 	[AddComponentMenu("Ravel/File content")]
-	public partial class FileContentComponent : ComponentBase, INetworkId
-	{ 
+	public partial class FileContentComponent : ComponentBase, IUniqueId, INameIdentifiedObject
+	{
 		public override ComponentData Data {
 			get { return _data; }
 		}
 		
-		public bool Networked { get { return true; } }
+		public bool SetUniqueID { get { return true; } }
 
 		public int ID {
 			get { return _data.id; }
@@ -89,7 +89,7 @@ namespace Base.Ravel.Creator.Components
 					EditorGUILayout.HelpBox("No name set for filecomponent, file components require a unique name for content managenent!", MessageType.Error);
 					return;
 				} if (_instance._data.name != _nameCache) {
-					if (DynamicContentManagement.FileContentNameAvailable(_instance._data.name, _instance)) {
+					if (NameAvailabilityCheck.Check(_instance)) {
 						_nameCache = _instance._data.name;
 					}
 					else {
@@ -142,12 +142,6 @@ namespace Base.Ravel.Creator.Components
 					EditorUtility.SetDirty(_instance);
 				}
 			}
-		}
-		
-		[Serializable]
-		public class FileComponentMetaData
-		{
-			
 		}
 #endif
 	}

@@ -11,9 +11,9 @@ namespace Base.Ravel.Creator.Components
 	/// </summary>
 	[RequireComponent(typeof(AudioSource))]
 	[AddComponentMenu("Ravel/Synchronized audio")]
-	public partial class SynchronizedAudioComponent : ComponentBase, INetworkId
+	public partial class SynchronizedAudioComponent : ComponentBase, IUniqueId
 	{
-		public bool Networked {
+		public bool SetUniqueID {
 			get { return true; }
 		}
 		public int ID {

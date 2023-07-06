@@ -12,9 +12,9 @@ namespace Base.Ravel.Creator.Components
 	/// </summary>
 	[RequireComponent(typeof(Collider))]
 	[AddComponentMenu("Ravel/Interactable")]
-	public partial class InteractableComponent : ComponentBase, INetworkId
+	public partial class InteractableComponent : ComponentBase, IUniqueId
 	{
-		public bool Networked { 
+		public bool SetUniqueID { 
 			get { return _data.networked;}
 			set { _data.networked = value; } 
 		}

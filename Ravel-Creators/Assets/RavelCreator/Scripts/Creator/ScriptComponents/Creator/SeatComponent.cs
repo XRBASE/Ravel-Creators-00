@@ -12,12 +12,12 @@ namespace Base.Ravel.Creator.Components
 	/// </summary>
 	[RequireComponent(typeof(Collider))]
 	[AddComponentMenu("Ravel/Seat")]
-	public partial class SeatComponent : ComponentBase, INetworkId
+	public partial class SeatComponent : ComponentBase, IUniqueId
 	{
 		public override ComponentData Data { get; }
 		[SerializeField, HideInInspector] private SeatData _data;
 
-		public bool Networked { get { return true; } }
+		public bool SetUniqueID { get { return true; } }
 
 		public int ID {
 			get { return _data.id;}

@@ -10,7 +10,7 @@ namespace Base.Ravel.Creator.Components
     /// </summary>
     [RequireComponent(typeof(Animation))]
     [AddComponentMenu("Ravel/Synchronized animation")]
-    public partial class SynchronizedAnimationComponent : ComponentBase, INetworkId
+    public partial class SynchronizedAnimationComponent : ComponentBase, IUniqueId
     {
         public override ComponentData Data {
             get { return null; }
@@ -18,7 +18,7 @@ namespace Base.Ravel.Creator.Components
 
         [SerializeField, HideInInspector] protected PlayableData _data;
 		
-        public bool Networked {
+        public bool SetUniqueID {
             get { return true; }
         }
         
