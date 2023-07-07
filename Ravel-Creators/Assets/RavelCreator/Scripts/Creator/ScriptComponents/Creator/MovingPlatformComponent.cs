@@ -24,7 +24,7 @@ namespace Base.Ravel.Creator.Components
                     "Adding this component to a GameObject with a collider makes\nthe player move along with this object while colliding with it");
                 DrawDefaultInspector();
             }
-#endif
         }
+#endif
     }
 }
