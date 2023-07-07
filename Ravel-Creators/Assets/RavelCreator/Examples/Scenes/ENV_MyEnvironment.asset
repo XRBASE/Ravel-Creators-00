@@ -1,0 +1,35 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 06960f5091c0ff34497c172458b206ec, type: 3}
+  m_Name: ENV_MyEnvironment
+  m_EditorClassIdentifier: 
+  environment:
+    environmentUuid: 5aee802e-d332-4d2b-a460-d3281e26b797
+    name: MyEnvironment
+    shortSummary: '-'
+    longSummary: '-'
+    metadataPreviewImage:
+      url256: 
+      url512: 
+      url1024: 
+      url1280: 
+      url1920: 
+    metadataAssetBundle:
+      assetBundleUrl: https://cdn.ravel.world/environments/dev/qPjQNn/gxJ1aP/asset-bundles/3a40b50d-71b5-4ae5-bd0f-dc804823a63c
+    isPublic: 1
+    published: 0
+    submissionInProgress: 0
+    userList: []
+    organizations: []
+    previewSize: 0
+    preview: {fileID: 0}
+  bundleName: MyEnvironment
