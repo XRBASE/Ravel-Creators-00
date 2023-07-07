@@ -1,5 +1,9 @@
 fileFormatVersion: 2
+<<<<<<<< HEAD:Ravel-Creators/Assets/Ready Player Me.meta
+guid: 4c0de497446dcf94986f9b907abf08f9
+========
 guid: 2b003f011a1faf445a47fbe08ff3cad9
+>>>>>>>> development:Ravel-Creators/Assets/RavelCreator/Examples/Assets.meta
 folderAsset: yes
 DefaultImporter:
   externalObjects: {}

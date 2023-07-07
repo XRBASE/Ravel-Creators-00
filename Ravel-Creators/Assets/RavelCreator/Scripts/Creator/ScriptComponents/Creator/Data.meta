@@ -1,5 +1,9 @@
 fileFormatVersion: 2
+<<<<<<<< HEAD:Ravel-Creators/Assets/Ready Player Me/Avatars.meta
+guid: 55c8e7b96db28d949a732856ac9aa948
+========
 guid: 8d227c7914b17b642abeedc0e5f94de1
+>>>>>>>> development:Ravel-Creators/Assets/RavelCreator/Scripts/Creator/ScriptComponents/Creator/Data.meta
 folderAsset: yes
 DefaultImporter:
   externalObjects: {}
