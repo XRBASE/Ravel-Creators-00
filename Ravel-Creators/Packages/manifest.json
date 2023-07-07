@@ -1,6 +1,10 @@
 {
   "dependencies": {
+    "com.atteneder.gltfast": "https://github.com/atteneder/glTFast.git#v5.0.0",
     "com.marijnzwemmer.unity-toolbar-extender": "file:../Assets/unity-toolbar-extender-master/",
+    "com.readyplayerme.avatarloader": "https://github.com/readyplayerme/rpm-unity-sdk-avatar-loader.git#v1.3.2",
+    "com.readyplayerme.core": "https://github.com/readyplayerme/rpm-unity-sdk-core.git",
+    "com.readyplayerme.webview": "https://github.com/readyplayerme/rpm-unity-sdk-webview.git#v1.2.0",
     "com.unity.cinemachine": "2.8.9",
     "com.unity.collab-proxy": "2.0.3",
     "com.unity.editorcoroutines": "1.0.0",
