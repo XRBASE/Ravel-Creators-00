@@ -75,6 +75,7 @@ namespace Base.Ravel.Creator.Components.Games
             
             GUIDrawProperty("onGameStart");
             GUIDrawProperty("onGameStop");
+            GUIDrawProperty("onGameReset");
             
             if (dirty || EditorGUI.EndChangeCheck()) {
                 EditorUtility.SetDirty(_baseInstance);
@@ -104,5 +105,6 @@ namespace Base.Ravel.Creator.Components.Games
 
         public UnityEvent onGameStart;  
         public UnityEvent onGameStop;
+        public UnityEvent onGameReset;
     }
 }
