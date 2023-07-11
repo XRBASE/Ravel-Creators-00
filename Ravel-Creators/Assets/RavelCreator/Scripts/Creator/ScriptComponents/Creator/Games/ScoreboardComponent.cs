@@ -18,6 +18,8 @@ namespace Base.Ravel.Creator.Components.Games
 		protected override void BuildComponents() { }
 		protected override void DisposeData() { }
 
+		public void ResetScores() { }
+
 #if UNITY_EDITOR
 		[CustomEditor(typeof(ScoreboardComponent))]
 		private class ScoreboardComponentEditor : Editor

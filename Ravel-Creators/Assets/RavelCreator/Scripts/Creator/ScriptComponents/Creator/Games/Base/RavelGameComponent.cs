@@ -1,5 +1,6 @@
 using System;
 using Base.Ravel.Creator.Components.Naming;
+using UnityEngine;
 using UnityEngine.Events;
 #if UNITY_EDITOR
 using UnityEditor;
@@ -12,16 +13,16 @@ namespace Base.Ravel.Creator.Components.Games
         public bool SetUniqueID {
             get { return true; }
         }
-        
+
         public string Name {
             get { return BaseData.name; }
         }
-        
+
         public int ID {
-            get { return BaseData.id;}
+            get { return BaseData.id; }
             set { BaseData.id = value; }
         }
-        
+
         public abstract RavelGameData BaseData { get; }
 
         public void StartGame() { }
@@ -67,6 +68,8 @@ namespace Base.Ravel.Creator.Components.Games
                 EditorGUILayout.HelpBox($"Game name should be unique. Name {_baseInstance.BaseData.name} is already taken!", MessageType.Error);
             }
 
+            _baseInstance.BaseData.startOnLoad = EditorGUILayout.Toggle(
+                new GUIContent("start on load","Automatically start the game, after it's been loaded."), _baseInstance.BaseData.startOnLoad);
             _baseInstance.BaseData.hasScore = EditorGUILayout.Toggle("Has score", _baseInstance.BaseData.hasScore);
             if (_baseInstance.BaseData.hasScore) {
                 _baseInstance.BaseData.scoreboard = EditorGUILayout.ObjectField("Scoreboard", _baseInstance.BaseData.scoreboard,
@@ -99,7 +102,8 @@ namespace Base.Ravel.Creator.Components.Games
     {
         public int id;
         public string name;
-        
+
+        public bool startOnLoad;
         public bool hasScore;
         public ScoreboardComponent scoreboard;
 
