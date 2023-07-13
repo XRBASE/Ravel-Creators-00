@@ -12,7 +12,7 @@ using UnityEditor;
 public class SceneConfiguration : MonoBehaviour
 {
     [HideInInspector] public EnvironmentSO environmentSO;
-    
+    public bool disableTeleport;
 #if UNITY_EDITOR
     public static Action environmentUpdated;
     
