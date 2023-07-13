@@ -172,112 +172,6 @@ MonoBehaviour:
   m_hasFontAssetChanged: 0
   m_renderer: {fileID: 1674158521058134696}
   m_maskType: 0
---- !u!1 &1674158521222786383
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 1674158521222786382}
-  - component: {fileID: 1674158521222786381}
-  m_Layer: 0
-  m_Name: Dialog_Sample_1
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &1674158521222786382
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1674158521222786383}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 1674158521843919741}
-  m_RootOrder: 1
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1674158521222786381
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1674158521222786383}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6065b32c8c4dcbc419417e5299b0d303, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _data:
-    messages:
-    - header: 
-      playerNameHeader: 0
-      body: '2: Dialog message with audio option'
-      options: 2
-      delay: 0
-      clip: {fileID: 8300000, guid: 8a87732ae4a54f540aaddaac44b9e584, type: 3}
-    - header: 
-      playerNameHeader: 0
-      body: '2: Dialog message without audio option'
-      options: 0
-      delay: 2
-      clip: {fileID: 0}
-    - header: 
-      playerNameHeader: 0
-      body: '2: Dialog message that auto skips after given time'
-      options: 1
-      delay: 3
-      clip: {fileID: 8300000, guid: 8a87732ae4a54f540aaddaac44b9e584, type: 3}
-    - header: '2: The other user'
-      playerNameHeader: 0
-      body: Dialog message with header text
-      options: 4
-      delay: 0
-      clip: {fileID: 8300000, guid: 8a87732ae4a54f540aaddaac44b9e584, type: 3}
-    - header: Player
-      playerNameHeader: 1
-      body: '2: Dialog message with player name header'
-      options: 4
-      delay: 0
-      clip: {fileID: 8300000, guid: 8a87732ae4a54f540aaddaac44b9e584, type: 3}
-    _usage: 0
-    _playOnAwake: 0
-    _autoNext: 1
-    writeText: 1
-    messageSpeed: 20
-    hasAudio: 1
-    audioSource: {fileID: 2650903648803909725}
-    displayTemplate: {fileID: 2650903648863831772}
-    onDialogFinished:
-      m_PersistentCalls:
-        m_Calls:
-        - m_Target: {fileID: 1674158521222786381}
-          m_TargetAssemblyTypeName: Base.Ravel.Creator.Components.DialogComponent,
-            Assembly-CSharp
-          m_MethodName: ResetDialog
-          m_Mode: 1
-          m_Arguments:
-            m_ObjectArgument: {fileID: 0}
-            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-            m_IntArgument: 0
-            m_FloatArgument: 0
-            m_StringArgument: 
-            m_BoolArgument: 0
-          m_CallState: 2
-    onMessageClose:
-      m_PersistentCalls:
-        m_Calls: []
-    onMessageShow:
-      m_PersistentCalls:
-        m_Calls: []
 --- !u!1 &1674158521843919742
 GameObject:
   m_ObjectHideFlags: 0
@@ -307,7 +201,6 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 1674158522101219833}
-  - {fileID: 1674158521222786382}
   m_Father: {fileID: 2650903648733994379}
   m_RootOrder: 5
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -532,30 +425,35 @@ MonoBehaviour:
     - header: 
       playerNameHeader: 0
       body: Dialog message with audio option
+      color: {r: 0, g: 0, b: 0, a: 0}
       options: 2
       delay: 0
       clip: {fileID: 8300000, guid: 8a87732ae4a54f540aaddaac44b9e584, type: 3}
     - header: 
       playerNameHeader: 0
       body: Dialog message without audio option
+      color: {r: 0, g: 0, b: 0, a: 0}
       options: 0
       delay: 2
       clip: {fileID: 0}
     - header: 
       playerNameHeader: 0
       body: Dialog message that auto skips after given time
+      color: {r: 0, g: 0, b: 0, a: 0}
       options: 1
       delay: 3
       clip: {fileID: 8300000, guid: 8a87732ae4a54f540aaddaac44b9e584, type: 3}
     - header: The other user
       playerNameHeader: 0
       body: Dialog message with header text
+      color: {r: 0, g: 0, b: 0, a: 0}
       options: 4
       delay: 0
       clip: {fileID: 8300000, guid: 8a87732ae4a54f540aaddaac44b9e584, type: 3}
     - header: Player
       playerNameHeader: 1
       body: Dialog message with player name header
+      color: {r: 0, g: 0, b: 0, a: 0}
       options: 4
       delay: 0
       clip: {fileID: 8300000, guid: 8a87732ae4a54f540aaddaac44b9e584, type: 3}
@@ -1677,6 +1575,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _header: {fileID: 1674158522381927524}
   _body: {fileID: 2650903648314640519}
+  _colorHighlights: []
 --- !u!1 &2650903648932616438
 GameObject:
   m_ObjectHideFlags: 0

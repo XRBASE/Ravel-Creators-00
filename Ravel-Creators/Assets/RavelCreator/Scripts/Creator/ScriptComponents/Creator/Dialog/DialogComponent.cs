@@ -53,6 +53,9 @@ namespace Base.Ravel.Creator.Components
             private SerializedProperty _messages;
             private SerializedProperty _event;
 
+            private int _prevMsgCount = 0;
+            private bool _prevMsgColor = false;
+
             public void OnEnable() {
                 _instance = (DialogComponent)target;
                 _serObj = new SerializedObject(_instance);
@@ -64,12 +67,40 @@ namespace Base.Ravel.Creator.Components
                 EditorGUI.indentLevel = 0;
                 DrawDefaultInspector();
                 //checks for any changes, so object can be marked as dirty
-                //bool dirty = false;
+                bool dirty = false;
                 EditorGUI.BeginChangeCheck();
                 
                 //list of message info.
                 EditorGUILayout.PropertyField(_messages,
                     new GUIContent("Messages", "These are the shown messages in order."));
+
+                dirty = EditorGUI.EndChangeCheck();
+                if (dirty) {
+                    if (_prevMsgCount < _instance._data.messages.Length) {
+                        //message added
+                        DialogMessage newMsg, sampleMsg;
+                        for (int i = _prevMsgCount; i < _instance._data.messages.Length; i++) {
+                            newMsg = _instance._data.messages[i];
+                            if (!newMsg.HasHeader) {
+                                continue;
+                            }
+                            
+                            for (int j = i; j >= 0; j--) {
+                                sampleMsg = _instance._data.messages[j];
+                                if (sampleMsg.HasHeader && sampleMsg.HasColor &&
+                                    sampleMsg.header == newMsg.header) {
+                                    newMsg.color = sampleMsg.color;
+                                    break;
+                                }
+                            }
+                        }
+                    }
+                    
+                    _prevMsgCount = _instance._data.messages.Length;
+                }
+                else {
+                    EditorGUI.BeginChangeCheck();
+                }
                 
                 //usage
                 _instance._data._usage = (DialogData.DisplayUsage)
@@ -140,7 +171,7 @@ namespace Base.Ravel.Creator.Components
                 _serObj.ApplyModifiedProperties();
                 
                 //when object has changed, check if it still has audio (and save) and mark the object as dirty
-                if (EditorGUI.EndChangeCheck()) {
+                if (dirty || EditorGUI.EndChangeCheck()) {
                     _instance._data.hasAudio = CheckMessagesForAudio();
                     
                     EditorUtility.SetDirty(_instance);
@@ -231,10 +262,16 @@ namespace Base.Ravel.Creator.Components
         public virtual bool HasHeader {
             get { return options.HasFlag(MessageFlags.Header); }
         }
+        
+        public virtual bool HasColor {
+            get { return options.HasFlag(MessageFlags.Color); }
+        }
 	
         public string header;
         public bool playerNameHeader;
         public string body;
+        public Color color;
+        
         [SerializeField] private MessageFlags options;
         
         public float delay = -1;
@@ -247,9 +284,10 @@ namespace Base.Ravel.Creator.Components
         private enum MessageFlags
         {
             None = 0,
-            Delay = 1,
-            Audio = 2,
-            Header = 4
+            Delay = 1<<0,
+            Audio = 1<<1,
+            Header =1<<2,
+            Color = 1<<3,
         }
         
 #if UNITY_EDITOR
@@ -276,6 +314,9 @@ namespace Base.Ravel.Creator.Components
                         h += EditorGUI.GetPropertyHeight(property.FindPropertyRelative("playerNameHeader"));
                         if (!property.FindPropertyRelative("playerNameHeader").boolValue)
                             h += EditorGUI.GetPropertyHeight(property.FindPropertyRelative("header"));
+                    }
+                    if (flags.HasFlag(MessageFlags.Color)) {
+                        h += EditorGUI.GetPropertyHeight(property.FindPropertyRelative("color"));
                     }
                 }
                 
@@ -350,6 +391,19 @@ namespace Base.Ravel.Creator.Components
                         rect = new Rect(position.x, position.y + h, position.width,
                             EditorGUI.GetPropertyHeight(property.FindPropertyRelative("clip")));
                         EditorGUI.PropertyField(rect, property.FindPropertyRelative("clip"), new GUIContent("clip"));
+                        h += rect.height;
+                    } else if (property.FindPropertyRelative("clip").objectReferenceValue != null) {
+                        property.FindPropertyRelative("clip").objectReferenceValue = null;
+                    }
+
+                    if (flags.HasFlag(MessageFlags.Color)) {
+                        //options dropdown
+                        rect = new Rect(position.x, position.y + h, position.width,
+                            EditorGUI.GetPropertyHeight(property.FindPropertyRelative("color")));
+                        EditorGUI.PropertyField(rect, property.FindPropertyRelative("color"),
+                            new GUIContent("color",
+                                "If display contains highlight graphics, they will get assigned this color while showing this message."));
+                        h += rect.height;
                     }
                 }
                 //stop of the foldout
