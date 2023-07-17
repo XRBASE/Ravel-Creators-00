@@ -80,6 +80,7 @@ namespace Base.Ravel.Creator.Components.Games.Collectibles
 				}
 
 				GUIDrawCallback("onCollected");
+				GUIDrawCallback("onCollectedByLocal", "Only fires when the local player collects this item");
 				GUIDrawCallback("onReset");
 
 				if (dirty || EditorGUI.EndChangeCheck()) {
@@ -90,9 +91,9 @@ namespace Base.Ravel.Creator.Components.Games.Collectibles
 			/// <summary>
 			/// Draws event property with given name in GUI.
 			/// </summary>
-			private void GUIDrawCallback(string propertyName) {
+			private void GUIDrawCallback(string propertyName, string tooltip = "") {
 				_evtProperty = _data.FindPropertyRelative(propertyName);
-				EditorGUILayout.PropertyField(_evtProperty);
+				EditorGUILayout.PropertyField(_evtProperty, new GUIContent(propertyName, tooltip));
 				serializedObject.ApplyModifiedProperties();
 			}
 		}
@@ -106,6 +107,7 @@ namespace Base.Ravel.Creator.Components.Games.Collectibles
 		public string name;
 
 		public UnityEvent onCollected;
+		public UnityEvent onCollectedByLocal;
 		public UnityEvent onReset;
 	}
 }
