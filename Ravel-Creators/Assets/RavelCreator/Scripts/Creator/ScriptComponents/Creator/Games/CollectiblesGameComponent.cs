@@ -8,6 +8,7 @@ using UnityEditor;
 
 namespace Base.Ravel.Creator.Components.Games.Collectibles
 {
+	[AddComponentMenu("Ravel/Games/Collectibles/CollectibleGame")]
 	public partial class CollectiblesGameComponent : RavelGameComponent
 	{
 		public override RavelGameData BaseData {
@@ -78,7 +79,6 @@ namespace Base.Ravel.Creator.Components.Games.Collectibles
 
 		public UnityEvent onAnyCollected;
 		public UnityEvent onAllCollected;
-		public UnityEvent<int> onGameProgress;
 
 		public List<CollectibleComponent> collectibles;
 	}

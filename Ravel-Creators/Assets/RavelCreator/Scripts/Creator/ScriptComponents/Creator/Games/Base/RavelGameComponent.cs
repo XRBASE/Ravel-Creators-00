@@ -8,18 +8,20 @@ using UnityEditor;
 
 namespace Base.Ravel.Creator.Components.Games
 {
+    //after game events
+    [DefaultExecutionOrder(100)]
     public abstract partial class RavelGameComponent : ComponentBase, IUniqueId, INameIdentifiedObject
     {
         public bool SetUniqueID {
             get { return true; }
         }
-
+        
         public string Name {
             get { return BaseData.name; }
         }
-
+        
         public int ID {
-            get { return BaseData.id; }
+            get { return BaseData.id;}
             set { BaseData.id = value; }
         }
 
@@ -79,6 +81,8 @@ namespace Base.Ravel.Creator.Components.Games
             GUIDrawProperty("onGameStart");
             GUIDrawProperty("onGameStop");
             GUIDrawProperty("onGameReset");
+            GUIDrawProperty("onLocalScoreChange", "Called when the local player scores points, or the points reset.");
+            GUIDrawProperty("onGameProgress", "Called when the percentage of completeness changes in the game.");
             
             if (dirty || EditorGUI.EndChangeCheck()) {
                 EditorUtility.SetDirty(_baseInstance);
@@ -88,9 +92,9 @@ namespace Base.Ravel.Creator.Components.Games
         /// <summary>
         /// Draws event property with given name in GUI.
         /// </summary>
-        private void GUIDrawProperty(string propertyName) {
+        private void GUIDrawProperty(string propertyName, string tooltip = "") {
             _baseSerializedProperty = _baseData.FindPropertyRelative(propertyName);
-            EditorGUILayout.PropertyField(_baseSerializedProperty);
+            EditorGUILayout.PropertyField(_baseSerializedProperty, new GUIContent(propertyName, tooltip));
             serializedObject.ApplyModifiedProperties();
         }
     }
@@ -110,5 +114,8 @@ namespace Base.Ravel.Creator.Components.Games
         public UnityEvent onGameStart;  
         public UnityEvent onGameStop;
         public UnityEvent onGameReset;
+        
+        public UnityEvent<int> onGameProgress;
+        public UnityEvent<string> onLocalScoreChange;
     }
 }
