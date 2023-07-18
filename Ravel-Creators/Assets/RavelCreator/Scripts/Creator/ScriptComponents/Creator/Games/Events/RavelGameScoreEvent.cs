@@ -8,6 +8,7 @@ using UnityEditor;
 
 namespace Base.Ravel.Creator.Components.Games
 {
+	[AddComponentMenu("Ravel/Games/Score event")]
 	public partial class RavelGameScoreEvent : MonoBehaviour
 	{
 		[SerializeField] private RavelGameComponent _connectedTo;

@@ -7,6 +7,7 @@ using UnityEditor;
 
 namespace Base.Ravel.Creator.Components.Games
 {
+	[AddComponentMenu("Ravel/Games/Scoreboard")]
 	public partial class ScoreboardComponent : ComponentBase
 	{
 		public override ComponentData Data {
