@@ -1,5 +1,7 @@
+using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
+using UnityEngine.UI;
 #if UNITY_EDITOR
 using UnityEditor;
 #endif
@@ -19,6 +21,8 @@ namespace Base.Ravel.Creator.Components
 
 		[SerializeField] private TMP_Text _header;
 		[SerializeField] private TMP_Text _body;
+		[SerializeField, Tooltip("When set, these graphics will change colors, based on the colors added in the messages.")] 
+		private List<Graphic> _colorHighlights;
 
 		public void NextMessage() { }
 		public void PrevMessage() { }

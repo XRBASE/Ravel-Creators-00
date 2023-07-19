@@ -926,6 +926,18 @@ Transform:
     type: 3}
   m_PrefabInstance: {fileID: 7462009437947683725}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &1476651504 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 8324725475280881183, guid: d5f008559a4bbbd45a2f13f15bb3417d,
+    type: 3}
+  m_PrefabInstance: {fileID: 5413798468343053878}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!4 &1609909223 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 2424345835095246104, guid: d86a057e04ca68e438af2ca4047297ba,
@@ -1412,7 +1424,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   environmentSO: {fileID: 11400000, guid: 86bb66f79230656449b046d4f07a0bf6, type: 2}
-  teleportEnabled: 1
+  teleportEnabled: 0
 --- !u!4 &1765377040
 Transform:
   m_ObjectHideFlags: 0
@@ -2015,6 +2027,16 @@ PrefabInstance:
       propertyPath: m_AnchoredPosition.y
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 2650903648863831772, guid: 49dc96351ab333647a9e3e4e86f1c410,
+        type: 3}
+      propertyPath: _colorHighlights.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2650903648863831772, guid: 49dc96351ab333647a9e3e4e86f1c410,
+        type: 3}
+      propertyPath: _colorHighlights.Array.data[0]
+      value: 
+      objectReference: {fileID: 1674158522627707840}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 5ddbb005e7fe54e449343281304d1b2a, type: 3}
 --- !u!4 &3743098893638389300 stripped
@@ -2500,6 +2522,16 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 9090016848014344101, guid: d5f008559a4bbbd45a2f13f15bb3417d,
+        type: 3}
+      propertyPath: _colorHighlights.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 9090016848014344101, guid: d5f008559a4bbbd45a2f13f15bb3417d,
+        type: 3}
+      propertyPath: _colorHighlights.Array.data[0]
+      value: 
+      objectReference: {fileID: 1476651504}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: d5f008559a4bbbd45a2f13f15bb3417d, type: 3}
 --- !u!1001 &6464844004610974530

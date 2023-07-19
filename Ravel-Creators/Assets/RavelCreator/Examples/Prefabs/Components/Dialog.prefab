@@ -1447,6 +1447,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _header: {fileID: 5070337941931427407}
   _body: {fileID: 8706449397524342030}
+  _colorHighlights: []
 --- !u!1 &8706449398168405705
 GameObject:
   m_ObjectHideFlags: 0
@@ -1566,31 +1567,36 @@ MonoBehaviour:
     - header: 
       playerNameHeader: 0
       body: Dialog with audio option
+      color: {r: 0, g: 0, b: 0, a: 0}
       options: 2
       delay: 0
       clip: {fileID: 8300000, guid: 8a87732ae4a54f540aaddaac44b9e584, type: 3}
     - header: 
       playerNameHeader: 0
       body: Dialog without audio option
+      color: {r: 0, g: 0, b: 0, a: 0}
       options: 0
       delay: 2
       clip: {fileID: 0}
     - header: 
       playerNameHeader: 0
       body: Dialog that auto skips
+      color: {r: 0, g: 0, b: 0, a: 0}
       options: 1
       delay: 2
       clip: {fileID: 8300000, guid: 8a87732ae4a54f540aaddaac44b9e584, type: 3}
     - header: Some name
       playerNameHeader: 0
       body: Dialog with name header
-      options: 4
+      color: {r: 1, g: 0, b: 0, a: 1}
+      options: 12
       delay: 0
       clip: {fileID: 8300000, guid: 8a87732ae4a54f540aaddaac44b9e584, type: 3}
     - header: Player
       playerNameHeader: 1
       body: Dialog with player name header
-      options: 4
+      color: {r: 0.017601252, g: 1, b: 0, a: 1}
+      options: 12
       delay: 0
       clip: {fileID: 8300000, guid: 8a87732ae4a54f540aaddaac44b9e584, type: 3}
     _usage: 0
