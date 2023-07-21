@@ -54,7 +54,6 @@ namespace Base.Ravel.Creator.Components
             private SerializedProperty _event;
 
             private int _prevMsgCount = 0;
-            private bool _prevMsgColor = false;
 
             public void OnEnable() {
                 _instance = (DialogComponent)target;

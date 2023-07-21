@@ -32,6 +32,8 @@ namespace Base.Ravel.Creator.Components
 
         public void GetData() { }
 
+        public void ResetInfo() { }
+
 #if UNITY_EDITOR
         [CustomEditor(typeof(DisplayPlayerInfoComponent))]
         private class DisplayPlayerInfoComponentEditor : Editor
