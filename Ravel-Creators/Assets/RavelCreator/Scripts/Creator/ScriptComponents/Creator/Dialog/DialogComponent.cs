@@ -1,5 +1,4 @@
 using System;
-using TMPro;
 using UnityEngine;
 using UnityEngine.Events;
 #if UNITY_EDITOR
@@ -12,7 +11,7 @@ namespace Base.Ravel.Creator.Components
     /// Adds a conversation to the bundle, in which messages can be saved and by using triggers to call next or previous
     /// the conversation can be held.
     /// </summary>
-    [AddComponentMenu("Ravel/Dialog")]
+    [AddComponentMenu("Ravel/Dialog/Dialog component")]
     public partial class DialogComponent : ComponentBase
     {
         public override ComponentData Data {
@@ -32,7 +31,7 @@ namespace Base.Ravel.Creator.Components
         /// <summary>
         /// Start dialog at message first message (resets if this needs to happen)
         /// </summary>
-        public void StartDialog(){ }
+        public void StartDialog() { }
 
         /// <summary>
         /// Move to the next message in the conversation.
@@ -53,23 +52,13 @@ namespace Base.Ravel.Creator.Components
             private SerializedObject _serObj;
             private SerializedProperty _messages;
             private SerializedProperty _event;
-            
-            //checks the template object and confirms the text output is connected to it.
-            private bool _transformsConnected = false;
-            
+
+            private int _prevMsgCount = 0;
+
             public void OnEnable() {
                 _instance = (DialogComponent)target;
                 _serObj = new SerializedObject(_instance);
                 _messages = _serObj.FindProperty("_data").FindPropertyRelative("messages");
-
-                _transformsConnected = false;
-                //precheck if the transforms are connected, so reloading the scene, or losing data does throw a not connected error.
-                if (_instance._data.displayField?.transform != null &&
-                    _instance._data.displayTemplate?.transform != null) {
-                    if (CheckIfTransformsConnected(_instance._data.displayField.transform, _instance._data.displayTemplate.transform)) {
-                        _transformsConnected = true;
-                    }
-                }
             }
 
             public override void OnInspectorGUI() {
@@ -83,6 +72,34 @@ namespace Base.Ravel.Creator.Components
                 //list of message info.
                 EditorGUILayout.PropertyField(_messages,
                     new GUIContent("Messages", "These are the shown messages in order."));
+
+                dirty = EditorGUI.EndChangeCheck();
+                if (dirty) {
+                    if (_prevMsgCount < _instance._data.messages.Length) {
+                        //message added
+                        DialogMessage newMsg, sampleMsg;
+                        for (int i = _prevMsgCount; i < _instance._data.messages.Length; i++) {
+                            newMsg = _instance._data.messages[i];
+                            if (!newMsg.HasHeader) {
+                                continue;
+                            }
+                            
+                            for (int j = i; j >= 0; j--) {
+                                sampleMsg = _instance._data.messages[j];
+                                if (sampleMsg.HasHeader && sampleMsg.HasColor &&
+                                    sampleMsg.header == newMsg.header) {
+                                    newMsg.color = sampleMsg.color;
+                                    break;
+                                }
+                            }
+                        }
+                    }
+                    
+                    _prevMsgCount = _instance._data.messages.Length;
+                }
+                else {
+                    EditorGUI.BeginChangeCheck();
+                }
                 
                 //usage
                 _instance._data._usage = (DialogData.DisplayUsage)
@@ -123,41 +140,19 @@ namespace Base.Ravel.Creator.Components
                         _instance._data.messageSpeed);
                 }
                 
-                //stop chance check, so checks can be reused for the template objects.
-                dirty = EditorGUI.EndChangeCheck();
-
-                
-                EditorGUILayout.LabelField("Display/Message prefab");
-                //begin prefab/template change check
-                bool templateDirty = false;
-                EditorGUI.BeginChangeCheck();
                 _instance._data.displayTemplate = EditorGUILayout.ObjectField(new GUIContent("Display template", "This template acts as a prefab for the displayed messages."),
-                    _instance._data.displayTemplate, typeof(GameObject), true) as GameObject;
-                
-                _instance._data.displayField = EditorGUILayout.ObjectField(new GUIContent("Display field", "Field in which the messages are displayed."),
-                    _instance._data.displayField, typeof(TMP_Text), true) as TMP_Text;
-                //This checks both the textfield and the parent, as any change in either of them triggers the following statements 
-                templateDirty = EditorGUI.EndChangeCheck();
-                
+                    _instance._data.displayTemplate, typeof(DialogDisplay), true) as DialogDisplay;
+
                 //when missing a prefab, an error is shown, when not missing one, a check is performed to determine whether the textfield is in the template object.
                 //if not, another error is thrown.
-                if (_instance._data.displayTemplate == null || _instance._data.displayField == null) {
-                    EditorGUILayout.HelpBox("Dialog requires both a display and field reference to display messages on!", MessageType.Error);
-                }
-                else{
-                    if (templateDirty) {
-                        if (!CheckIfTransformsConnected(_instance._data.displayField.transform,
-                                _instance._data.displayTemplate.transform)) {
-                            _transformsConnected = false;
-                        }
-                        else {
-                            _transformsConnected = true;
-                        }
-                    }
-                    
-                    if (!_transformsConnected) {
-                        EditorGUILayout.HelpBox("Dialog field should be the same transform or child of template object.", MessageType.Error);
-                    }
+                if (_instance._data.displayTemplate == null) {
+                    EditorGUILayout.HelpBox("Dialog requires a display on which messages are shown!", MessageType.Error);
+                } else {
+                    if (!_instance._data.displayTemplate.HasHeaderReference)
+                        EditorGUILayout.HelpBox("Cannot display messages with header, header is not set in display component!", MessageType.Warning);
+                    if (!_instance._data.displayTemplate.HasBodyReference)
+                        EditorGUILayout.HelpBox("Cannot display messages, no body set in display component!", MessageType.Error);
+                        
                 }
                 
                 //shows the possible events for the dialog.
@@ -175,31 +170,13 @@ namespace Base.Ravel.Creator.Components
                 _serObj.ApplyModifiedProperties();
                 
                 //when object has changed, check if it still has audio (and save) and mark the object as dirty
-                if (dirty || templateDirty) {
+                if (dirty || EditorGUI.EndChangeCheck()) {
                     _instance._data.hasAudio = CheckMessagesForAudio();
                     
                     EditorUtility.SetDirty(_instance);
                 }
                 
                 EditorGUI.indentLevel = indent;
-            }
-            
-            /// <summary>
-            /// Checks if the field transform is contained within the template transform.
-            /// </summary>
-            private bool CheckIfTransformsConnected(Transform field, Transform template) {
-                if (field == template)
-                    return true;
-
-                Transform cache = field;
-                while (cache.parent != null) {
-                    if (cache.parent == template) {
-                        return true;
-                    }
-                    cache = cache.parent;
-                }
-
-                return false;
             }
             
             /// <summary>
@@ -235,8 +212,7 @@ namespace Base.Ravel.Creator.Components
         public AudioSource audioSource;
 
         //display data
-        public GameObject displayTemplate;
-        public TMP_Text displayField;
+        public DialogDisplay displayTemplate;
         
         //events
         public UnityEvent onDialogFinished;
@@ -281,9 +257,22 @@ namespace Base.Ravel.Creator.Components
         public virtual bool HasAudio {
             get { return options.HasFlag(MessageFlags.Audio); }
         }
+        
+        public virtual bool HasHeader {
+            get { return options.HasFlag(MessageFlags.Header); }
+        }
+        
+        public virtual bool HasColor {
+            get { return options.HasFlag(MessageFlags.Color); }
+        }
 	
-        public string text;
+        public string header;
+        public bool playerNameHeader;
+        public string body;
+        public Color color;
+        
         [SerializeField] private MessageFlags options;
+        
         public float delay = -1;
         public AudioClip clip;
         
@@ -294,8 +283,10 @@ namespace Base.Ravel.Creator.Components
         private enum MessageFlags
         {
             None = 0,
-            Delay = 1,
-            Audio = 2
+            Delay = 1<<0,
+            Audio = 1<<1,
+            Header =1<<2,
+            Color = 1<<3,
         }
         
 #if UNITY_EDITOR
@@ -309,7 +300,7 @@ namespace Base.Ravel.Creator.Components
                 float h = EditorGUIUtility.singleLineHeight;
                 if (property.isExpanded) {
                     //text and options always drawn when property is expanded
-                    h += EditorGUI.GetPropertyHeight(property.FindPropertyRelative("text"));
+                    h += EditorGUI.GetPropertyHeight(property.FindPropertyRelative("body"));
                     h += EditorGUI.GetPropertyHeight(property.FindPropertyRelative("options"));
                     
                     //add height of flags, only if the flags have been included.
@@ -318,6 +309,14 @@ namespace Base.Ravel.Creator.Components
                         h += EditorGUI.GetPropertyHeight(property.FindPropertyRelative("delay"));
                     if (flags.HasFlag(MessageFlags.Audio))
                         h += EditorGUI.GetPropertyHeight(property.FindPropertyRelative("clip"));
+                    if (flags.HasFlag(MessageFlags.Header)) {
+                        h += EditorGUI.GetPropertyHeight(property.FindPropertyRelative("playerNameHeader"));
+                        if (!property.FindPropertyRelative("playerNameHeader").boolValue)
+                            h += EditorGUI.GetPropertyHeight(property.FindPropertyRelative("header"));
+                    }
+                    if (flags.HasFlag(MessageFlags.Color)) {
+                        h += EditorGUI.GetPropertyHeight(property.FindPropertyRelative("color"));
+                    }
                 }
                 
                 return h;
@@ -344,10 +343,32 @@ namespace Base.Ravel.Creator.Components
                 float h = rect.height;
                 
                 if (property.isExpanded) {
+                    //retrieve flags value as value
+                    MessageFlags flags = GetFlags(property);
+                    
+                    //if header, draw header
+                    if (flags.HasFlag(MessageFlags.Header)) {
+                        rect = new Rect(position.x, position.y + h, position.width,
+                                EditorGUI.GetPropertyHeight(property.FindPropertyRelative("playerNameHeader")));
+                        
+                        EditorGUI.PropertyField(rect, property.FindPropertyRelative("playerNameHeader"), new GUIContent("Player name header", "Header uses player name as data."));
+                        h += rect.height;
+
+                        if (!property.FindPropertyRelative("playerNameHeader").boolValue) {
+                            rect = new Rect(position.x, position.y + h, position.width,
+                                EditorGUI.GetPropertyHeight(property.FindPropertyRelative("header")));
+                            EditorGUI.PropertyField(rect, property.FindPropertyRelative("header"), new GUIContent("header"));
+                            h += rect.height;
+                        }
+                        else {
+                            property.FindPropertyRelative("header").stringValue = "Player";
+                        }
+                    }
+                    
                     //text field
                     rect = new Rect(position.x, position.y + h, position.width,
-                        EditorGUI.GetPropertyHeight(property.FindPropertyRelative("text")));
-                    EditorGUI.PropertyField(rect, property.FindPropertyRelative("text"), new GUIContent("Text"));
+                        EditorGUI.GetPropertyHeight(property.FindPropertyRelative("body")));
+                    EditorGUI.PropertyField(rect, property.FindPropertyRelative("body"), new GUIContent("message"));
                     h += rect.height;
 
                     //options dropdown
@@ -355,10 +376,7 @@ namespace Base.Ravel.Creator.Components
                         EditorGUI.GetPropertyHeight(property.FindPropertyRelative("options")));
                     EditorGUI.PropertyField(rect, property.FindPropertyRelative("options"), new GUIContent("Options"));
                     h += rect.height;
-                    
-                    //retrieve flags value as value
-                    MessageFlags flags = GetFlags(property);
-                    
+
                     //if delay, draw delay
                     if (flags.HasFlag(MessageFlags.Delay)) {
                         rect = new Rect(position.x, position.y + h, position.width,
@@ -372,6 +390,19 @@ namespace Base.Ravel.Creator.Components
                         rect = new Rect(position.x, position.y + h, position.width,
                             EditorGUI.GetPropertyHeight(property.FindPropertyRelative("clip")));
                         EditorGUI.PropertyField(rect, property.FindPropertyRelative("clip"), new GUIContent("clip"));
+                        h += rect.height;
+                    } else if (property.FindPropertyRelative("clip").objectReferenceValue != null) {
+                        property.FindPropertyRelative("clip").objectReferenceValue = null;
+                    }
+
+                    if (flags.HasFlag(MessageFlags.Color)) {
+                        //options dropdown
+                        rect = new Rect(position.x, position.y + h, position.width,
+                            EditorGUI.GetPropertyHeight(property.FindPropertyRelative("color")));
+                        EditorGUI.PropertyField(rect, property.FindPropertyRelative("color"),
+                            new GUIContent("color",
+                                "If display contains highlight graphics, they will get assigned this color while showing this message."));
+                        h += rect.height;
                     }
                 }
                 //stop of the foldout
