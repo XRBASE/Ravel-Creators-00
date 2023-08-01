@@ -54,7 +54,6 @@ namespace Base.Ravel.Creator.Components
             private SerializedProperty _event;
 
             private int _prevMsgCount = 0;
-            private bool _prevMsgColor = false;
 
             public void OnEnable() {
                 _instance = (DialogComponent)target;
@@ -266,11 +265,17 @@ namespace Base.Ravel.Creator.Components
         public virtual bool HasColor {
             get { return options.HasFlag(MessageFlags.Color); }
         }
+        
+        public virtual bool HasImg {
+            get { return options.HasFlag(MessageFlags.Image); }
+        }
 	
         public string header;
         public bool playerNameHeader;
         public string body;
         public Color color;
+        public Sprite img;
+        public bool userPlayerImg;
         
         [SerializeField] private MessageFlags options;
         
@@ -288,6 +293,7 @@ namespace Base.Ravel.Creator.Components
             Audio = 1<<1,
             Header =1<<2,
             Color = 1<<3,
+            Image = 1<<4,
         }
         
 #if UNITY_EDITOR
@@ -317,6 +323,11 @@ namespace Base.Ravel.Creator.Components
                     }
                     if (flags.HasFlag(MessageFlags.Color)) {
                         h += EditorGUI.GetPropertyHeight(property.FindPropertyRelative("color"));
+                    }
+                    if (flags.HasFlag(MessageFlags.Image)) {
+                        h += EditorGUI.GetPropertyHeight(property.FindPropertyRelative("userPlayerImg"));
+                        if (!property.FindPropertyRelative("userPlayerImg").boolValue)
+                            h += EditorGUI.GetPropertyHeight(property.FindPropertyRelative("img"));
                     }
                 }
                 
@@ -397,7 +408,7 @@ namespace Base.Ravel.Creator.Components
                     }
 
                     if (flags.HasFlag(MessageFlags.Color)) {
-                        //options dropdown
+                        //color for custom colored items.
                         rect = new Rect(position.x, position.y + h, position.width,
                             EditorGUI.GetPropertyHeight(property.FindPropertyRelative("color")));
                         EditorGUI.PropertyField(rect, property.FindPropertyRelative("color"),
@@ -405,6 +416,28 @@ namespace Base.Ravel.Creator.Components
                                 "If display contains highlight graphics, they will get assigned this color while showing this message."));
                         h += rect.height;
                     }
+                    
+                    if (flags.HasFlag(MessageFlags.Image)) {
+                        //sprite for option item
+                        rect = new Rect(position.x, position.y + h, position.width,
+                            EditorGUI.GetPropertyHeight(property.FindPropertyRelative("userPlayerImg")));
+
+                        EditorGUI.PropertyField(rect, property.FindPropertyRelative("userPlayerImg"),
+                            new GUIContent("use player image",
+                                "Show player's profile image if one is found."));
+                        h += rect.height;
+
+                        if (!property.FindPropertyRelative("userPlayerImg").boolValue) {
+                            rect = new Rect(position.x, position.y + h, position.width,
+                                EditorGUI.GetPropertyHeight(property.FindPropertyRelative("img")));
+
+                            EditorGUI.PropertyField(rect, property.FindPropertyRelative("img"),
+                                new GUIContent("profile image",
+                                    "profile image to show with this message."));
+                            h += rect.height;
+                        }
+                    }
+                    
                 }
                 //stop of the foldout
                 EditorGUI.EndFoldoutHeaderGroup();

@@ -24,6 +24,9 @@ namespace Base.Ravel.Creator.Components
 		[SerializeField, Tooltip("When set, these graphics will change colors, based on the colors added in the messages.")] 
 		private List<Graphic> _colorHighlights;
 
+		[SerializeField, Tooltip("When set, this graphic will show the profile image connected to the message shown.")] 
+		private Image _profileImg;
+
 		public void NextMessage() { }
 		public void PrevMessage() { }
 
