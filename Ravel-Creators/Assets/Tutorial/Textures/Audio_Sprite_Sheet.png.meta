@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: 33b12570dd9a1924aa753792a639e0b6
+guid: 4c0a19c34f957d647bea9ff4f15515c4
 TextureImporter:
   internalIDToNameTable: []
   externalObjects: {}
@@ -48,7 +48,7 @@ TextureImporter:
   alignment: 0
   spritePivot: {x: 0.5, y: 0.5}
   spritePixelsToUnits: 100
-  spriteBorder: {x: 100, y: 145, z: 100, w: 65}
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
   spriteGenerateFallbackPhysicsShape: 1
   alphaUsage: 1
   alphaIsTransparency: 1
@@ -117,22 +117,127 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: SI_ButtonGreen_0
+      name: Audio_Sprite_Sheet_0
       rect:
         serializedVersion: 2
-        x: 36
-        y: 0
-        width: 256
-        height: 331
+        x: 19
+        y: 27
+        width: 70
+        height: 70
       alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 63, y: 143, z: 62, w: 64}
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: d3391cec88ada8f45a713a6c489dab9c
-      internalID: 110566172
+      spriteID: 2467883195afad744a0714192f84e736
+      internalID: -1091142059
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Audio_Sprite_Sheet_1
+      rect:
+        serializedVersion: 2
+        x: 114
+        y: 27
+        width: 70
+        height: 70
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 31601172da867ad48a123b0673872100
+      internalID: 1160732741
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Audio_Sprite_Sheet_2
+      rect:
+        serializedVersion: 2
+        x: 209
+        y: 27
+        width: 70
+        height: 70
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: cff268d8916899b48bf902c11995ba4c
+      internalID: -1082561852
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Audio_Sprite_Sheet_3
+      rect:
+        serializedVersion: 2
+        x: 304
+        y: 27
+        width: 70
+        height: 70
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: d8b615a870aea5e40907fbd2e11aa1dc
+      internalID: 671474064
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Audio_Sprite_Sheet_4
+      rect:
+        serializedVersion: 2
+        x: 399
+        y: 27
+        width: 70
+        height: 70
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 3530abe09dbe3a7428df7e80a41ca4ea
+      internalID: -411459762
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Audio_Sprite_Sheet_5
+      rect:
+        serializedVersion: 2
+        x: 494
+        y: 27
+        width: 70
+        height: 70
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: f99a3dcedbacda248a05fdcd0fc4b3c1
+      internalID: 816918806
       vertices: []
       indices: 
       edges: []
@@ -140,15 +245,20 @@ TextureImporter:
     outline: []
     physicsShape: []
     bones: []
-    spriteID: 5e97eb03825dee720800000000000000
-    internalID: 1537655665
+    spriteID: aeecb3bcea63139429d542b415b668a6
+    internalID: 0
     vertices: []
     indices: 
     edges: []
     weights: []
     secondaryTextures: []
     nameFileIdTable:
-      SI_ButtonGreen_0: 110566172
+      Audio_Sprite_Sheet_0: -1091142059
+      Audio_Sprite_Sheet_1: 1160732741
+      Audio_Sprite_Sheet_2: -1082561852
+      Audio_Sprite_Sheet_3: 671474064
+      Audio_Sprite_Sheet_4: -411459762
+      Audio_Sprite_Sheet_5: 816918806
   spritePackingTag: 
   pSDRemoveMatte: 0
   pSDShowRemoveMatteOption: 0
