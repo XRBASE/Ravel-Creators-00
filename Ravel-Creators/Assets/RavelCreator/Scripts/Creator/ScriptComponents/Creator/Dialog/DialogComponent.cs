@@ -154,8 +154,11 @@ namespace Base.Ravel.Creator.Components
                         EditorGUILayout.HelpBox("Cannot display messages, no body set in display component!", MessageType.Error);
                         
                 }
-                
+
                 //shows the possible events for the dialog.
+                _event = _serObj.FindProperty("_data").FindPropertyRelative("onDialogStart");
+                EditorGUILayout.PropertyField(_event, new GUIContent("On dialog started", "Called when the dialog starts."));
+                
                 _event = _serObj.FindProperty("_data").FindPropertyRelative("onDialogFinished");
                 EditorGUILayout.PropertyField(_event, new GUIContent("On dialog finished", "Called when all messages have been read by the user"));
                 
@@ -215,6 +218,7 @@ namespace Base.Ravel.Creator.Components
         public DialogDisplay displayTemplate;
         
         //events
+        public UnityEvent onDialogStart;
         public UnityEvent onDialogFinished;
         public UnityEvent<int> onMessageClose;
         public UnityEvent<int> onMessageShow;
