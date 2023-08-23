@@ -31,11 +31,11 @@ namespace Base.Ravel.Creator.Components.Quiz
         /// <summary>
         /// Called as result of network data, this selects the corresponding answer visual.
         /// </summary>
-        public void SelectMultiAnswer(int answerId) { }
+        public void SelectMultiAnswer(int answerId, bool force){}
 
         /// <summary>
         /// Called in the case of a reset, this unselects the answer, so that the previous answers are cleared when the quiz is reset.
         /// </summary>
-        public void UnselectMultiAnswer(int answerId) { }
+        public void UnselectMultiAnswer(int answerId, bool force) { }
     }
 }
