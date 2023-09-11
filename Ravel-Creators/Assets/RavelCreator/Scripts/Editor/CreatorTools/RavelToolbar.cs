@@ -1,4 +1,5 @@
 using Base.Ravel.Config;
+using Base.Ravel.Networking;
 using UnityEditor;
 using UnityEditor.SceneManagement;
 using UnityEngine;
@@ -104,6 +105,13 @@ public class RavelToolbar
         if (GUILayout.Button(new GUIContent("Refresh", "Refresh configuration"), RavelEditorStying.txtBtnSmall)) {
             RefreshConfig();
         }
+        
+        GUI.enabled = _config?.environmentSO?.environment != null;
+        //Refreshes the configuration file
+        if (GUILayout.Button(new GUIContent("Open Ravel", "open currently uploaded scene in browser "), RavelEditorStying.txtBtnSmall)) {
+            Application.OpenURL(CreatorRequest.GetPreviewUrl(_config.environmentSO.environment));
+        }
+        GUI.enabled = true;
 
         //Backend mode that is used to preview on, only accessible for dev users.
         GUI.enabled = RavelEditor.DevUser;
