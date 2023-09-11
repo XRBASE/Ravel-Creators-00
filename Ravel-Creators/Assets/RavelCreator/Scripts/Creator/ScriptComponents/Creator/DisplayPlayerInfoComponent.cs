@@ -11,8 +11,16 @@ namespace Base.Ravel.Creator.Components
     /// Displays user data of the local user, using callbacks to send the data to an image, TMP or something else.
     /// </summary>
     [AddComponentMenu("Ravel/Display player info")]
-    public partial class DisplayPlayerInfoComponent : ComponentBase
+    public partial class DisplayPlayerInfoComponent : ComponentBase, IUniqueId
     {
+        public bool SetUniqueID {
+            get { return _data.networked; }
+        }
+        public int ID {
+            get { return _data.id;}
+            set { _data.id = value; }
+        }
+        
         public override ComponentData Data {
             get { return _data; }
         }
@@ -21,8 +29,10 @@ namespace Base.Ravel.Creator.Components
         protected override void BuildComponents() { }
 
         protected override void DisposeData() { }
-        
+
         public void GetData() { }
+
+        public void ResetInfo() { }
 
 #if UNITY_EDITOR
         [CustomEditor(typeof(DisplayPlayerInfoComponent))]
@@ -47,11 +57,16 @@ namespace Base.Ravel.Creator.Components
                     EditorGUILayout.Toggle("Retrieve data on awake", _instance._data.retrieveOnAwake);
 
                 if (_instance._data.SpriteInfo) {
+                    _instance._data.networked = false;
+                    
                     _evtProperty = _data.FindPropertyRelative("onSpriteRetrieved");
                     EditorGUILayout.PropertyField(_evtProperty);
                     serializedObject.ApplyModifiedProperties();
                 }
                 else {
+                    _instance._data.networked =
+                        EditorGUILayout.Toggle("network result", _instance._data.networked);
+                    
                     _evtProperty = _data.FindPropertyRelative("onStringRetrieved");
                     EditorGUILayout.PropertyField(_evtProperty);
                     serializedObject.ApplyModifiedProperties();
@@ -73,6 +88,8 @@ namespace Base.Ravel.Creator.Components
             
         public InfoType infoType;
         public bool retrieveOnAwake;
+        public bool networked;
+        public int id;
 
         public UnityEvent<string> onStringRetrieved;
         public UnityEvent<Sprite> onSpriteRetrieved;

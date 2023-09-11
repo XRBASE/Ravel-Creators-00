@@ -11,9 +11,9 @@ namespace Base.Ravel.Creator.Components
 	/// Skeleton part of the class, contains code and methods for creators, but no implementation
 	/// </summary>
 	[AddComponentMenu("Ravel/Interactable")]
-	public partial class InteractableComponent : ComponentBase, INetworkId
+	public partial class InteractableComponent : ComponentBase, IUniqueId
 	{
-		public bool Networked { 
+		public bool SetUniqueID { 
 			get { return _data.networked;}
 			set { _data.networked = value; } 
 		}

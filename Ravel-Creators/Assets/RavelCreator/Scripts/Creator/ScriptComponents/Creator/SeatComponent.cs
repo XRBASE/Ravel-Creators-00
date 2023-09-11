@@ -1,5 +1,6 @@
 using System;
 using UnityEngine;
+using UnityEngine.Events;
 #if UNITY_EDITOR
 using UnityEditor;
 #endif
@@ -12,19 +13,19 @@ namespace Base.Ravel.Creator.Components
 	/// </summary>
 	[RequireComponent(typeof(Collider))]
 	[AddComponentMenu("Ravel/Seat")]
-	public partial class SeatComponent : ComponentBase, INetworkId
+	public partial class SeatComponent : ComponentBase, IUniqueId
 	{
 		public override ComponentData Data { get; }
 		[SerializeField, HideInInspector] private SeatData _data;
 
-		public bool Networked { get { return true; } }
+		public bool SetUniqueID { get { return true; } }
 
 		public int ID {
 			get { return _data.id;}
 			set { _data.id = value; }
 		}
 
-		protected override void BuildComponents() { }
+		protected override void BuildComponents(){}
 
 		protected override void DisposeData() { }
 
@@ -33,9 +34,11 @@ namespace Base.Ravel.Creator.Components
 		private class SeatComponentEditor : Editor
 		{
 			private SeatComponent _instance;
+			private SerializedProperty _data;
 
 			public void OnEnable() {
 				_instance = (SeatComponent)target;
+				_data = serializedObject.FindProperty("_data");
 			}
 
 			public override void OnInspectorGUI() {
@@ -43,6 +46,14 @@ namespace Base.Ravel.Creator.Components
 				
 				EditorGUI.BeginChangeCheck();
 				_instance._data.seat = EditorGUILayout.ObjectField("Seat", _instance._data.seat, typeof(Transform), true) as Transform;
+
+				_instance._data.hasHover = EditorGUILayout.Toggle(new GUIContent("Has hover", "Should hover events be added to this chair"),
+					_instance._data.hasHover);
+				if (_instance._data.hasHover) {
+					EditorGUILayout.PropertyField(_data.FindPropertyRelative("onHoverEnter"));
+					EditorGUILayout.PropertyField(_data.FindPropertyRelative("onHoverExit"));
+					serializedObject.ApplyModifiedProperties();
+				}
 				
 				bool found = false;
 				float distance = Mathf.Infinity;
@@ -98,5 +109,9 @@ namespace Base.Ravel.Creator.Components
 		
 		public int id;
 		public Transform seat;
+
+		public bool hasHover = false;
+		public UnityEvent onHoverEnter;
+		public UnityEvent onHoverExit;
 	}
 }
