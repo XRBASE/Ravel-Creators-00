@@ -1,4 +1,5 @@
 using System;
+using TMPro;
 using UnityEngine;
 using UnityEngine.Events;
 #if UNITY_EDITOR
@@ -60,6 +61,27 @@ namespace Base.Ravel.Creator.Components
 					Mathf.Abs(EditorGUILayout.FloatField("Timer duration", _instance._data.duration));
 				_instance._data.startOnAwake = EditorGUILayout.Toggle("Start on awake", _instance._data.startOnAwake);
 
+				_instance._data.hasCountdown = EditorGUILayout.Toggle(
+					new GUIContent("Has countdown", "countdowns use UI to show the timer counting down to zero"),
+					_instance._data.hasCountdown);
+				if (_instance._data.hasCountdown) {
+					_instance._data.speed = Mathf.Max(1, EditorGUILayout.IntField(
+						new GUIContent("Speed", "How fast does the system count down (1x = once every second)."), _instance._data.speed));
+
+					_instance._data.animateProps = (CountDownAnimationProps)
+						EditorGUILayout.EnumFlagsField(
+							new GUIContent("Animate properties", "Properties that fade/transition while counting down"),
+							_instance._data.animateProps);
+					
+					_instance._data.oddText = EditorGUILayout.ObjectField(
+						new GUIContent("Odd number output", "Odd numbers are shown in this TMP_Field."), 
+						_instance._data.oddText, typeof(TMP_Text), true) as TMP_Text;
+					
+					_instance._data.evenText = EditorGUILayout.ObjectField(
+						new GUIContent("Even number output", "Even numbers are shown in this TMP_Field."),
+						_instance._data.evenText, typeof(TMP_Text), true) as TMP_Text;
+				}
+
 				EditorGUILayout.PropertyField(onStartEvt);
 				EditorGUILayout.PropertyField(onFinEvt);
 
@@ -78,7 +100,22 @@ namespace Base.Ravel.Creator.Components
 	{
 		public float duration;
 		public bool startOnAwake;
+		
 		public UnityEvent onStart;
 		public UnityEvent onFinish;
+
+		public bool hasCountdown = false;
+		public int speed;
+		public TMP_Text evenText;
+		public TMP_Text oddText;
+		public CountDownAnimationProps animateProps;
+	}
+
+	[Flags]
+	public enum CountDownAnimationProps
+	{
+		None = 0,
+		Fade = 1<<0,
+		ScaleUp = 1<<1,
 	}
 }
