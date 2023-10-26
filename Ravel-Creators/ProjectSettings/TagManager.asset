@@ -3,7 +3,10 @@
 --- !u!78 &1
 TagManager:
   serializedVersion: 2
-  tags: []
+  tags:
+  - WallOfDeath
+  - RemotePlayer
+  - LocalPlayer
   layers:
   - Default
   - TransparentFX
@@ -11,14 +14,14 @@ TagManager:
   - 
   - Water
   - UI
+  - Player
+  - NavMeshSurface
+  - Interactable
+  - HoverInteractable
   - 
-  - 
-  - 
-  - 
-  - 
-  - 
-  - 
-  - 
+  - Collectible
+  - Collector
+  - NavmeshIgnore
   - 
   - 
   - 
