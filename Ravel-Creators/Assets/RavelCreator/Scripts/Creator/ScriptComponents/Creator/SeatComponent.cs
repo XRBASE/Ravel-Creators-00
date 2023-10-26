@@ -49,12 +49,14 @@ namespace Base.Ravel.Creator.Components
 
 				_instance._data.hasHover = EditorGUILayout.Toggle(new GUIContent("Has hover", "Should hover events be added to this chair"),
 					_instance._data.hasHover);
+				EditorGUILayout.PropertyField(_data.FindPropertyRelative("onSeat"));
+				EditorGUILayout.PropertyField(_data.FindPropertyRelative("onStandup"));
 				if (_instance._data.hasHover) {
 					EditorGUILayout.PropertyField(_data.FindPropertyRelative("onHoverEnter"));
 					EditorGUILayout.PropertyField(_data.FindPropertyRelative("onHoverExit"));
-					serializedObject.ApplyModifiedProperties();
 				}
-				
+				serializedObject.ApplyModifiedProperties();
+
 				bool found = false;
 				float distance = Mathf.Infinity;
 				string name = "";
@@ -113,5 +115,7 @@ namespace Base.Ravel.Creator.Components
 		public bool hasHover = false;
 		public UnityEvent onHoverEnter;
 		public UnityEvent onHoverExit;
+		public UnityEvent onSeat;
+		public UnityEvent onStandup;
 	}
 }
