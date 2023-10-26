@@ -13,6 +13,8 @@ namespace Base.Ravel.Creator.Components
     {
         public abstract ComponentData Data { get; }
 
+        protected bool _componentsBuild = false; 
+
         protected void Awake() {
             BuildComponents();
         }
@@ -20,7 +22,9 @@ namespace Base.Ravel.Creator.Components
         /// <summary>
         /// Create the required components to implement the behaviour, and transfer data into the right classes.
         /// </summary>
-        protected abstract void BuildComponents();
+        protected virtual void BuildComponents() {
+            _componentsBuild = true;
+        }
         
         /// <summary>
         /// Should be called after building the components has finished, to clear up the used memory
@@ -32,6 +36,9 @@ namespace Base.Ravel.Creator.Components
             get { return GizmoIconType.Default; }
         }
         
+        /// <summary>
+        /// Icons with the same name (in Assets/Gizmos folder will be loaded as the icon of this script).
+        /// </summary>
         public enum GizmoIconType
         {
             Default = 0,
