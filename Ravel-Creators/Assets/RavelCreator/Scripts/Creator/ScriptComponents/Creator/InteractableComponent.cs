@@ -11,6 +11,7 @@ namespace Base.Ravel.Creator.Components
 	/// Skeleton part of the class, contains code and methods for creators, but no implementation
 	/// </summary>
 	[AddComponentMenu("Ravel/Interactable")]
+	[HelpURL("https://www.notion.so/thenewbase/Interactable-57fb6fc2ec1840a0929734a6de98d4be")]
 	public partial class InteractableComponent : ComponentBase, IUniqueId
 	{
 		public bool SetUniqueID { 

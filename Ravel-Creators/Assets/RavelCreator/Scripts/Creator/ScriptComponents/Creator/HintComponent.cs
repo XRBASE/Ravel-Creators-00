@@ -12,6 +12,7 @@ namespace Base.Ravel.Creator.Components
 	/// Adds oe or multiple hints to the hint panel when the ShowHints method is called.
 	/// </summary>
 	[AddComponentMenu("Ravel/Hint")]
+	[HelpURL("https://www.notion.so/thenewbase/Hint-f83ec49d3de346cfb69f724483201b9d")]
 	public partial class HintComponent : ComponentBase
 	{
 		public override ComponentData Data {
