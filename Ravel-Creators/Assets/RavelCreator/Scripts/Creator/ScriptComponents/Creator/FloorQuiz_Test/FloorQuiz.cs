@@ -17,6 +17,7 @@ namespace QuizSampleFloor
         [SerializeField] private Button _submitBtn;
         
         [SerializeField] private List<Question> _questions;
+        [SerializeField] private bool _networked = false;
         private int _questionId = 0;
         private State _state = State.ShowQuestion;
         
