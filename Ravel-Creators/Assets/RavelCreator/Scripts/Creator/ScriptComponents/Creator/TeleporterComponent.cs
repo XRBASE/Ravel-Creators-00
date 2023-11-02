@@ -10,6 +10,7 @@ namespace Base.Ravel.Creator.Components
     /// Teleport component used for teleporting the player to different spawnpoints in the scene.
     /// </summary>
     [AddComponentMenu("Ravel/Teleporter")]
+    [HelpURL("https://www.notion.so/thenewbase/Teleporter-39f437d5f4ef42ea88b133bd2d5832f0")]
     public partial class TeleporterComponent : ComponentBase
     {
         public override ComponentData Data {
