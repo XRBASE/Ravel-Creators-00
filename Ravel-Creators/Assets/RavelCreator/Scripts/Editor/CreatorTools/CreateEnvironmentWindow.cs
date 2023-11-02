@@ -70,7 +70,7 @@ public class CreateEnvironmentWindow : EditorWindow
 
 	private void OnCreatePressed() {
 		//Open saving dialogs, so user can save the file at her chosen location, or cancel saving.
-		string path = EditorUtility.SaveFilePanel("Save environment", RavelEditor.CreatorConfig.GetFilePath(), 
+		string path = EditorUtility.SaveFilePanel("Save environment", RavelEditorSettings.Get().GetFilePath(), 
 			$"ENV_{_environment.name}", "asset");
 		while (string.IsNullOrEmpty(path)) {
 			if (EditorUtility.DisplayDialog("Cancel create?",
@@ -78,7 +78,7 @@ public class CreateEnvironmentWindow : EditorWindow
 				    "No (create)", "Yes (cancel)")) 
 			{
 				//Don't cancel save
-				path = EditorUtility.SaveFilePanel("Save environment", RavelEditor.CreatorConfig.GetFilePath(), 
+				path = EditorUtility.SaveFilePanel("Save environment", RavelEditorSettings.Get().GetFilePath(), 
 					$"ENV_{_environment.name}", "asset");
 				
 				if (!string.IsNullOrEmpty(path) && !path.IsSubpathOf(Application.dataPath)) {
@@ -91,7 +91,7 @@ public class CreateEnvironmentWindow : EditorWindow
 				return;
 			}
 		}
-		RavelEditor.CreatorConfig.SetFilePath(path);
+		RavelEditorSettings.Get().SetFilePath(path);
 		//Remove path before assets (AssetDatabase tools use relative path).
 		path = path.Substring(Application.dataPath.Length - 6);
 

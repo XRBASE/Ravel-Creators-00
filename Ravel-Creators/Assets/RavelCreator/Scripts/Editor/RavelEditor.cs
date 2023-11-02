@@ -17,7 +17,7 @@ public static class RavelEditor
     public static CreatorConfig CreatorConfig {
         get {
             if (_creatorConfig == null) {
-                _creatorConfig = CreatorConfig.LoadCurrent();
+                _creatorConfig = CreatorConfig.LoadConfig();
             }
 
             return _creatorConfig;
@@ -32,7 +32,7 @@ public static class RavelEditor
     public static BundleConfig BundleConfig {
         get {
             if (_bundleConfig == null) {
-                _bundleConfig = BundleConfig.LoadCurrent();
+                _bundleConfig = BundleConfig.LoadConfig();
             }
 
             return _bundleConfig;
@@ -79,14 +79,6 @@ public static class RavelEditor
     }
     private static RavelBranding _branding;
     
-    [MenuItem("Ravel/Clear editor cache", false)]
-    public static void ClearCache() {
-        if (EditorUtility.DisplayDialog("Clear cache",
-                "This will delete all configuration data and version numbering, are you sure?", "Yes", "No")) {
-            EditorCache.Clear();
-        }
-    }
-
     /// <summary>
     /// Sets the user (creator) after login.
     /// </summary>

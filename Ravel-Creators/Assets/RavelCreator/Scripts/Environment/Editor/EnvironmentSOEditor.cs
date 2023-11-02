@@ -212,10 +212,10 @@ public class EnvironmentSOEditor : Editor
         GUI.enabled = !empty && enabled;
 
         if (GUILayout.Button("Save")) {
-            string path = EditorUtility.SaveFilePanel("Save", RavelEditor.CreatorConfig.GetFilePath(),fileName, extension);
+            string path = EditorUtility.SaveFilePanel("Save", RavelEditorSettings.Get().GetFilePath(),fileName, extension);
 
             if (!string.IsNullOrEmpty(path)) {
-                RavelEditor.CreatorConfig.SetFilePath(path);
+                RavelEditorSettings.Get().SetFilePath(path);
                 RavelWebRequest req = new RavelWebRequest(url, RavelWebRequest.Method.Get);
                 EditorWebRequests.DownloadAndSave(req, path, false, _instance);
             }
@@ -235,10 +235,10 @@ public class EnvironmentSOEditor : Editor
     /// </summary>
     private void GUIServerFunctions() {
         if (GUILayout.Button("Upload loading image")) {
-            string path = EditorUtility.OpenFilePanel("Upload new loading image", RavelEditor.CreatorConfig.GetFilePath(), RavelEditorStying.IMAGE_EXTENSIONS);
+            string path = EditorUtility.OpenFilePanel("Upload new loading image", RavelEditorSettings.Get().GetFilePath(), RavelEditorStying.IMAGE_EXTENSIONS);
 
             if (!string.IsNullOrEmpty(path)) {
-                RavelEditor.CreatorConfig.SetFilePath(path);
+                RavelEditorSettings.Get().SetFilePath(path);
                 RavelWebRequest req = CreatorRequest.UploadPreview(_instance.environment.environmentUuid, path);
                 EditorWebRequests.SendWebRequest(req, OnImageUploaded, this);
                 _uploadingFile = true;
@@ -246,10 +246,10 @@ public class EnvironmentSOEditor : Editor
         }
 
         if (GUILayout.Button("Upload bundle")) {
-            string path = EditorUtility.OpenFilePanel("Upload new asset bundle", RavelEditor.CreatorConfig.GetFilePath(), "");
+            string path = EditorUtility.OpenFilePanel("Upload new asset bundle", RavelEditorSettings.Get().GetFilePath(), "");
 
             if (!string.IsNullOrEmpty(path)) {
-                RavelEditor.CreatorConfig.SetFilePath(path);
+                RavelEditorSettings.Get().SetFilePath(path);
                 RavelWebRequest req = CreatorRequest.UploadBundle(_instance.environment.environmentUuid, path);
                 EditorWebRequests.SendWebRequest(req, OnBundleUploaded, this);
                 _uploadingFile = true;

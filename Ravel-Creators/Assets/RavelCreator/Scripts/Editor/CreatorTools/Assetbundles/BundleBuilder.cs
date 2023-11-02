@@ -162,7 +162,7 @@ public static class BundleBuilder
 			           $"{config.environmentSO.environment.name}, this will override the previous assetbundle. Are you sure?";
 		}
 		else {
-			dialogMsg = $"Building scene {s.name} in folder {RavelEditor.CreatorConfig.bundlePath}, are you sure?";
+			dialogMsg = $"Building scene {s.name} in folder {RavelEditorSettings.Get().GetBundlePath()}, are you sure?";
 		}
 		
 		//Last chance for user to cancel. This dialog shows what scene is assigned into what environment.
@@ -194,7 +194,7 @@ public static class BundleBuilder
 		}
 
 		//Get the bundle path from the config and create missing folders if they're not already there
-		string path = RavelEditor.CreatorConfig.bundlePath;
+		string path = RavelEditorSettings.Get().GetBundlePath();
 		if (!Directory.Exists(path)) {
 			Debug.LogWarning($"Bundle directory {path} does not exist, creating it!");
 			Directory.CreateDirectory(path);
@@ -271,9 +271,9 @@ public static class BundleBuilder
 	/// and so this call will only delete files without extension that have another file with the manifest extension.
 	/// </summary>
 	public static void DeleteBundles() {
-		List<string> files = Directory.GetFiles(RavelEditor.CreatorConfig.bundlePath).ToList();
+		List<string> files = Directory.GetFiles(RavelEditorSettings.Get().GetBundlePath()).ToList();
 		if (files.Count == 0) {
-			Debug.LogWarning($"Cannot delete bundles, no files found at {RavelEditor.CreatorConfig.bundlePath}");
+			Debug.LogWarning($"Cannot delete bundles, no files found at {RavelEditorSettings.Get().GetBundlePath()}");
 			return;
 		}
 		
@@ -293,7 +293,7 @@ public static class BundleBuilder
 
 		if (toDelete.Count == 0) {
 			//no bundles found
-			Debug.LogWarning($"Cannot delete bundles, no bundles found at {RavelEditor.CreatorConfig.bundlePath}");
+			Debug.LogWarning($"Cannot delete bundles, no bundles found at {RavelEditorSettings.Get().GetBundlePath()}");
 			return;
 		}
 		//remove last comma

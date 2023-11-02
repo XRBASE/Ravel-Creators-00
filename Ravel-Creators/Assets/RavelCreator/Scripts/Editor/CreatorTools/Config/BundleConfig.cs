@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using UnityEditor;
-using UnityEngine;
 
 /// <summary>
 /// Config file for saving bundle preferences in the editor cache
@@ -9,9 +8,6 @@ using UnityEngine;
 [Serializable]
 public class BundleConfig
 {
-	//saved under this key in editor prefs.
-	private const string CONFIG_KEY = "BUND_CFG";
-
 	/// <summary>
 	/// List of local environment bundle data.
 	/// </summary>
@@ -25,20 +21,14 @@ public class BundleConfig
 	/// Save this configuration in the editor cache.
 	/// </summary>
 	public void SaveConfig() {
-		EditorCache.SetString(CONFIG_KEY, JsonUtility.ToJson(this));
+		RavelEditorSettings.Get().SaveBundleConfig(this);
 	}
 	
 	/// <summary>
 	/// Loads the current config file from the editor cache.
 	/// </summary>
-	public static BundleConfig LoadCurrent() {
-		string json = EditorCache.GetString(CONFIG_KEY);
-		if (string.IsNullOrEmpty(json)) {
-			//default values
-			return new BundleConfig();
-		}
-
-		return JsonUtility.FromJson<BundleConfig>(json);
+	public static BundleConfig LoadConfig() {
+		return RavelEditorSettings.Get().GetBundleConfig();
 	}
 
 	/// <summary>
@@ -46,13 +36,6 @@ public class BundleConfig
 	/// bundles for new environments and remove bundles that are not in the project anymore.
 	/// </summary>
 	public void UpdateValues() {
-		string json = EditorCache.GetString(CONFIG_KEY);
-		if (!string.IsNullOrEmpty(json)) {
-			//default values
-			bundles.Clear();
-			JsonUtility.FromJsonOverwrite(json, this);
-		}
-
 		//go through all local assets and check if bundles match. Create missing bundles and save id's of bundles that
 		//have been identified in the project
 		EnvironmentSO[] envs = RavelEditor.GetAllAssetsOfType<EnvironmentSO>();

@@ -220,11 +220,11 @@ public class ImageState : CreatorWindowState
 		//crop only enabled when the image is not already correctly sized.
 		GUI.enabled = !_sizeMatch;
 		if (GUILayout.Button("Scale/Crop image")) {
-			string cropPath = RavelEditor.CreatorConfig.GetFilePath();
+			string cropPath = RavelEditorSettings.Get().GetFilePath();
 			//Save file on location
 			cropPath = EditorUtility.SaveFilePanel("Scale/Crop image", cropPath, $"{_image.name}_Crop", "jpg");
 			if (!string.IsNullOrEmpty(cropPath)) {
-				RavelEditor.CreatorConfig.SetFilePath(cropPath);
+				RavelEditorSettings.Get().SetFilePath(cropPath);
 				ScaleCropAndSaveImage(cropPath);
 			}
 		}
@@ -242,11 +242,11 @@ public class ImageState : CreatorWindowState
 	/// </summary>
 	private void GUISelectImage() {
 		if (GUILayout.Button("Select file")) {
-			string selectPath = RavelEditor.CreatorConfig.GetFilePath();
+			string selectPath = RavelEditorSettings.Get().GetFilePath();
 
 			selectPath = EditorUtility.OpenFilePanel("Select image", selectPath, RavelEditorStying.IMAGE_EXTENSIONS);
 			if (!string.IsNullOrEmpty(selectPath)) {
-				RavelEditor.CreatorConfig.SetFilePath(selectPath);
+				RavelEditorSettings.Get().SetFilePath(selectPath);
 				LoadFile(selectPath);
 				
 				_wnd.EnableBanner(_image == null);

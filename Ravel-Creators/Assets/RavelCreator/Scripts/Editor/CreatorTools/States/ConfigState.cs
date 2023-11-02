@@ -84,8 +84,7 @@ public class ConfigState : CreatorWindowState
         //18f is spacing between elements
         GUI.enabled = false;
         
-        
-        if (GetLastFoldersOfPath(Config.bundlePath, PATH_TRUNC_FOLDERS, out string truncPath)) {
+        if (GetLastFoldersOfPath(RavelEditorSettings.Get().GetBundlePath(), PATH_TRUNC_FOLDERS, out string truncPath)) {
             truncPath = "(...)" + truncPath;
         }
         //width of all other elements and spacing (18f at the end is 3 spacing for each element and one spacing in front and end)
@@ -94,15 +93,15 @@ public class ConfigState : CreatorWindowState
         GUI.enabled = true;
         
         if (GUILayout.Button("Select folder", GUILayout.Width(RavelEditorStying.GUI_SPACING_DECA))) {
-            string path = EditorUtility.OpenFolderPanel("Select bundle location", Config.GetFilePath(), "Assetbundle output");
+            string path = EditorUtility.OpenFolderPanel("Select bundle location", RavelEditorSettings.Get().GetFilePath(), "Assetbundle output");
             if (!string.IsNullOrEmpty(path))
             {
-                Config.bundlePath = path;
+                RavelEditorSettings.Get().SetBundlePath(path);
             }
         }
         
         if (GUILayout.Button("Copy", GUILayout.Width(RavelEditorStying.GUI_SPACING))) {
-            GUIUtility.systemCopyBuffer = Config.bundlePath;
+            GUIUtility.systemCopyBuffer = RavelEditorSettings.Get().GetBundlePath();
             Debug.Log("Path copied!");
         }
         GUILayout.EndHorizontal();
