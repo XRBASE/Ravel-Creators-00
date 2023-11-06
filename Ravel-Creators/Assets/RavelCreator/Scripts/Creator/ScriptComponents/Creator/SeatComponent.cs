@@ -13,6 +13,7 @@ namespace Base.Ravel.Creator.Components
 	/// </summary>
 	[RequireComponent(typeof(Collider))]
 	[AddComponentMenu("Ravel/Seat")]
+	[HelpURL("https://www.notion.so/thenewbase/Seat-489c476ff84e44aa832ad42b4500cf0c")]
 	public partial class SeatComponent : ComponentBase, IUniqueId
 	{
 		public override ComponentData Data { get; }
@@ -25,7 +26,7 @@ namespace Base.Ravel.Creator.Components
 			set { _data.id = value; }
 		}
 
-		protected override void BuildComponents(){}
+		protected override void BuildComponents() { }
 
 		protected override void DisposeData() { }
 
@@ -49,6 +50,7 @@ namespace Base.Ravel.Creator.Components
 
 				_instance._data.hasHover = EditorGUILayout.Toggle(new GUIContent("Has hover", "Should hover events be added to this chair"),
 					_instance._data.hasHover);
+				
 				EditorGUILayout.PropertyField(_data.FindPropertyRelative("onSeat"));
 				EditorGUILayout.PropertyField(_data.FindPropertyRelative("onStandup"));
 				if (_instance._data.hasHover) {
@@ -56,7 +58,7 @@ namespace Base.Ravel.Creator.Components
 					EditorGUILayout.PropertyField(_data.FindPropertyRelative("onHoverExit"));
 				}
 				serializedObject.ApplyModifiedProperties();
-
+				
 				bool found = false;
 				float distance = Mathf.Infinity;
 				string name = "";

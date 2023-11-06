@@ -11,6 +11,7 @@ namespace Base.Ravel.Creator.Components
     /// Displays user data of the local user, using callbacks to send the data to an image, TMP or something else.
     /// </summary>
     [AddComponentMenu("Ravel/Display player info")]
+    [HelpURL("https://www.notion.so/thenewbase/Display-player-info-0a1e87f5fa564c6e91f72c974ddaeb1a")]
     public partial class DisplayPlayerInfoComponent : ComponentBase, IUniqueId
     {
         public bool SetUniqueID {

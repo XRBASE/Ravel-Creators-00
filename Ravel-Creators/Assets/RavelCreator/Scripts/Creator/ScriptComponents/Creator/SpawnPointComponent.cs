@@ -9,7 +9,7 @@ namespace Base.Ravel.Creator.Components
     /// <summary>
     /// This component offers a spawnpoint (0 is where all players start). These points are also reused for in space teleporting of players.
     /// </summary>
-    [AddComponentMenu("Ravel/Spawnpoint")]
+    [HelpURL("https://www.notion.so/thenewbase/Spawnpoint-84f121367ed449c8993d8bd16d8eb9f1")]
     public partial class SpawnPointComponent : ComponentBase
     {
         public int ID {

@@ -10,6 +10,7 @@ namespace Base.Ravel.Creator.Components
     /// </summary>
     [RequireComponent(typeof(Animation))]
     [AddComponentMenu("Ravel/Synchronized animation")]
+    [HelpURL("https://www.notion.so/thenewbase/Synchronized-animation-eb91476e01834e25b1abbbed92bacd65")]
     public partial class SynchronizedAnimationComponent : ComponentBase, IUniqueId
     {
         public override ComponentData Data {

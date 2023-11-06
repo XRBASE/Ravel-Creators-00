@@ -12,6 +12,7 @@ namespace Base.Ravel.Creator.Components
     /// the conversation can be held.
     /// </summary>
     [AddComponentMenu("Ravel/Dialog/Dialog component")]
+    [HelpURL("https://www.notion.so/thenewbase/Dialog-265c38d502a74d1fad14815c0eb73b35")]
     public partial class DialogComponent : ComponentBase
     {
         public override ComponentData Data {

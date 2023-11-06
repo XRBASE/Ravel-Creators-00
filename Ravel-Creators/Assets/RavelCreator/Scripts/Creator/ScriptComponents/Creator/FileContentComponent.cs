@@ -13,6 +13,7 @@ namespace Base.Ravel.Creator.Components
 	/// Used to create a container for loading files in, either 2D or 3D.
 	/// </summary>
 	[AddComponentMenu("Ravel/File content")]
+	[HelpURL("https://www.notion.so/thenewbase/File-content-f80dd126bba14d40b9b63ca036fa051f")]
 	public partial class FileContentComponent : ComponentBase, IUniqueId, INameIdentifiedObject
 	{
 		public override ComponentData Data {
