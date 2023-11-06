@@ -1,10 +1,8 @@
 using System;
 using System.Collections.Generic;
+using UnityEditor;
 using UnityEngine;
 using UnityEngine.Events;
-#if UNITY_EDITOR
-using UnityEditor;
-#endif
 
 namespace Base.Ravel.Creator.Components
 {
@@ -12,6 +10,7 @@ namespace Base.Ravel.Creator.Components
     /// This component creates a track which the player can navigate on
     /// </summary>
     [AddComponentMenu("Ravel/Track")]
+    [HelpURL("https://www.notion.so/thenewbase/Track-aac7da0473194265985395da1df7c134")]
     public partial class TrackComponent : ComponentBase
     {
         public override ComponentData Data
@@ -42,25 +41,17 @@ namespace Base.Ravel.Creator.Components
         /// <summary>
         /// When this is called, the player will set the navigation target to the track targets until the last target has been reached
         /// </summary>
-        public void StartTrack()
-        {
-        }
+        public void StartTrack() { }
 
         /// <summary>
         /// When this is called, the player will set the navigation target to the track targets in reversed order until the last target has been reached
         /// </summary>
-        public void StartTrackReversed()
-        {
-        }
+        public void StartTrackReversed() { }
 
 
-        protected override void BuildComponents()
-        {
-        }
+        protected override void BuildComponents() { }
 
-        protected override void DisposeData()
-        {
-        }
+        protected override void DisposeData() { }
 
 #if UNITY_EDITOR
         [CustomEditor(typeof(TrackComponent))]
@@ -110,7 +101,7 @@ namespace Base.Ravel.Creator.Components
         }
 #endif
     }
-
+    
     [Serializable]
     public class TrackData : ComponentData
     {

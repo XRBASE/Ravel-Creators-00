@@ -11,6 +11,7 @@ namespace Base.Ravel.Creator.Components
 	/// Used to control the camera into a specific cinematic viewpoint.
 	/// </summary>
 	[AddComponentMenu("Ravel/Cinematic Camera")]
+	[HelpURL("https://www.notion.so/thenewbase/Cinematic-Camera-f90d4464269a452e93012cb517d4e2f2")]
 	public partial class CinematicCameraComponent : ComponentBase
 	{
 		public override ComponentData Data {

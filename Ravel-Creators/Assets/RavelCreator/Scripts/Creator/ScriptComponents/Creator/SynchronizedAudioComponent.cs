@@ -11,6 +11,7 @@ namespace Base.Ravel.Creator.Components
 	/// </summary>
 	[RequireComponent(typeof(AudioSource))]
 	[AddComponentMenu("Ravel/Synchronized audio")]
+	[HelpURL("https://www.notion.so/thenewbase/Synchronized-audio-8f578b265de943bfa38d64902fd6845e")]
 	public partial class SynchronizedAudioComponent : ComponentBase, IUniqueId
 	{
 		public bool SetUniqueID {
