@@ -6,14 +6,14 @@ using UnityEditor;
 /// Config file for saving bundle preferences in the editor cache
 /// </summary>
 [Serializable]
-public class BundleConfig
+public class EditorBundles
 {
 	/// <summary>
 	/// List of local environment bundle data.
 	/// </summary>
 	public List<BundleData> bundles;
 
-	public BundleConfig() {
+	public EditorBundles() {
 		bundles = new List<BundleData>();
 	}
 
@@ -21,14 +21,14 @@ public class BundleConfig
 	/// Save this configuration in the editor cache.
 	/// </summary>
 	public void SaveConfig() {
-		RavelEditorSettings.Get().SaveBundleConfig(this);
+		RavelCreatorSettings.Get().SaveBundleConfig(this);
 	}
 	
 	/// <summary>
 	/// Loads the current config file from the editor cache.
 	/// </summary>
-	public static BundleConfig LoadConfig() {
-		return RavelEditorSettings.Get().GetBundleConfig();
+	public static EditorBundles LoadConfig() {
+		return RavelCreatorSettings.Get().GetBundleConfig();
 	}
 
 	/// <summary>
@@ -120,12 +120,12 @@ public class BundleConfig
 	/// <param name="minor">Minor version number to include.</param>
 	/// <returns>String containing version numbering formatted according to the configuration.</returns>
 	public string GetVersionString(int major, int minor) {
-		if (string.IsNullOrEmpty(RavelEditor.CreatorConfig.versioning)) {
+		if (string.IsNullOrEmpty(RavelEditor.CreatorPanelSettings.versioning)) {
 			//no versioning
 			return "";
 		}
 
-		string version = RavelEditor.CreatorConfig.versioning;
+		string version = RavelEditor.CreatorPanelSettings.versioning;
 		if (version.Contains('1')) {
 			version = version.Replace("1", major.ToString());
 		}

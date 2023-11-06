@@ -90,12 +90,12 @@ public class RavelToolbar
         
         //preview environment in ravel web
         if (GUILayout.Button(new GUIContent("Preview", "Build and preview asset bundle"), RavelEditorStying.txtBtnSmall)) {
-            bool cleanup = RavelEditor.CreatorConfig.autoClean;
+            bool cleanup = RavelEditor.CreatorPanelSettings.autoClean;
 
             BundleBuilder.BuildOpenScene(bundleName, true, cleanup);
         }
         if (GUILayout.Button(new GUIContent("Build", "Build asset bundle"), RavelEditorStying.txtBtnSmall)) {
-            bool cleanup = RavelEditor.CreatorConfig.autoClean;
+            bool cleanup = RavelEditor.CreatorPanelSettings.autoClean;
 
             BundleBuilder.BuildOpenScene(bundleName, false, false);
         }

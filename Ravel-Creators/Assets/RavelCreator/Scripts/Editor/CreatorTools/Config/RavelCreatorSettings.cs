@@ -4,7 +4,7 @@ using UnityEditor;
 using UnityEngine;
 
 [CreateAssetMenu(menuName = "Ravel/Config/EditorSettings", fileName = EDITOR_SETTINGS_NAME, order = 0)]
-public class RavelEditorSettings : ScriptableObject
+public partial class RavelCreatorSettings : ScriptableObject
 {
 	private const string EDITOR_SETTINGS_PATH = "Assets/RavelCreator/Resources/Config/";
 	private const string EDITOR_SETTINGS_NAME = "RavelEditorSettings";
@@ -12,23 +12,26 @@ public class RavelEditorSettings : ScriptableObject
 	private static readonly string DEFAULT_FILE_PATH = "";
 	private static readonly string DEFAULT_BUNDLE_PATH = "/StreamingAssets/";
 
-	private static RavelEditorSettings _instance;
+	private static RavelCreatorSettings _instance;
 
-	[SerializeField] private string _filePath;
-	[SerializeField] private string _bundlePath;
+	[SerializeField] private CreatorPanelSettings _creatorPanelSettings;
+	[SerializeField] private EditorBundles _editorBundles;
 	
+	[SerializeField, HideInInspector] private string _filePath;
+	[SerializeField, HideInInspector] private string _bundlePath;
+
 	/// <summary>
 	/// Load configuration from the resources folder.
 	/// </summary>
-	public static RavelEditorSettings Get()
+	public static RavelCreatorSettings Get()
 	{
 		if (!_instance) {
 			//load from resource folder
-			_instance = Resources.Load<RavelEditorSettings>("Config/" + EDITOR_SETTINGS_NAME);
+			_instance = Resources.Load<RavelCreatorSettings>("Config/" + EDITOR_SETTINGS_NAME);
 			if (!_instance) {
 				//create in resource folder.
 				string path = EDITOR_SETTINGS_PATH;
-				_instance = CreateInstance<RavelEditorSettings>();
+				_instance = CreateInstance<RavelCreatorSettings>();
 				_instance.OnCreate();
 
 				AssetDatabase.CreateAsset(_instance, path + EDITOR_SETTINGS_NAME + ".asset");
@@ -43,24 +46,21 @@ public class RavelEditorSettings : ScriptableObject
 		_filePath = GetFilePath();
 		_bundlePath = GetBundlePath();
 	}
-	
-	[SerializeField] private CreatorConfig _panelConfig;
-	[SerializeField] private BundleConfig _bundleConfig;
 
-	public void SaveCreatorConfig(CreatorConfig config) {
-		_panelConfig = config;
+	public void SaveCreatorConfig(CreatorPanelSettings panelSettings) {
+		_creatorPanelSettings = panelSettings;
 	}
 
-	public CreatorConfig GetCreatorConfig() {
-		return _panelConfig;
+	public CreatorPanelSettings GetCreatorConfig() {
+		return _creatorPanelSettings;
 	}
 
-	public void SaveBundleConfig(BundleConfig config) {
-		_bundleConfig = config;
+	public void SaveBundleConfig(EditorBundles config) {
+		_editorBundles = config;
 	}
 
-	public BundleConfig GetBundleConfig() {
-		return _bundleConfig;
+	public EditorBundles GetBundleConfig() {
+		return _editorBundles;
 	}
 
 	private bool IsPathInProject(string path) {

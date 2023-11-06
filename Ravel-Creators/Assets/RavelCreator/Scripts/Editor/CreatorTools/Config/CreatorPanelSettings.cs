@@ -4,7 +4,7 @@ using System;
 /// Config file for saving creator preferences in the editor cache. These are all configurations that are project wide and not environment specific.
 /// </summary>
 [Serializable]
-public class CreatorConfig
+public class CreatorPanelSettings
 {
 	//Should the e-mail address be cached, so you never have to type it again?
 	public bool saveUserMail = false;
@@ -20,7 +20,7 @@ public class CreatorConfig
 	public bool incrementMinorVersionOnBuild;
 
 	//Creates a default configuration.
-	public CreatorConfig() {
+	public CreatorPanelSettings() {
 		saveUserMail = false;
 		userMail = "";
 
@@ -33,10 +33,10 @@ public class CreatorConfig
 	/// Save this configuration to the editor cache.
 	/// </summary>
 	public void SaveConfig() {
-		RavelEditorSettings.Get().SaveCreatorConfig(this);
+		RavelCreatorSettings.Get().SaveCreatorConfig(this);
 	}
 
-	public static CreatorConfig LoadConfig() {
-		return RavelEditorSettings.Get().GetCreatorConfig();
+	public static CreatorPanelSettings LoadConfig() {
+		return RavelCreatorSettings.Get().GetCreatorConfig();
 	}
 }

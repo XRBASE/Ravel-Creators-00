@@ -14,32 +14,32 @@ public static class RavelEditor
     /// <summary>
     /// Project configuration.
     /// </summary>
-    public static CreatorConfig CreatorConfig {
+    public static CreatorPanelSettings CreatorPanelSettings {
         get {
-            if (_creatorConfig == null) {
-                _creatorConfig = CreatorConfig.LoadConfig();
+            if (_creatorPanelSettings == null) {
+                _creatorPanelSettings = CreatorPanelSettings.LoadConfig();
             }
 
-            return _creatorConfig;
+            return _creatorPanelSettings;
         }
-        set { _creatorConfig = value; }
+        set { _creatorPanelSettings = value; }
     }
-    private static CreatorConfig _creatorConfig;
+    private static CreatorPanelSettings _creatorPanelSettings;
     
     /// <summary>
     /// Per-bundle configurations, mostly version numbers.
     /// </summary>
-    public static BundleConfig BundleConfig {
+    public static EditorBundles EditorBundles {
         get {
-            if (_bundleConfig == null) {
-                _bundleConfig = BundleConfig.LoadConfig();
+            if (_editorBundles == null) {
+                _editorBundles = EditorBundles.LoadConfig();
             }
 
-            return _bundleConfig;
+            return _editorBundles;
         }
-        set { _bundleConfig = value; }
+        set { _editorBundles = value; }
     }
-    private static BundleConfig _bundleConfig;
+    private static EditorBundles _editorBundles;
 
     /// <summary>
     /// Checks if the user is set.

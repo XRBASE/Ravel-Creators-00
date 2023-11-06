@@ -14,9 +14,9 @@ public class ConfigState : CreatorWindowState
     /// <summary>
     /// Configuration file for most of the data in the window.
     /// </summary>
-    public CreatorConfig Config {
-        get { return RavelEditor.CreatorConfig; }
-        set { RavelEditor.CreatorConfig = value; }
+    public CreatorPanelSettings PanelSettings {
+        get { return RavelEditor.CreatorPanelSettings; }
+        set { RavelEditor.CreatorPanelSettings = value; }
     }
 
     public ConfigState(CreatorWindow wnd) : base(wnd) { }
@@ -33,7 +33,7 @@ public class ConfigState : CreatorWindowState
 
     public override void OnStateClosed() {
         base.OnStateClosed();
-        Config.SaveConfig();
+        PanelSettings.SaveConfig();
     }
     
     public override void OnGUI(Rect position) {
@@ -45,7 +45,7 @@ public class ConfigState : CreatorWindowState
 
         GUILayout.Space(RavelEditorStying.GUI_SPACING_MICRO);
         if (GUILayout.Button("Reset")) {
-            Config = new CreatorConfig();
+            PanelSettings = new CreatorPanelSettings();
         }
         EditorGUILayout.EndScrollView();
     }
@@ -57,19 +57,19 @@ public class ConfigState : CreatorWindowState
     /// </summary>
     private void GUIDrawMailCaching(Rect position) {
         EditorGUI.BeginChangeCheck();
-        Config.saveUserMail = GUILayout.Toggle(Config.saveUserMail, "Save e-mail");
-        if (EditorGUI.EndChangeCheck() && !Config.saveUserMail) {
-            Config.userMail = "";
+        PanelSettings.saveUserMail = GUILayout.Toggle(PanelSettings.saveUserMail, "Save e-mail");
+        if (EditorGUI.EndChangeCheck() && !PanelSettings.saveUserMail) {
+            PanelSettings.userMail = "";
         }
 
         GUILayout.BeginHorizontal();
         GUI.enabled = false;
         GUILayout.Label("Saved e-mail address:", GUILayout.Width(RavelEditorStying.GUI_SPACING_DECA));
-        GUILayout.TextField(Config.userMail, GUILayout.Width(position.width - (RavelEditorStying.GUI_SPACING_DECA + RavelEditorStying.GUI_SPACING + 15f)));
+        GUILayout.TextField(PanelSettings.userMail, GUILayout.Width(position.width - (RavelEditorStying.GUI_SPACING_DECA + RavelEditorStying.GUI_SPACING + 15f)));
         GUI.enabled = true;
         if (GUILayout.Button("Clear", GUILayout.Width(RavelEditorStying.GUI_SPACING))) {
-            Config.userMail = "";
-            Config.SaveConfig();
+            PanelSettings.userMail = "";
+            PanelSettings.SaveConfig();
         }
         GUILayout.EndHorizontal();
     }
@@ -84,7 +84,7 @@ public class ConfigState : CreatorWindowState
         //18f is spacing between elements
         GUI.enabled = false;
         
-        if (GetLastFoldersOfPath(RavelEditorSettings.Get().GetBundlePath(), PATH_TRUNC_FOLDERS, out string truncPath)) {
+        if (GetLastFoldersOfPath(RavelCreatorSettings.Get().GetBundlePath(), PATH_TRUNC_FOLDERS, out string truncPath)) {
             truncPath = "(...)" + truncPath;
         }
         //width of all other elements and spacing (18f at the end is 3 spacing for each element and one spacing in front and end)
@@ -93,15 +93,15 @@ public class ConfigState : CreatorWindowState
         GUI.enabled = true;
         
         if (GUILayout.Button("Select folder", GUILayout.Width(RavelEditorStying.GUI_SPACING_DECA))) {
-            string path = EditorUtility.OpenFolderPanel("Select bundle location", RavelEditorSettings.Get().GetFilePath(), "Assetbundle output");
+            string path = EditorUtility.OpenFolderPanel("Select bundle location", RavelCreatorSettings.Get().GetFilePath(), "Assetbundle output");
             if (!string.IsNullOrEmpty(path))
             {
-                RavelEditorSettings.Get().SetBundlePath(path);
+                RavelCreatorSettings.Get().SetBundlePath(path);
             }
         }
         
         if (GUILayout.Button("Copy", GUILayout.Width(RavelEditorStying.GUI_SPACING))) {
-            GUIUtility.systemCopyBuffer = RavelEditorSettings.Get().GetBundlePath();
+            GUIUtility.systemCopyBuffer = RavelCreatorSettings.Get().GetBundlePath();
             Debug.Log("Path copied!");
         }
         GUILayout.EndHorizontal();
@@ -111,7 +111,7 @@ public class ConfigState : CreatorWindowState
     /// Draws configuration settings for the build process.
     /// </summary>
     private void GUIDrawBuildConfig() {
-        Config.autoClean = GUILayout.Toggle(Config.autoClean, "auto cleanup bundle files");
+        PanelSettings.autoClean = GUILayout.Toggle(PanelSettings.autoClean, "auto cleanup bundle files");
     }
 
 #endregion
