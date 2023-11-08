@@ -22,7 +22,7 @@ TagManager:
   - Collectible
   - Collector
   - NavmeshIgnore
-  - 
+  - IgnoreTeleport
   - 
   - 
   - 
