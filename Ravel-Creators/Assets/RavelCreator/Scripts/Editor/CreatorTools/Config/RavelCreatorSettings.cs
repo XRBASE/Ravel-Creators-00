@@ -49,6 +49,7 @@ public partial class RavelCreatorSettings : ScriptableObject
 
 	public void SaveCreatorConfig(CreatorPanelSettings panelSettings) {
 		_creatorPanelSettings = panelSettings;
+		EditorUtility.SetDirty(this);
 	}
 
 	public CreatorPanelSettings GetCreatorConfig() {
@@ -57,6 +58,7 @@ public partial class RavelCreatorSettings : ScriptableObject
 
 	public void SaveBundleConfig(EditorBundles config) {
 		_editorBundles = config;
+		EditorUtility.SetDirty(this);
 	}
 
 	public EditorBundles GetBundleConfig() {
@@ -72,8 +74,14 @@ public partial class RavelCreatorSettings : ScriptableObject
 			if (File.Exists(path)) {
 				path = Path.GetDirectoryName(path);
 			}
-			
-			_filePath = path;
+
+			if (_filePath != path) {
+				_filePath = path;
+				EditorUtility.SetDirty(this);
+			}
+		}
+		else {
+			Debug.LogWarning("Cannot set file path outside of project!");
 		}
 	}
 
@@ -82,8 +90,14 @@ public partial class RavelCreatorSettings : ScriptableObject
 			if (File.Exists(path)) {
 				path = Path.GetDirectoryName(path);
 			}
-			
-			_bundlePath = path;
+
+			if (_bundlePath != path) {
+				_bundlePath = path;
+				EditorUtility.SetDirty(this);
+			}
+		}
+		else {
+			Debug.LogWarning("Cannot set file path outside of project!");
 		}
 	}
 
@@ -96,7 +110,7 @@ public partial class RavelCreatorSettings : ScriptableObject
 	}
 
 	public string GetBundlePath() {
-		if (string.IsNullOrEmpty(_filePath)) {
+		if (string.IsNullOrEmpty(_bundlePath)) {
 			_bundlePath = Application.dataPath + DEFAULT_BUNDLE_PATH;
 		}
 

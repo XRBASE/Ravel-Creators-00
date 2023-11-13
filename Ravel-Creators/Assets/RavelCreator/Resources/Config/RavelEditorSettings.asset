@@ -12,4 +12,29 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 21b9a635d928e464d91c0fdef2ebef96, type: 3}
   m_Name: RavelEditorSettings
   m_EditorClassIdentifier: 
-  testI: 0
+  _creatorPanelSettings:
+    saveUserMail: 1
+    userMail: lotte@ravel.world
+    autoClean: 1
+    versioning: _1_2
+    incrementMinorVersionOnBuild: 1
+  _editorBundles:
+    bundles:
+    - name: TMP_CollectiblesTest
+      guid: 70cfae4a-587a-4094-a578-945233c3d775
+      vMajor: 0
+      vMinor: 0
+    - name: MyEnvironment
+      guid: 5aee802e-d332-4d2b-a460-d3281e26b797
+      vMajor: 0
+      vMinor: 0
+    - name: Tutorial_v1
+      guid: 924d8ceb-8176-4fea-956b-a0a91ac61dad
+      vMajor: 0
+      vMinor: 0
+    - name: Tutorial_v2
+      guid: cf727050-89ac-45e6-98ff-afdb0039150e
+      vMajor: 0
+      vMinor: 0
+  _filePath: C:/Users/Lotte/Documents/01-Werk/Base/01-Ravel/Unity/Ravel-Creators-00/Ravel-Creators/Assets
+  _bundlePath: C:/Users/Lotte/Documents/01-Werk/Base/01-Ravel/Unity/Ravel-Creators-00/Ravel-Creators/Assets/StreamingAssets/
