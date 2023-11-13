@@ -1,13 +1,23 @@
 using System;
 using System.Collections.Generic;
+using Base.Ravel.Creator.Components;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
 namespace QuizSampleFloor
 {
-    public class FloorQuiz : MonoBehaviour
+    public class FloorQuiz : MonoBehaviour, IUniqueId
     {
+        public bool SetUniqueID {
+            get { return true; }
+        }
+
+        public int ID {
+            get { return _id; }
+            set { _id = value; }
+        }
+
         private Question CurQuestion {
             get { return _questions[_questionId]; }
         }
@@ -15,21 +25,24 @@ namespace QuizSampleFloor
         [SerializeField] private FloorAnswer _answerTemplate;
         [SerializeField] private TMP_Text _questionField;
         [SerializeField] private Button _submitBtn;
-        
+
         [SerializeField] private List<Question> _questions;
         [SerializeField] private bool _networked = false;
+        
+        [HideInInspector, SerializeField] private int _id;
+        
         private int _questionId = 0;
         private State _state = State.ShowQuestion;
-        
+
         private List<FloorAnswer> _answerObjects;
 
         private void Start() {
             _answerObjects = new List<FloorAnswer>();
-            
+
             _submitBtn.onClick.AddListener(OnSubmit);
 
             SetQuestion();
-            
+
             //set button interactable state
             OnAnwerVoteChanged(false);
         }
@@ -38,7 +51,7 @@ namespace QuizSampleFloor
             for (int i = 0; i < _answerObjects.Count; i++) {
                 _answerObjects[i].gameObject.SetActive(false);
             }
-            
+
             _questionField.text = CurQuestion.question;
 
             if (!_answerObjects.Contains(_answerTemplate)) {
@@ -51,13 +64,14 @@ namespace QuizSampleFloor
                     if (i >= _answerObjects.Count) {
                         FloorAnswer fa = Instantiate(_answerTemplate, _answerTemplate.transform.parent);
                         fa.onVoteChanged = OnAnwerVoteChanged;
-                        
+
                         _answerObjects.Add(fa);
                     }
 
                     _answerObjects[i].Answer = CurQuestion.answers[i];
                     _answerObjects[i].gameObject.SetActive(true);
-                } else {
+                }
+                else {
                     _answerObjects[i].Reset();
                 }
             }
@@ -74,6 +88,7 @@ namespace QuizSampleFloor
                         return;
                     }
                 }
+
                 _submitBtn.interactable = false;
             }
         }
@@ -83,19 +98,19 @@ namespace QuizSampleFloor
                 for (int i = 0; i < _answerObjects.Count; i++) {
                     _answerObjects[i].ShowResult(i == CurQuestion.correctAnswer);
                 }
-                
+
                 _state = State.ShowAnswer;
             }
             else {
                 for (int i = 0; i < _answerObjects.Count; i++) {
                     _answerObjects[i].Reset();
                 }
-                
+
                 _questionId = (_questions.Count + (_questionId + 1)) % _questions.Count;
                 SetQuestion();
-                
+
                 _state = State.ShowQuestion;
-                
+
                 //update button interactable
                 OnAnwerVoteChanged(false);
             }
@@ -115,13 +130,13 @@ namespace QuizSampleFloor
             ShowAnswer = 1
         }
     }
-    
+
     [Serializable]
     class Question
     {
         public string question;
         public List<string> answers;
-        
+
         public int correctAnswer;
     }
 }
