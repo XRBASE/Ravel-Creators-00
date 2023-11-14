@@ -23,7 +23,7 @@ TagManager:
   - Collector
   - NavmeshIgnore
   - IgnoreTeleport
-  - 
+  - IgnoreNavigation
   - 
   - 
   - 
