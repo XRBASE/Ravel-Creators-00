@@ -383,6 +383,7 @@ public class EnvironmentSOEditor : Editor
     /// Make call to backend to refresh this environment.
     /// </summary>
     public void RefreshEnvironment() {
+        networkError = "";
         RavelWebRequest req = CreatorRequest.GetCreatorEnvironment(_instance.environment.environmentUuid);
         EditorWebRequests.SendWebRequest(req, OnEnvironmentUpdateReceived, this);
     }

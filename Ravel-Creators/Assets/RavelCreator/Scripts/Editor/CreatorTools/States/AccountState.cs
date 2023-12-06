@@ -21,7 +21,7 @@ public class AccountState : CreatorWindowState
 	public AccountState(CreatorWindow wnd) : base(wnd) {
 		_remember = RavelEditor.CreatorPanelSettings.saveUserMail;
 	}
-
+	
 	public override void OnSwitchState() {
 		base.OnSwitchState();
 		if (RavelEditor.CreatorPanelSettings.saveUserMail) {

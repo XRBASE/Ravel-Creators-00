@@ -1,5 +1,6 @@
 using System;
 using Base.Ravel.Config;
+using Base.Ravel.Networking;
 using Base.Ravel.Networking.Authorization;
 using Base.Ravel.Networking.Organisations;
 using Base.Ravel.Users;
@@ -88,6 +89,8 @@ public static class RavelEditor
     public static void OnLogin(User user) {
         User = user;
         RavelToolbar.RefreshConfig();
+
+        RavelWebResponse.onLoginInvalid += OnLoginInvalid;
     }
 
     /// <summary>
@@ -105,12 +108,21 @@ public static class RavelEditor
             AppConfig.Networking.Mode = NetworkConfig.AppMode.Live;
         }
     }
-    
+
+    public static void OnLoginInvalid() {
+        EditorUtility.DisplayDialog("Login expired", "Login has expired, please log in again", "yes");
+        
+        CreatorWindow.OpenAccount();
+        OnLogout(false);
+    }
+
     /// <summary>
     /// Logs out the user.
     /// </summary>
     public static void OnLogout(bool log) {
         User = null;
+        RavelWebResponse.onLoginInvalid -= OnLoginInvalid;
+        
         PlayerCache.DeleteKey(LoginRequest.SYSTEMS_TOKEN_KEY);
         
         if (log)

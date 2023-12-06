@@ -6,7 +6,10 @@ namespace Base.Ravel.Networking {
     /// <summary>
     /// Base class for response data. 
     /// </summary>
-    public class RavelWebResponse {
+    public class RavelWebResponse
+    {
+        public static Action onLoginInvalid; 
+        
         public long ResultCode {
             get { return _result; }
         }
@@ -50,27 +53,40 @@ namespace Base.Ravel.Networking {
         private Sprite _sprite;
         private AssetBundle _assetBundle;
 
+        public RavelWebResponse() {
+            _error = new WebError(Code.Unknown, "Webresponse not initialized!");
+            Debug.LogWarning("Created uninitialized (test) webresponse!");
+        }
+
         /// <summary>
         /// Create response once call has been made.
         /// </summary>
         /// <param name="call">Finished webrequest call</param>
         public RavelWebResponse(RavelWebRequest call)
         {
-            _result = call.Request.responseCode;
-            if(call.Request.result != UnityWebRequest.Result.Success) {
-                try {
-                    _error = JsonUtility.FromJson<WebError>(call.Request.downloadHandler.text);
-                    _error.code = (Code)call.Request.responseCode;
-                }
-                catch {
-                    _error = new WebError((Code)call.Request.responseCode, call.Request.error);
-                }
-
-                if (Success) {
-                    _result = (long) Code.Unknown;
-                    _error.code = Code.Unknown;
-                }
+            if (call.Error != RavelWebRequest.InternalError.None) {
+                _error = new WebError(Code.internal_MissingToken, "missing token, internal");
+                _result = (int)Code.internal_MissingToken;
+                
                 _error.message += $"\n({call.Request.url})";
+            }
+            else {
+                _result = call.Request.responseCode;
+                if(call.Request.result != UnityWebRequest.Result.Success) {
+                    try {
+                        _error = JsonUtility.FromJson<WebError>(call.Request.downloadHandler.text);
+                        _error.code = (Code)call.Request.responseCode;
+                    }
+                    catch {
+                        _error = new WebError((Code)call.Request.responseCode, call.Request.error);
+                    }
+
+                    if (Success) {
+                        _result = (long) Code.Unknown;
+                        _error.code = Code.Unknown;
+                    }
+                    _error.message += $"\n({call.Request.url})";
+                }
             }
 
             if (Success)
@@ -100,8 +116,28 @@ namespace Base.Ravel.Networking {
                     }
                 }
             }
+
+            if (RequiresNewLogin()) {
+                onLoginInvalid?.Invoke();
+            }
             
             call.DisposeData();
+        }
+
+        public static RavelWebResponse TestErrorResponse(Code code, string message) {
+            RavelWebResponse res = new RavelWebResponse();
+            res._result = (int)Code.Unauthorized;
+            res._error = new WebError(code, message);
+            
+            if (res.RequiresNewLogin()) {
+                onLoginInvalid?.Invoke();
+            }
+
+            return res;
+        }
+
+        private bool RequiresNewLogin() {
+            return _error != null && (_error.code == Code.internal_MissingToken || _error.code == Code.Unauthorized);
         }
 
         public virtual bool TryGetSprite(out Sprite spr)
@@ -172,6 +208,7 @@ namespace Base.Ravel.Networking {
         /// Return codes that van be send back from the server and their identifiers that match the codes.  
         /// </summary>
         public enum Code {
+            internal_MissingToken = -3,
             ResponseParseError = -2,
             Unknown = -1,
             
