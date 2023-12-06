@@ -1,5 +1,6 @@
 using System;
 using System.IO;
+using Base.Ravel.Config;
 using Base.Ravel.Networking;
 using MathBuddy.Strings;
 using Unity.EditorCoroutines.Editor;
@@ -318,6 +319,10 @@ public class EnvironmentState : CreatorWindowState
             res.DataString = EnvironmentExtensions.RenameStringFromBackend(res.DataString);
             
             if (res.TryGetCollection(out ProxyCollection<Environment> environments)) {
+                for (int i = 0; i < environments.Length; i++) {
+                    environments[i].mode = AppConfig.Networking.Mode;
+                }
+                
                 _environments = environments.Array;
                 _names = _environments.GetNames();
 

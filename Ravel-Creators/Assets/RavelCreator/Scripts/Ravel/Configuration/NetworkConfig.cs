@@ -192,6 +192,7 @@ namespace Base.Ravel.Config
 
         public enum AppMode
         {
+            Unknown = -1,
             Development = 0,
             Test = 1,
             Live = 2,

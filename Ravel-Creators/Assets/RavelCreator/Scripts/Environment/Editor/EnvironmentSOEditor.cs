@@ -1,4 +1,5 @@
 #if UNITY_EDITOR
+using Base.Ravel.Config;
 using Base.Ravel.Networking;
 using UnityEditor;
 using UnityEngine;
@@ -33,12 +34,27 @@ public class EnvironmentSOEditor : Editor
     /// </summary>
     private void OnEnable() {
         if (_instance != null) {
-            RefreshEnvironment();
+            if (_instance.environment.mode == NetworkConfig.AppMode.Unknown ||
+                _instance.environment.mode == AppConfig.Networking.Mode) {
+                RefreshEnvironment();
+            }
         }
     }
 
     public override void OnInspectorGUI() {
         _instance = (EnvironmentSO)target;
+
+        if (_instance.environment.mode != AppConfig.Networking.Mode) {
+            EditorGUILayout.HelpBox($"Environment does not use the same appmode as is currently selected: {_instance.environment.mode}", MessageType.Warning);
+            GUI.enabled = false;
+        } else if (_instance.environment.mode == NetworkConfig.AppMode.Unknown) {
+            EditorGUILayout.HelpBox($"Environment mode not set, please refresh the environment.", MessageType.Warning);
+            GUI.enabled = RavelEditor.LoggedIn;
+        }
+        else {
+            GUI.enabled = RavelEditor.LoggedIn;
+        }
+        
         
         //draw banner image
         if (_instance.environment.preview == null) {
@@ -185,11 +201,11 @@ public class EnvironmentSOEditor : Editor
     private void GUIDataUrls() {
         _instance.environment.metadataPreviewImage.TryGetUrl(_size, out string url);
         GUIDrawCopySaveUrl("Image", url, $"IMG_{_instance.environment.name}_{_size.ToString().Substring(1)}", "jpg", 
-            !_uploadingFile);
+            (!_uploadingFile && GUI.enabled));
 
         url = _instance.environment.metadataAssetBundle.assetBundleUrl;
         GUIDrawCopySaveUrl( "Bundle", url, $"BUN_{_instance.environment.name}", "", 
-            !_uploadingFile);
+            (!_uploadingFile && GUI.enabled));
     }
     
     private void GUIDrawCopySaveUrl(string label, string url, string fileName, string extension, bool enabled) {
@@ -397,6 +413,8 @@ public class EnvironmentSOEditor : Editor
             res.DataString = EnvironmentExtensions.RenameStringFromBackend(res.DataString);
 
             if (res.TryGetData(out Environment env)) {
+                env.mode = AppConfig.Networking.Mode;
+                
                 _instance.environment = env;
             }
 

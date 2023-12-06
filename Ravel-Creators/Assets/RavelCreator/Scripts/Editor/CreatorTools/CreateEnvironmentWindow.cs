@@ -1,4 +1,5 @@
 using System.IO;
+using Base.Ravel.Config;
 using Base.Ravel.Networking;
 using MathBuddy.Strings;
 using UnityEditor;
@@ -95,6 +96,7 @@ public class CreateEnvironmentWindow : EditorWindow
 		//Remove path before assets (AssetDatabase tools use relative path).
 		path = path.Substring(Application.dataPath.Length - 6);
 
+		_environment.mode = AppConfig.Networking.Mode;
 		CreatorRequest req = CreatorRequest.CreateEnvironment(RavelEditor.User.userUUID, _environment);
 		EditorWebRequests.SendWebRequest(req, (res) => OnCreateResponse(res, path), this);
 	}
