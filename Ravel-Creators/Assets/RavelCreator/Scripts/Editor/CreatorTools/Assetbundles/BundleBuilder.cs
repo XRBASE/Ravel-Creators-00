@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using Base.Ravel.BackendData.DynamicContent;
+using Base.Ravel.Config;
 using Base.Ravel.Creator.Components;
 using Base.Ravel.Networking;
 using Unity.EditorCoroutines.Editor;
@@ -65,6 +66,7 @@ public static class BundleBuilder
 		//See if there is an active scene configuration in the scene, otherwise cancel the build.
 		//Missing config errors are shown to the user.
 		if (!TryGetConfig(out SceneConfiguration config)) {
+			Debug.LogWarning("Could not find scene configuration component! Cancelling build.");
 			yield break;
 		}
 
@@ -75,6 +77,16 @@ public static class BundleBuilder
 				"Ok");
 
 			Selection.activeObject = config;
+			yield break;
+		}
+
+		if (config.environmentSO.environment.mode != NetworkConfig.AppMode.Unknown &&
+		    config.environmentSO.environment.mode != AppConfig.Networking.Mode) {
+			EditorUtility.DisplayDialog("Appmode mismatch!",
+				$"You are trying to build an {config.environmentSO.environment.mode}, but the currently selected mode" +
+				$"is {AppConfig.Networking.Mode}. Cancelling build.",
+				"Ok");
+			
 			yield break;
 		}
 		

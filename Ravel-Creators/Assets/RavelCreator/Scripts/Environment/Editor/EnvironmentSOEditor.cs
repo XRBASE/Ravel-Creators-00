@@ -43,18 +43,6 @@ public class EnvironmentSOEditor : Editor
 
     public override void OnInspectorGUI() {
         _instance = (EnvironmentSO)target;
-
-        if (_instance.environment.mode != AppConfig.Networking.Mode) {
-            EditorGUILayout.HelpBox($"Environment does not use the same appmode as is currently selected: {_instance.environment.mode}", MessageType.Warning);
-            GUI.enabled = false;
-        } else if (_instance.environment.mode == NetworkConfig.AppMode.Unknown) {
-            EditorGUILayout.HelpBox($"Environment mode not set, please refresh the environment.", MessageType.Warning);
-            GUI.enabled = RavelEditor.LoggedIn;
-        }
-        else {
-            GUI.enabled = RavelEditor.LoggedIn;
-        }
-        
         
         //draw banner image
         if (_instance.environment.preview == null) {
@@ -85,6 +73,18 @@ public class EnvironmentSOEditor : Editor
         }
 
         GUITitle();
+        
+        //Disable when there is a mode mismatch
+        if (_instance.environment.mode != AppConfig.Networking.Mode) {
+            EditorGUILayout.HelpBox($"Environment ({_instance.environment.mode}) does not use the same appmode as is currently selected ({AppConfig.Networking.Mode}).", MessageType.Warning);
+            GUI.enabled = false;
+        } else if (_instance.environment.mode == NetworkConfig.AppMode.Unknown) {
+            EditorGUILayout.HelpBox($"Environment mode not set, please refresh the environment.", MessageType.Warning);
+            GUI.enabled = RavelEditor.LoggedIn;
+        }
+        else {
+            GUI.enabled = RavelEditor.LoggedIn;
+        }
 
         //environment download error handling
         if (!string.IsNullOrEmpty(networkError)) {

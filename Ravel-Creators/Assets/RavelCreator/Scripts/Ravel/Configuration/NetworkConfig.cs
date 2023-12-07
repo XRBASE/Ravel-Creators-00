@@ -74,7 +74,7 @@ namespace Base.Ravel.Config
                     case AppMode.Test:
                         url = "https://test.ravel.systems/";
                         break;
-                    case AppMode.Live:
+                    case AppMode.App:
                         url = "https://live.ravel.systems/";
                         break;
                     case AppMode.LocalHost:
@@ -100,7 +100,7 @@ namespace Base.Ravel.Config
                 case AppMode.Test:
                     url = "https://demo.ravel.world/";
                     break;
-                case AppMode.Live:
+                case AppMode.App:
                     url = "https://app.ravel.world/";
                     break;
                 case AppMode.LocalHost:
@@ -130,7 +130,7 @@ namespace Base.Ravel.Config
                 case AppMode.Test:
                     id = "41149b28-2061-4424-9d2b-0d392ebc8027";
                     break;
-                case AppMode.Live:
+                case AppMode.App:
                     id = "e2bdfa09-1a97-41ab-acbf-a33e10c96a30";
                     break;
                 case AppMode.PersistentSample:
@@ -158,7 +158,7 @@ namespace Base.Ravel.Config
             switch (m) {
                 case AppMode.Development:
                 case AppMode.Test:
-                case AppMode.Live:
+                case AppMode.App:
                 case AppMode.PersistentSample:
                     id = "b5ef7fb8a6004bbab48d15fe4e6b13fd";
                     break;
@@ -181,12 +181,7 @@ namespace Base.Ravel.Config
             if (!cfg) {
                 throw new FileNotFoundException($"No network config found!");
             }
-
-            //TODO: live when no dev build
-            /*
-    #if !UNITY_EDITOR && !DEVELOPMENT_BUILD
-            cfg._mode = NetworkConfig.AppMode.Live;
-    #endif*/
+            
             return cfg;
         }
 
@@ -195,7 +190,7 @@ namespace Base.Ravel.Config
             Unknown = -1,
             Development = 0,
             Test = 1,
-            Live = 2,
+            App = 2, //live
             PersistentSample = 3,
             LocalHost = 4,
         }
