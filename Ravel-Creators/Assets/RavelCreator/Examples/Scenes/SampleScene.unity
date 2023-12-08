@@ -198,6 +198,10 @@ PrefabInstance:
       propertyPath: m_AnchoredPosition.y
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 3418932912064569617, guid: 4460656af65d797489797a19c2626f3a, type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
     - target: {fileID: 3814239804460517478, guid: 4460656af65d797489797a19c2626f3a, type: 3}
       propertyPath: m_SizeDelta.y
       value: 0
@@ -268,15 +272,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 9159861550475728977, guid: 4460656af65d797489797a19c2626f3a, type: 3}
       propertyPath: _id
-      value: 9
-      objectReference: {fileID: 0}
-    - target: {fileID: 9159861550475728977, guid: 4460656af65d797489797a19c2626f3a, type: 3}
-      propertyPath: _networked
       value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 9159861550475728979, guid: 4460656af65d797489797a19c2626f3a, type: 3}
       propertyPath: m_Name
       value: FloorQuiz
+      objectReference: {fileID: 0}
+    - target: {fileID: 9159861550475728979, guid: 4460656af65d797489797a19c2626f3a, type: 3}
+      propertyPath: m_IsActive
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 4460656af65d797489797a19c2626f3a, type: 3}
@@ -295,6 +299,10 @@ PrefabInstance:
     - target: {fileID: 3090666532429086102, guid: bb1309e6e4a26b848a3f721014666ee8, type: 3}
       propertyPath: m_Name
       value: MovingPlatform
+      objectReference: {fileID: 0}
+    - target: {fileID: 3090666532429086102, guid: bb1309e6e4a26b848a3f721014666ee8, type: 3}
+      propertyPath: m_IsActive
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 3090666532429086103, guid: bb1309e6e4a26b848a3f721014666ee8, type: 3}
       propertyPath: m_RootOrder
@@ -1261,6 +1269,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Track
       objectReference: {fileID: 0}
+    - target: {fileID: 8212054918115379259, guid: e0524cedeca33ed42a11a611fa979bdf, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: e0524cedeca33ed42a11a611fa979bdf, type: 3}
 --- !u!4 &298866257 stripped
@@ -1322,6 +1334,10 @@ PrefabInstance:
     - target: {fileID: 1941752139986791903, guid: 75b4e14215e8abf479814f40dd3a7771, type: 3}
       propertyPath: m_Name
       value: Interaction
+      objectReference: {fileID: 0}
+    - target: {fileID: 1941752139986791903, guid: 75b4e14215e8abf479814f40dd3a7771, type: 3}
+      propertyPath: m_IsActive
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 1941752139998576839, guid: 75b4e14215e8abf479814f40dd3a7771, type: 3}
       propertyPath: _data.id
@@ -1614,6 +1630,10 @@ PrefabInstance:
     - target: {fileID: 949795996631293860, guid: 4e42c2e27988d2d4590148c2966ec4fa, type: 3}
       propertyPath: m_Name
       value: NPCComponents
+      objectReference: {fileID: 0}
+    - target: {fileID: 949795996631293860, guid: 4e42c2e27988d2d4590148c2966ec4fa, type: 3}
+      propertyPath: m_IsActive
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 949795997674994300, guid: 4e42c2e27988d2d4590148c2966ec4fa, type: 3}
       propertyPath: m_AnchorMax.y
@@ -8228,6 +8248,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Seats
       objectReference: {fileID: 0}
+    - target: {fileID: 6069522243990443990, guid: 20f32b47715b80b4c9fe36e77527883a, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 6069522245048329926, guid: 20f32b47715b80b4c9fe36e77527883a, type: 3}
       propertyPath: _data.id
       value: 1
@@ -8249,6 +8273,10 @@ PrefabInstance:
     - target: {fileID: 2650903648733994376, guid: 49dc96351ab333647a9e3e4e86f1c410, type: 3}
       propertyPath: m_Name
       value: Dialog
+      objectReference: {fileID: 0}
+    - target: {fileID: 2650903648733994376, guid: 49dc96351ab333647a9e3e4e86f1c410, type: 3}
+      propertyPath: m_IsActive
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 2650903648733994379, guid: 49dc96351ab333647a9e3e4e86f1c410, type: 3}
       propertyPath: m_RootOrder
@@ -9352,6 +9380,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: VisibleWith
       objectReference: {fileID: 0}
+    - target: {fileID: 2236184240920092068, guid: 8d80d36e391ccc9409d55f5730f09a11, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 2236184240997263586, guid: 8d80d36e391ccc9409d55f5730f09a11, type: 3}
       propertyPath: m_AnchorMax.y
       value: 0
@@ -10022,6 +10054,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Quiz
       objectReference: {fileID: 0}
+    - target: {fileID: 9086992404689792880, guid: 993dc8d2f946358448479de66d71ee3a, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 993dc8d2f946358448479de66d71ee3a, type: 3}
 --- !u!4 &3221273851074391243 stripped
@@ -10343,6 +10379,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: DisplayDateCanvas
       objectReference: {fileID: 0}
+    - target: {fileID: 8315319914699800887, guid: 3fccada56307d364fb23c5020ea68420, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 3fccada56307d364fb23c5020ea68420, type: 3}
 --- !u!1 &4959683726636493230
@@ -10610,6 +10650,10 @@ PrefabInstance:
     - target: {fileID: 7746041339525071906, guid: 26827477ddcb58a46abd0eba3cbcdea7, type: 3}
       propertyPath: m_Name
       value: Timer
+      objectReference: {fileID: 0}
+    - target: {fileID: 7746041339525071906, guid: 26827477ddcb58a46abd0eba3cbcdea7, type: 3}
+      propertyPath: m_IsActive
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 7746041339525071907, guid: 26827477ddcb58a46abd0eba3cbcdea7, type: 3}
       propertyPath: m_RootOrder
