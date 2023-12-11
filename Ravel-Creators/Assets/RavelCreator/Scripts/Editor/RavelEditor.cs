@@ -1,10 +1,13 @@
 using System;
+using Base.Ravel.Config;
 using Base.Ravel.Networking.Authorization;
 using Base.Ravel.Networking.Organisations;
 using Base.Ravel.Users;
+using MathBuddy;
 using MathBuddy.Strings;
 using UnityEditor;
 using UnityEngine;
+using Object = UnityEngine.Object;
 
 /// <summary>
 /// Manager class for editor user data and usefull editor functions
@@ -96,6 +99,10 @@ public static class RavelEditor
             if (auths[i] == "dev:access") {
                 DevUser = true;
             }
+        }
+        
+        if (!DevUser && AppConfig.Networking.Mode != NetworkConfig.AppMode.Live) {
+            AppConfig.Networking.Mode = NetworkConfig.AppMode.Live;
         }
     }
     
@@ -237,7 +244,7 @@ public static class RavelEditor
         float m = mask.width / mask.height;
         float t = (float)tex.width / tex.height;
 
-        if (Mathf.Abs(m - t) <= MathBuddy.FloatingPoints.LABDA) {
+        if (Mathf.Abs(m - t) <= FloatingPoints.LABDA) {
             return coords;
         }
         if (m > t) {
@@ -330,7 +337,7 @@ public static class RavelEditor
     /// Searches the project for files (outside of the scene) of this type, and returns them.
     /// </summary>
     /// <param name="filter">additional filtering, apart from the type.</param>
-    public static T[] GetAllAssetsOfType<T>(string filter = "") where T : UnityEngine.Object {
+    public static T[] GetAllAssetsOfType<T>(string filter = "") where T : Object {
         string[] paths = AssetDatabase.FindAssets($"t:{typeof(T)} {filter}");
         T[] data = new T[paths.Length];
         for (int i = 0; i < paths.Length; i++) {

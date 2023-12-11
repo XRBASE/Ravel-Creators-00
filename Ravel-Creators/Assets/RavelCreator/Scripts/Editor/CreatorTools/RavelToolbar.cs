@@ -114,16 +114,24 @@ public class RavelToolbar
         GUI.enabled = true;
 
         //Backend mode that is used to preview on, only accessible for dev users.
-        GUI.enabled = RavelEditor.DevUser;
+        GUI.enabled = RavelEditor.DevUser || !RavelEditor.LoggedIn;
         bool curMode = AppConfig.Networking.Mode == NetworkConfig.AppMode.Live;
         //user picks between app and live
         bool pickedMode = EditorGUILayout.Popup("", curMode ? 0 : 1, new[] { "App", "Dev" }, 
             GUILayout.Width(RavelEditorStying.GUI_SPACING_DECI)) == 0;
         
-        if (curMode != pickedMode &&
-            EditorUtility.DisplayDialog("Switch app modes", "Are you sure you want to switch app modes? You'll have to log in again.", "Yes", "No")) {
-            //switch app modes
-            RavelEditor.OnLogout(false);
+        if (curMode != pickedMode) {
+            if (RavelEditor.LoggedIn) {
+                if (!EditorUtility.DisplayDialog("Switch app modes",
+                        "Are you sure you want to switch app modes? You'll have to log in again.", "Yes", "No")) {
+                    //escape if user does not want to log out.
+                    return;
+                }
+                
+                //switch app modes
+                RavelEditor.OnLogout(false);
+            }
+            
             CreatorWindow.OpenAccount();
             
             AppConfig.Networking.Mode = (pickedMode) ? NetworkConfig.AppMode.Live : NetworkConfig.AppMode.Development;
