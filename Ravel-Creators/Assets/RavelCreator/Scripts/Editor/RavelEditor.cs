@@ -104,8 +104,8 @@ public static class RavelEditor
             }
         }
         
-        if (!DevUser && AppConfig.Networking.Mode != NetworkConfig.AppMode.Live) {
-            AppConfig.Networking.Mode = NetworkConfig.AppMode.Live;
+        if (!DevUser && AppConfig.Networking.Mode != NetworkConfig.AppMode.App) {
+            AppConfig.Networking.Mode = NetworkConfig.AppMode.App;
         }
     }
 

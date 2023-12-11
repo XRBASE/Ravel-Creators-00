@@ -115,7 +115,7 @@ public class RavelToolbar
 
         //Backend mode that is used to preview on, only accessible for dev users.
         GUI.enabled = RavelEditor.DevUser || !RavelEditor.LoggedIn;
-        bool curMode = AppConfig.Networking.Mode == NetworkConfig.AppMode.Live;
+        bool curMode = AppConfig.Networking.Mode == NetworkConfig.AppMode.App;
         //user picks between app and live
         bool pickedMode = EditorGUILayout.Popup("", curMode ? 0 : 1, new[] { "App", "Dev" }, 
             GUILayout.Width(RavelEditorStying.GUI_SPACING_DECI)) == 0;
@@ -134,7 +134,7 @@ public class RavelToolbar
             
             CreatorWindow.OpenAccount();
             
-            AppConfig.Networking.Mode = (pickedMode) ? NetworkConfig.AppMode.Live : NetworkConfig.AppMode.Development;
+            AppConfig.Networking.Mode = (pickedMode) ? NetworkConfig.AppMode.App : NetworkConfig.AppMode.Development;
             
             EditorUtility.SetDirty(AppConfig.Networking);
             AssetDatabase.SaveAssets();

@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Base.Ravel.Config;
 using Base.Ravel.CustomAttributes;
 using Base.Ravel.Users;
 using UnityEngine;
@@ -20,6 +21,10 @@ public class Environment
     public string shortSummary;
     [ReadOnly]
     public string longSummary;
+
+    //track whether it is a development or live environment.
+    [ReadOnly]
+    public NetworkConfig.AppMode mode = NetworkConfig.AppMode.Unknown;
     
     //container class for all size image urls.
     [HideInInspector]

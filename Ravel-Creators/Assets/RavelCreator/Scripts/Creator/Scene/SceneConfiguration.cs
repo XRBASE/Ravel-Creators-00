@@ -15,6 +15,28 @@ public class SceneConfiguration : MonoBehaviour
     public bool teleportEnabled = true;
     
 #if UNITY_EDITOR
+
+    public void OnValidate() {
+        SceneConfiguration[] configs = FindObjectsOfType<SceneConfiguration>();
+
+        if (configs.Length > 1 && EditorUtility.DisplayDialog("Double config",
+                "There is already a scene configuration in the scene. No more than one config is allowed per scene!",
+                "ok")) {
+
+            for (int i = 0; i < configs.Length; i++) {
+                if (configs[i] != this) {
+                    EditorGUIUtility.PingObject(configs[i].gameObject);
+                }
+            }
+
+            Debug.LogError(
+                "There is already a scene configuration in the scene. No more than one config is allowed per scene!");
+
+            //destroy component when allowed to. 
+            EditorApplication.delayCall += () => { DestroyImmediate(this); };
+        }
+    }
+
     public static Action environmentUpdated;
     
     [CustomEditor(typeof(SceneConfiguration))]
