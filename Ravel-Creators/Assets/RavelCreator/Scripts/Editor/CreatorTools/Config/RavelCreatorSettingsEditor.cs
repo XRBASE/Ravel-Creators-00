@@ -21,9 +21,13 @@ public partial class RavelCreatorSettings
 			DrawDefaultInspector();
 
 			GUIDrawFolderAndSetBtn(_instance._filePath, _instance.SetFilePath,
-				new GUIContent("File path", $"(Last used) Path that is opened when accessing files.\n {_instance._filePath}"));
+				new GUIContent("File path", "(Last used) Path that is opened when accessing files. " +
+				                            "Should be a folder within the asset folder of this project.\n" +
+				                            $"{_instance._filePath}"));
 			GUIDrawFolderAndSetBtn(_instance._bundlePath, _instance.SetBundlePath,
-				new GUIContent("Bundle path", $"The location at which assetbundles are saved.\n {_instance._bundlePath}"));
+				new GUIContent("Bundle path", "The location at which assetbundles are saved." +
+				                              "Should be a folder within the asset folder of this project.\n" +
+				                              $"{_instance._bundlePath}"));
 		}
 
 		private void GUIDrawFolderAndSetBtn(string value, Action<string> setValueAction, GUIContent content) {
