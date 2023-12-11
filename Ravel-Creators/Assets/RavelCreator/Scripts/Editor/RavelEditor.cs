@@ -1,10 +1,13 @@
 using System;
+using Base.Ravel.Config;
 using Base.Ravel.Networking.Authorization;
 using Base.Ravel.Networking.Organisations;
 using Base.Ravel.Users;
+using MathBuddy;
 using MathBuddy.Strings;
 using UnityEditor;
 using UnityEngine;
+using Object = UnityEngine.Object;
 
 /// <summary>
 /// Manager class for editor user data and usefull editor functions
@@ -14,32 +17,32 @@ public static class RavelEditor
     /// <summary>
     /// Project configuration.
     /// </summary>
-    public static CreatorConfig CreatorConfig {
+    public static CreatorPanelSettings CreatorPanelSettings {
         get {
-            if (_creatorConfig == null) {
-                _creatorConfig = CreatorConfig.LoadCurrent();
+            if (_creatorPanelSettings == null) {
+                _creatorPanelSettings = CreatorPanelSettings.LoadConfig();
             }
 
-            return _creatorConfig;
+            return _creatorPanelSettings;
         }
-        set { _creatorConfig = value; }
+        set { _creatorPanelSettings = value; }
     }
-    private static CreatorConfig _creatorConfig;
+    private static CreatorPanelSettings _creatorPanelSettings;
     
     /// <summary>
     /// Per-bundle configurations, mostly version numbers.
     /// </summary>
-    public static BundleConfig BundleConfig {
+    public static EditorBundles EditorBundles {
         get {
-            if (_bundleConfig == null) {
-                _bundleConfig = BundleConfig.LoadCurrent();
+            if (_editorBundles == null) {
+                _editorBundles = EditorBundles.LoadConfig();
             }
 
-            return _bundleConfig;
+            return _editorBundles;
         }
-        set { _bundleConfig = value; }
+        set { _editorBundles = value; }
     }
-    private static BundleConfig _bundleConfig;
+    private static EditorBundles _editorBundles;
 
     /// <summary>
     /// Checks if the user is set.
@@ -79,14 +82,6 @@ public static class RavelEditor
     }
     private static RavelBranding _branding;
     
-    [MenuItem("Ravel/Clear editor cache", false)]
-    public static void ClearCache() {
-        if (EditorUtility.DisplayDialog("Clear cache",
-                "This will delete all configuration data and version numbering, are you sure?", "Yes", "No")) {
-            EditorCache.Clear();
-        }
-    }
-
     /// <summary>
     /// Sets the user (creator) after login.
     /// </summary>
@@ -104,6 +99,10 @@ public static class RavelEditor
             if (auths[i] == "dev:access") {
                 DevUser = true;
             }
+        }
+        
+        if (!DevUser && AppConfig.Networking.Mode != NetworkConfig.AppMode.Live) {
+            AppConfig.Networking.Mode = NetworkConfig.AppMode.Live;
         }
     }
     
@@ -245,7 +244,7 @@ public static class RavelEditor
         float m = mask.width / mask.height;
         float t = (float)tex.width / tex.height;
 
-        if (Mathf.Abs(m - t) <= MathBuddy.FloatingPoints.LABDA) {
+        if (Mathf.Abs(m - t) <= FloatingPoints.LABDA) {
             return coords;
         }
         if (m > t) {
@@ -338,7 +337,7 @@ public static class RavelEditor
     /// Searches the project for files (outside of the scene) of this type, and returns them.
     /// </summary>
     /// <param name="filter">additional filtering, apart from the type.</param>
-    public static T[] GetAllAssetsOfType<T>(string filter = "") where T : UnityEngine.Object {
+    public static T[] GetAllAssetsOfType<T>(string filter = "") where T : Object {
         string[] paths = AssetDatabase.FindAssets($"t:{typeof(T)} {filter}");
         T[] data = new T[paths.Length];
         for (int i = 0; i < paths.Length; i++) {
