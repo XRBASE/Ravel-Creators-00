@@ -198,7 +198,7 @@ GameObject:
   - component: {fileID: 8743961836712623715}
   - component: {fileID: 3988643508843175240}
   m_Layer: 0
-  m_Name: Cube
+  m_Name: FinishedVisualCube
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -340,7 +340,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2180264, guid: 424a5734233885b489aab278e4576ff6, type: 2}
+  - {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -384,8 +384,8 @@ MonoBehaviour:
       m_Calls: []
   m_text: Answer
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 424a5734233885b489aab278e4576ff6, type: 2}
-  m_sharedMaterial: {fileID: 2180264, guid: 424a5734233885b489aab278e4576ff6, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
+  m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -835,7 +835,6 @@ MonoBehaviour:
   _highlightRenderers:
   - {fileID: 8660201609481123365}
   - {fileID: 6653615492668787904}
-  quizNetworked: 0
 --- !u!23 &8660201609481123365 stripped
 MeshRenderer:
   m_CorrespondingSourceObject: {fileID: 7801188755381029588, guid: dc193f91c67a89246844903e71bb23fb, type: 3}
