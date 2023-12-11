@@ -29,9 +29,9 @@ public class BundleState : CreatorWindowState
     /// <summary>
     /// Configuration file for most of the data in the window.
     /// </summary>
-    public BundleConfig Config {
-        get { return RavelEditor.BundleConfig; }
-        set { RavelEditor.BundleConfig = value; }
+    public EditorBundles Config {
+        get { return RavelEditor.EditorBundles; }
+        set { RavelEditor.EditorBundles = value; }
     }
     
     private Vector2 _scroll;
@@ -45,14 +45,14 @@ public class BundleState : CreatorWindowState
         Config.UpdateValues();
         
         //When the window is opened, set the correct versioning, based on the value in the creator config.
-        if (string.IsNullOrEmpty(RavelEditor.CreatorConfig.versioning)) {
+        if (string.IsNullOrEmpty(RavelEditor.CreatorPanelSettings.versioning)) {
             //no versioning
             _versioningMode = 0;
         }
         else {
             bool found = false;
             for (int i = 0; i < VERSIONING_OPTIONS.Length; i++) {
-                if (RavelEditor.CreatorConfig.versioning == VERSIONING_OPTIONS[i]) {
+                if (RavelEditor.CreatorPanelSettings.versioning == VERSIONING_OPTIONS[i]) {
                     _versioningMode = i;
                     found = true;
                 }
@@ -131,30 +131,30 @@ public class BundleState : CreatorWindowState
         if (IsCustomVersioning(_versioningMode)) {
             EditorGUILayout.BeginHorizontal();
             GUILayout.Label("Custom versioning string!");
-            RavelEditor.CreatorConfig.versioning = GUILayout.TextArea(RavelEditor.CreatorConfig.versioning);
+            RavelEditor.CreatorPanelSettings.versioning = GUILayout.TextArea(RavelEditor.CreatorPanelSettings.versioning);
             EditorGUILayout.EndHorizontal();
 
-            if (!RavelEditor.CreatorConfig.versioning.Contains('1') || !RavelEditor.CreatorConfig.versioning.Contains('2')) {
+            if (!RavelEditor.CreatorPanelSettings.versioning.Contains('1') || !RavelEditor.CreatorPanelSettings.versioning.Contains('2')) {
                 EditorGUILayout.HelpBox("Not both numbers, 1 for major and 2 for minor, are included in the custom versioning! " +
                                         "Numbers not included in this custom string will not be shown in the bundle name.", MessageType.Warning);
             }
         }
         else if (NoVersioning(_versioningMode)) {
-            RavelEditor.CreatorConfig.versioning = "";
+            RavelEditor.CreatorPanelSettings.versioning = "";
         }
         else {
-            RavelEditor.CreatorConfig.versioning = VERSIONING_OPTIONS[_versioningMode];
+            RavelEditor.CreatorPanelSettings.versioning = VERSIONING_OPTIONS[_versioningMode];
         }
         
         //toggle for version incrementation (on build)
         EditorGUILayout.BeginHorizontal();
         GUILayout.Label("Increment minor version every build", GUILayout.Width(position.width - VERSION_WIDTH));
-        RavelEditor.CreatorConfig.incrementMinorVersionOnBuild = EditorGUILayout.Toggle(RavelEditor.CreatorConfig.incrementMinorVersionOnBuild);
+        RavelEditor.CreatorPanelSettings.incrementMinorVersionOnBuild = EditorGUILayout.Toggle(RavelEditor.CreatorPanelSettings.incrementMinorVersionOnBuild);
         EditorGUILayout.EndHorizontal();
         
         if (EditorGUI.EndChangeCheck()) {
             //whenever changes are made in the editor code above, save the creator config. 
-            RavelEditor.CreatorConfig.SaveConfig();
+            RavelEditor.CreatorPanelSettings.SaveConfig();
         }
 
         //Sample string using either the first bundle or a sample string 
@@ -179,7 +179,7 @@ public class BundleState : CreatorWindowState
     /// </summary>
     /// <param name="bundle">Bundle of which the data is drawn.</param>
     /// <param name="position">GUI position rect.</param>
-    private void GUIDrawBundleInfo(BundleConfig.BundleData bundle, Rect position) {
+    private void GUIDrawBundleInfo(EditorBundles.BundleData bundle, Rect position) {
         GUILayout.BeginHorizontal();
         
         GUI.enabled = false;

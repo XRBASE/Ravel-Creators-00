@@ -174,12 +174,12 @@ public class EnvironmentState : CreatorWindowState
                     Selection.activeObject = so;
                 }
                 else {
-                    string path = EditorUtility.SaveFilePanel("Save environment", RavelEditor.CreatorConfig.GetFilePath(), 
+                    string path = EditorUtility.SaveFilePanel("Save environment", RavelCreatorSettings.Get().GetFilePath(), 
                         $"ENV_{CurEnv.name}", "asset");
 
                     if (!string.IsNullOrEmpty(path)) {
-                        RavelEditor.CreatorConfig.SetFilePath(path);
-                        
+                        RavelCreatorSettings.Get().SetFilePath(path);
+
                         so = ScriptableObject.CreateInstance<EnvironmentSO>();
                         so.environment = CurEnv;
 
@@ -203,11 +203,11 @@ public class EnvironmentState : CreatorWindowState
     /// </summary>
     private void GUISaveEnvImage() {
         if (CurEnv.metadataPreviewImage.TryGetUrl(ImageSize.I1920, out string imgUrl) && GUILayout.Button("Save image")) {
-            string path = EditorUtility.SaveFilePanel("Save image", RavelEditor.CreatorConfig.GetFilePath(), 
+            string path = EditorUtility.SaveFilePanel("Save image",  RavelCreatorSettings.Get().GetFilePath(), 
                 $"IMG_{CurEnv.name}_1920", "jpg");
 
             if (!string.IsNullOrEmpty(path)) {
-                RavelEditor.CreatorConfig.SetFilePath(path);
+                RavelCreatorSettings.Get().SetFilePath(path);
                 RavelWebRequest req = new RavelWebRequest(imgUrl, RavelWebRequest.Method.Get);
                 EditorWebRequests.DownloadAndSave(req, path, true, this);
             }
@@ -219,11 +219,11 @@ public class EnvironmentState : CreatorWindowState
     /// </summary>
     private void GUISaveEnvBundle() {
         if (!string.IsNullOrEmpty(CurEnv.metadataAssetBundle.assetBundleUrl) && GUILayout.Button("Save bundle")) {
-            string path = EditorUtility.SaveFilePanel("Save bundle", Application.dataPath, 
+            string path = EditorUtility.SaveFilePanel("Save bundle", RavelCreatorSettings.Get().GetFilePath(), 
                 $"BUN_{CurEnv.name}", "");
 
             if (!string.IsNullOrEmpty(path)) {
-                RavelEditor.CreatorConfig.SetFilePath(path);
+                RavelCreatorSettings.Get().SetFilePath(path);
                 RavelWebRequest req = new RavelWebRequest(CurEnv.metadataAssetBundle.assetBundleUrl, RavelWebRequest.Method.Get);
                 EditorWebRequests.DownloadAndSave(req, path, false, this);
             }

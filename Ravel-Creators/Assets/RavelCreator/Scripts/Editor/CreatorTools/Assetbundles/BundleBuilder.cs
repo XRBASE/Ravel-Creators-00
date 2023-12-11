@@ -97,7 +97,7 @@ public static class BundleBuilder
 		}
 
 		//this data contains the version numbering of the bundle, as saved in editor prefs.
-		BundleConfig.BundleData data = RavelEditor.BundleConfig.GetBundleData(config.environmentSO);
+		EditorBundles.BundleData data = RavelEditor.EditorBundles.GetBundleData(config.environmentSO);
 		
 		//Check if the build name was set, if not try to set the name that is set in the environment, if even that fails, 
 		//assign a guid to the bundle as name. GUID builds are always auto cleaned up.
@@ -110,11 +110,11 @@ public static class BundleBuilder
 			}
 			else {
 				bundleName = config.environmentSO.bundleName;
-				bundleName += RavelEditor.BundleConfig.GetVersionString(data);
+				bundleName += RavelEditor.EditorBundles.GetVersionString(data);
 			}
 		}
 		else {
-			bundleName += RavelEditor.BundleConfig.GetVersionString(data);
+			bundleName += RavelEditor.EditorBundles.GetVersionString(data);
 		}
 		
 		//If scene contains changes, ask the creator if she wants to save them.
@@ -162,7 +162,7 @@ public static class BundleBuilder
 			           $"{config.environmentSO.environment.name}, this will override the previous assetbundle. Are you sure?";
 		}
 		else {
-			dialogMsg = $"Building scene {s.name} in folder {RavelEditor.CreatorConfig.bundlePath}, are you sure?";
+			dialogMsg = $"Building scene {s.name} in folder {RavelCreatorSettings.Get().GetBundlePath()}, are you sure?";
 		}
 		
 		//Last chance for user to cancel. This dialog shows what scene is assigned into what environment.
@@ -194,7 +194,7 @@ public static class BundleBuilder
 		}
 
 		//Get the bundle path from the config and create missing folders if they're not already there
-		string path = RavelEditor.CreatorConfig.bundlePath;
+		string path = RavelCreatorSettings.Get().GetBundlePath();
 		if (!Directory.Exists(path)) {
 			Debug.LogWarning($"Bundle directory {path} does not exist, creating it!");
 			Directory.CreateDirectory(path);
@@ -204,9 +204,9 @@ public static class BundleBuilder
 		BuildPipeline.BuildAssetBundles(path, BuildAssetBundleOptions.None, BuildTarget.WebGL);
 		
 		//increment version numbers.
-		if(RavelEditor.CreatorConfig.incrementMinorVersionOnBuild){
+		if(RavelEditor.CreatorPanelSettings.incrementMinorVersionOnBuild){
 			data.vMinor++;
-			RavelEditor.BundleConfig.SaveConfig();
+			RavelEditor.EditorBundles.SaveConfig();
 		}
 
 		if (preview) {
@@ -271,9 +271,9 @@ public static class BundleBuilder
 	/// and so this call will only delete files without extension that have another file with the manifest extension.
 	/// </summary>
 	public static void DeleteBundles() {
-		List<string> files = Directory.GetFiles(RavelEditor.CreatorConfig.bundlePath).ToList();
+		List<string> files = Directory.GetFiles(RavelCreatorSettings.Get().GetBundlePath()).ToList();
 		if (files.Count == 0) {
-			Debug.LogWarning($"Cannot delete bundles, no files found at {RavelEditor.CreatorConfig.bundlePath}");
+			Debug.LogWarning($"Cannot delete bundles, no files found at {RavelCreatorSettings.Get().GetBundlePath()}");
 			return;
 		}
 		
@@ -293,7 +293,7 @@ public static class BundleBuilder
 
 		if (toDelete.Count == 0) {
 			//no bundles found
-			Debug.LogWarning($"Cannot delete bundles, no bundles found at {RavelEditor.CreatorConfig.bundlePath}");
+			Debug.LogWarning($"Cannot delete bundles, no bundles found at {RavelCreatorSettings.Get().GetBundlePath()}");
 			return;
 		}
 		//remove last comma

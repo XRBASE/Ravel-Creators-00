@@ -1,23 +1,19 @@
 using System;
 using System.Collections.Generic;
 using UnityEditor;
-using UnityEngine;
 
 /// <summary>
 /// Config file for saving bundle preferences in the editor cache
 /// </summary>
 [Serializable]
-public class BundleConfig
+public class EditorBundles
 {
-	//saved under this key in editor prefs.
-	private const string CONFIG_KEY = "BUND_CFG";
-
 	/// <summary>
 	/// List of local environment bundle data.
 	/// </summary>
 	public List<BundleData> bundles;
 
-	public BundleConfig() {
+	public EditorBundles() {
 		bundles = new List<BundleData>();
 	}
 
@@ -25,20 +21,14 @@ public class BundleConfig
 	/// Save this configuration in the editor cache.
 	/// </summary>
 	public void SaveConfig() {
-		EditorCache.SetString(CONFIG_KEY, JsonUtility.ToJson(this));
+		RavelCreatorSettings.Get().SaveBundleConfig(this);
 	}
 	
 	/// <summary>
 	/// Loads the current config file from the editor cache.
 	/// </summary>
-	public static BundleConfig LoadCurrent() {
-		string json = EditorCache.GetString(CONFIG_KEY);
-		if (string.IsNullOrEmpty(json)) {
-			//default values
-			return new BundleConfig();
-		}
-
-		return JsonUtility.FromJson<BundleConfig>(json);
+	public static EditorBundles LoadConfig() {
+		return RavelCreatorSettings.Get().GetBundleConfig();
 	}
 
 	/// <summary>
@@ -46,13 +36,6 @@ public class BundleConfig
 	/// bundles for new environments and remove bundles that are not in the project anymore.
 	/// </summary>
 	public void UpdateValues() {
-		string json = EditorCache.GetString(CONFIG_KEY);
-		if (!string.IsNullOrEmpty(json)) {
-			//default values
-			bundles.Clear();
-			JsonUtility.FromJsonOverwrite(json, this);
-		}
-
 		//go through all local assets and check if bundles match. Create missing bundles and save id's of bundles that
 		//have been identified in the project
 		EnvironmentSO[] envs = RavelEditor.GetAllAssetsOfType<EnvironmentSO>();
@@ -137,12 +120,12 @@ public class BundleConfig
 	/// <param name="minor">Minor version number to include.</param>
 	/// <returns>String containing version numbering formatted according to the configuration.</returns>
 	public string GetVersionString(int major, int minor) {
-		if (string.IsNullOrEmpty(RavelEditor.CreatorConfig.versioning)) {
+		if (string.IsNullOrEmpty(RavelEditor.CreatorPanelSettings.versioning)) {
 			//no versioning
 			return "";
 		}
 
-		string version = RavelEditor.CreatorConfig.versioning;
+		string version = RavelEditor.CreatorPanelSettings.versioning;
 		if (version.Contains('1')) {
 			version = version.Replace("1", major.ToString());
 		}

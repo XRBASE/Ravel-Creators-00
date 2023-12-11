@@ -19,13 +19,13 @@ public class AccountState : CreatorWindowState
 	}
 
 	public AccountState(CreatorWindow wnd) : base(wnd) {
-		_remember = RavelEditor.CreatorConfig.saveUserMail;
+		_remember = RavelEditor.CreatorPanelSettings.saveUserMail;
 	}
-
+	
 	public override void OnSwitchState() {
 		base.OnSwitchState();
-		if (RavelEditor.CreatorConfig.saveUserMail) {
-			email = RavelEditor.CreatorConfig.userMail;
+		if (RavelEditor.CreatorPanelSettings.saveUserMail) {
+			email = RavelEditor.CreatorPanelSettings.userMail;
 		}
 	}
 
@@ -44,10 +44,10 @@ public class AccountState : CreatorWindowState
 			if (GUILayout.Button("Log in")) {
 				//if remember is set to true, the mail and remember value are both saved in cache
 				if (_remember) {
-					RavelEditor.CreatorConfig.saveUserMail = true;
-					RavelEditor.CreatorConfig.userMail = email;
+					RavelEditor.CreatorPanelSettings.saveUserMail = true;
+					RavelEditor.CreatorPanelSettings.userMail = email;
 					
-					RavelEditor.CreatorConfig.SaveConfig();
+					RavelEditor.CreatorPanelSettings.SaveConfig();
 				}
 				
 				LoginUserPass(email, pass);
