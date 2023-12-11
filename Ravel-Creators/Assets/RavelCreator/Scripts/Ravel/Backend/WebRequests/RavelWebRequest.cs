@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using Base.Ravel.Config;
 using Base.Ravel.Networking.Authorization;
+using TMPro;
 using UnityEngine;
 using UnityEngine.Networking;
 
@@ -24,6 +25,10 @@ namespace Base.Ravel.Networking {
             get { return _method; }
         }
 
+        public InternalError Error {
+            get { return _error; }
+        }
+
         protected string _url;
         protected UnityWebRequest _request;
         protected Dictionary<string, string> _parameters;
@@ -32,6 +37,7 @@ namespace Base.Ravel.Networking {
         //used for passing data in PostJSON calls
         protected string _data = "";
         protected Method _method;
+        protected InternalError _error = InternalError.None;
         
         private bool _disposed;
 
@@ -287,6 +293,12 @@ namespace Base.Ravel.Networking {
             DeleteJSON,
             GetAssetBundle
         }
+
+        public enum InternalError
+        {
+            None = 0,
+            MissingToken = 1,
+        }
     }
 
     /// <summary>
@@ -300,11 +312,22 @@ namespace Base.Ravel.Networking {
         /// <param name="api">Api addition part, added between base url and version of the whole url.</param>
         /// <param name="version">Version addition, added after api part of the url.</param>
         public TokenWebRequest(Method method, string api, string version) : base(method, api, version) {
-            AddHeader("Authorization", "Bearer " + GetToken());
+            AddToken();
         }
 
         public TokenWebRequest(string api, string version, WWWForm form) : base(api, version, form) {
-            AddHeader("Authorization", "Bearer " + GetToken());
+            AddToken();
+        }
+
+        private void AddToken() {
+            string token = GetToken();
+            
+            if (string.IsNullOrEmpty(token)) {
+                _error = InternalError.MissingToken;
+                return;
+            }
+            
+            AddHeader("Authorization", "Bearer " + token);
         }
 
         /// <summary>
@@ -313,7 +336,11 @@ namespace Base.Ravel.Networking {
         public static string GetToken()
         {
             LoginRequest.TokenResponse token =
-                JsonUtility.FromJson<LoginRequest.TokenResponse>(PlayerPrefs.GetString(LoginRequest.SYSTEMS_TOKEN_KEY)); 
+                JsonUtility.FromJson<LoginRequest.TokenResponse>(PlayerPrefs.GetString(LoginRequest.SYSTEMS_TOKEN_KEY));
+
+            if (token == null) {
+                return "";
+            }
             
             //TODO token expiary: if expired here, the user could be logged out 
             return token.accessToken;
