@@ -67,12 +67,8 @@ namespace Base.Ravel.Config
             }
             else {
                 switch (mode) {
-                    case AppMode.PersistentSample:
                     case AppMode.Development:
                         url = "https://dev.ravel.systems/";
-                        break;
-                    case AppMode.Test:
-                        url = "https://test.ravel.systems/";
                         break;
                     case AppMode.App:
                         url = "https://live.ravel.systems/";
@@ -81,7 +77,8 @@ namespace Base.Ravel.Config
                         url = "http://localhost:8080/";
                         break;
                     default:
-                        throw new MissingFieldException($"No baseurl (Dataservices) for appMode {mode} found!");
+                        Debug.LogError($"Missing base backend url ({mode}), using development");
+                        return GetBaseUrl(AppMode.Development);
                 }
             }
             
@@ -93,12 +90,8 @@ namespace Base.Ravel.Config
         private string GetSiteUrl(AppMode mode) {
             string url;
             switch (mode) {
-                case AppMode.PersistentSample:
                 case AppMode.Development:
                     url = "https://dev.ravel.world/";
-                    break;
-                case AppMode.Test:
-                    url = "https://demo.ravel.world/";
                     break;
                 case AppMode.App:
                     url = "https://app.ravel.world/";
@@ -107,7 +100,8 @@ namespace Base.Ravel.Config
                     url = "http://localhost:8080/";
                     break;
                 default:
-                    throw new MissingFieldException($"No baseurl (Dataservices) for appMode {mode} found!");
+                    Debug.LogError($"Missing site url ({mode}), using development");
+                    return GetSiteUrl(AppMode.Development);
             }
             return url;
         }
@@ -118,26 +112,21 @@ namespace Base.Ravel.Config
 
         //realtimeIds
         // there is only a development (that is also test) app id and a live one
-        //dev:  41149b28-2061-4424-9d2b-0d392ebc8027
-        //test: 41149b28-2061-4424-9d2b-0d392ebc8027
         //live: e2bdfa09-1a97-41ab-acbf-a33e10c96a30
-        //peristentRoomSample: df17aba7-0290-4273-bed4-45a142d93827
+        //dev/persistentRoomSample: df17aba7-0290-4273-bed4-45a142d93827
         private string GetRealtimeId(AppMode m, bool debugValue = false)
         {
             string id;
             switch (m) {
-                case AppMode.Development:
-                case AppMode.Test:
-                    id = "41149b28-2061-4424-9d2b-0d392ebc8027";
-                    break;
                 case AppMode.App:
                     id = "e2bdfa09-1a97-41ab-acbf-a33e10c96a30";
                     break;
-                case AppMode.PersistentSample:
+                case AppMode.Development:
                     id = "93f34f51-bb3f-4ed4-9431-5f26d135efe4"; //"df17aba7-0290-4273-bed4-45a142d93827";
                     break;
                 default:
-                    throw new MissingFieldException($"No ids for appMode {m} found!");
+                    Debug.LogError($"Missing appmode ({m}), using development");
+                    return GetRealtimeId(AppMode.Development);
             }
             
             //TODO: move debug in networker class, not here
@@ -151,24 +140,10 @@ namespace Base.Ravel.Config
 #region AgoraIds
         //agora ids
         // there is only a development (that is also test) app id and a live one
-        //test version jasper:  8cf3286b37474c13af969ce398ede20c
+        //test version:  8cf3286b37474c13af969ce398ede20c
         private string GetAgoraId(AppMode m, bool debugValue = false)
         {
-            string id;
-            switch (m) {
-                case AppMode.Development:
-                case AppMode.Test:
-                case AppMode.App:
-                case AppMode.PersistentSample:
-                    id = "b5ef7fb8a6004bbab48d15fe4e6b13fd";
-                    break;
-                default:
-                    throw new MissingFieldException($"No agora ids for appMode {m} found!");
-            }
-            
-            if (debugValue)
-                Debug.Log($"Using {m} agora id ({id})");
-            return id;
+            return "b5ef7fb8a6004bbab48d15fe4e6b13fd";;
         }
 #endregion
 
@@ -184,14 +159,13 @@ namespace Base.Ravel.Config
             
             return cfg;
         }
-
+        
+        //numbering is weird, but required for Ruben backed, will be fixed in phoenix backend.
         public enum AppMode
         {
             Unknown = -1,
-            Development = 0,
-            Test = 1,
-            App = 2, //live
-            PersistentSample = 3,
+            App = 2,
+            Development = 3,
             LocalHost = 4,
         }
         
