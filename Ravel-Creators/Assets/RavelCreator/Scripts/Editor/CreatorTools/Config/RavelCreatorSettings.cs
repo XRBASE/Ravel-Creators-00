@@ -75,8 +75,10 @@ public partial class RavelCreatorSettings : ScriptableObject
 				path = Path.GetDirectoryName(path);
 			}
 
-			if (_filePath != path) {
-				_filePath = path;
+			if (path == Application.dataPath) {
+				_filePath = "/";
+			} else if (_filePath != path) {
+				_filePath = "/" + Path.GetRelativePath(Application.dataPath, path);
 				EditorUtility.SetDirty(this);
 			}
 		}
@@ -91,8 +93,10 @@ public partial class RavelCreatorSettings : ScriptableObject
 				path = Path.GetDirectoryName(path);
 			}
 
-			if (_bundlePath != path) {
-				_bundlePath = path;
+			if (path == Application.dataPath) {
+				_bundlePath = "/";
+			} else if (_bundlePath != path) {
+				_bundlePath = "/" + Path.GetRelativePath(Application.dataPath, path);
 				EditorUtility.SetDirty(this);
 			}
 		}
@@ -102,18 +106,18 @@ public partial class RavelCreatorSettings : ScriptableObject
 	}
 
 	public string GetFilePath() {
-		if (string.IsNullOrEmpty(_filePath)) {
-			_filePath = Application.dataPath + DEFAULT_FILE_PATH;
+		if (string.IsNullOrEmpty(_filePath) || !IsPathInProject(Application.dataPath + _filePath)) {
+			_filePath = DEFAULT_FILE_PATH;
 		}
 
-		return _filePath;
+		return Application.dataPath + _filePath;
 	}
 
 	public string GetBundlePath() {
-		if (string.IsNullOrEmpty(_bundlePath)) {
-			_bundlePath = Application.dataPath + DEFAULT_BUNDLE_PATH;
+		if (string.IsNullOrEmpty(_bundlePath) || !IsPathInProject(Application.dataPath + _bundlePath)) {
+			_bundlePath = DEFAULT_BUNDLE_PATH;
 		}
 
-		return _bundlePath;
+		return Application.dataPath + _bundlePath;
 	}
 }
