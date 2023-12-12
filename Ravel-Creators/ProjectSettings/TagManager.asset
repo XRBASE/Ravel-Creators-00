@@ -18,10 +18,10 @@ TagManager:
   - NavMeshSurface
   - Interactable
   - HoverInteractable
-  - 
+  - IgnoreTeleport
   - Collectible
   - Collector
-  - NavmeshIgnore
+  - 
   - 
   - 
   - 
