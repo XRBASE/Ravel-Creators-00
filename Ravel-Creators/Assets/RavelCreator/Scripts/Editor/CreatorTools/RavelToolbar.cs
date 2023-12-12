@@ -95,8 +95,6 @@ public class RavelToolbar
             BundleBuilder.BuildOpenScene(bundleName, true, cleanup);
         }
         if (GUILayout.Button(new GUIContent("Build", "Build asset bundle"), RavelEditorStying.txtBtnSmall)) {
-            bool cleanup = RavelEditor.CreatorPanelSettings.autoClean;
-
             BundleBuilder.BuildOpenScene(bundleName, false, false);
         }
         GUI.enabled = true;
@@ -109,7 +107,7 @@ public class RavelToolbar
         GUI.enabled = _config?.environmentSO?.environment != null;
         //Refreshes the configuration file
         if (GUILayout.Button(new GUIContent("Open Ravel", "open currently uploaded scene in browser "), RavelEditorStying.txtBtnSmall)) {
-            Application.OpenURL(CreatorRequest.GetPreviewUrl(_config.environmentSO.environment));
+            BundleBuilder.OpenPreviewEnvironment(_config.environmentSO.environment);
         }
         GUI.enabled = true;
 
