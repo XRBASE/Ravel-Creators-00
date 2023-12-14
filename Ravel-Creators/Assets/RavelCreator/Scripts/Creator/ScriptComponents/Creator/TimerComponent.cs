@@ -8,6 +8,7 @@ using UnityEditor;
 
 namespace Base.Ravel.Creator.Components
 {
+	//this should change the help url, check it though
 	public partial class TimerComponent : ComponentBase
 	{
 		public override ComponentData Data { get; }
@@ -43,14 +44,10 @@ namespace Base.Ravel.Creator.Components
 		{
 			private TimerComponent _instance;
 			private SerializedProperty _data;
-			private SerializedProperty onStartEvt;
-			private SerializedProperty onFinEvt;
 
 			private void OnEnable() {
 				_instance = (TimerComponent)target;
 				_data = serializedObject.FindProperty("_data");
-				onStartEvt = _data.FindPropertyRelative("onStart");
-				onFinEvt = _data.FindPropertyRelative("onFinish");
 			}
 
 			public override void OnInspectorGUI() {
@@ -82,14 +79,23 @@ namespace Base.Ravel.Creator.Components
 						_instance._data.evenText, typeof(TMP_Text), true) as TMP_Text;
 				}
 
-				EditorGUILayout.PropertyField(onStartEvt);
-				EditorGUILayout.PropertyField(onFinEvt);
+				GUIDrawCallback("onStart");
+				GUIDrawCallback("onFinish");
 
 				serializedObject.ApplyModifiedProperties();
 
 				if (EditorGUI.EndChangeCheck()) {
 					EditorUtility.SetDirty(_instance);
 				}
+			}
+			
+			/// <summary>
+			/// Draws event property with given name in GUI.
+			/// </summary>
+			private void GUIDrawCallback(string propertyName) {
+				var eventProp = _data.FindPropertyRelative(propertyName);
+				EditorGUILayout.PropertyField(eventProp);
+				serializedObject.ApplyModifiedProperties();
 			}
 		}
 #endif

@@ -11,10 +11,13 @@ namespace Base.Ravel.Creator.Components
     [AddComponentMenu("Ravel/Moving Platform")]
     public partial class MovingPlatformComponent : ComponentBase
     {
-        public override ComponentData Data { get; }
-        protected override void BuildComponents(){}
+        public override ComponentData Data {
+            get { return null; }
+        }
 
-        protected override void DisposeData(){}
+        protected override void BuildComponents() { }
+
+        protected override void DisposeData() { }
 
 #if UNITY_EDITOR
         [CustomEditor(typeof(MovingPlatformComponent))]

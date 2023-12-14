@@ -15,5 +15,9 @@ namespace Base.Ravel.Creator.Components.Quiz
 
         [SerializeField, Tooltip("In this graphic the answer sprite will be shown.")]
         private Image _img;
+
+        public override void Unselect() { }
+
+        public override void Select() { }
     }
 }

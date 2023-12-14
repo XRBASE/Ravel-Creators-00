@@ -30,7 +30,7 @@ namespace Base.Ravel.Creator.Components.Games.Collectibles
 			get { return _data; }
 		}
 
-		[SerializeField, HideInInspector] private CollectibleData _data;
+		[SerializeField] private CollectibleData _data;
 
 		protected override void BuildComponents() { }
 		protected override void DisposeData() { }
@@ -43,15 +43,12 @@ namespace Base.Ravel.Creator.Components.Games.Collectibles
 		private class CollectibleComponentEditor : Editor
 		{
 			private CollectibleComponent _instance;
-			private SerializedProperty _data;
-			private SerializedProperty _evtProperty;
 
 			private bool _nameValid = false;
 
 			private void OnEnable() {
 				_instance = (CollectibleComponent)target;
-				_data = serializedObject.FindProperty("_data");
-
+				
 				if (string.IsNullOrEmpty(_instance._data.name)) {
 					_instance._data.name = _instance.gameObject.name;
 				}
@@ -59,42 +56,16 @@ namespace Base.Ravel.Creator.Components.Games.Collectibles
 			}
 
 			public override void OnInspectorGUI() {
-				DrawDefaultInspector();
-				bool dirty = false;
 				EditorGUI.BeginChangeCheck();
-
-				_instance._data.name = EditorGUILayout.TextField("Name", _instance._data.name);
+				DrawDefaultInspector();
+				
 				if (EditorGUI.EndChangeCheck()) {
-					dirty = true;
-					
 					_nameValid = NameAvailabilityCheck.Check(_instance);
 				}
 
 				if (!_nameValid) {
 					EditorGUILayout.HelpBox($"Collectible name should be unique. Name {_instance._data.name} is already taken!", MessageType.Error);
 				}
-				
-				
-				if (!dirty) {
-					EditorGUI.BeginChangeCheck();
-				}
-
-				GUIDrawCallback("onCollected");
-				GUIDrawCallback("onCollectedByLocal", "Only fires when the local player collects this item");
-				GUIDrawCallback("onReset");
-
-				if (dirty || EditorGUI.EndChangeCheck()) {
-					EditorUtility.SetDirty(_instance);
-				}
-			}
-
-			/// <summary>
-			/// Draws event property with given name in GUI.
-			/// </summary>
-			private void GUIDrawCallback(string propertyName, string tooltip = "") {
-				_evtProperty = _data.FindPropertyRelative(propertyName);
-				EditorGUILayout.PropertyField(_evtProperty, new GUIContent(propertyName, tooltip));
-				serializedObject.ApplyModifiedProperties();
 			}
 		}
 #endif
@@ -103,7 +74,7 @@ namespace Base.Ravel.Creator.Components.Games.Collectibles
 	[Serializable]
 	public class CollectibleData : ComponentData
 	{
-		public int id;
+		[HideInInspector] public int id;
 		public string name;
 
 		public UnityEvent onCollected;

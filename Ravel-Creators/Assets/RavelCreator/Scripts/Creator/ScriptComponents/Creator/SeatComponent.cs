@@ -17,7 +17,7 @@ namespace Base.Ravel.Creator.Components
 	public partial class SeatComponent : ComponentBase, IUniqueId
 	{
 		public override ComponentData Data { get; }
-		[SerializeField, HideInInspector] private SeatData _data;
+		[SerializeField] private SeatData _data;
 
 		public bool SetUniqueID { get { return true; } }
 
@@ -44,20 +44,6 @@ namespace Base.Ravel.Creator.Components
 
 			public override void OnInspectorGUI() {
 				DrawDefaultInspector();
-				
-				EditorGUI.BeginChangeCheck();
-				_instance._data.seat = EditorGUILayout.ObjectField("Seat", _instance._data.seat, typeof(Transform), true) as Transform;
-
-				_instance._data.hasHover = EditorGUILayout.Toggle(new GUIContent("Has hover", "Should hover events be added to this chair"),
-					_instance._data.hasHover);
-				
-				EditorGUILayout.PropertyField(_data.FindPropertyRelative("onSeat"));
-				EditorGUILayout.PropertyField(_data.FindPropertyRelative("onStandup"));
-				if (_instance._data.hasHover) {
-					EditorGUILayout.PropertyField(_data.FindPropertyRelative("onHoverEnter"));
-					EditorGUILayout.PropertyField(_data.FindPropertyRelative("onHoverExit"));
-				}
-				serializedObject.ApplyModifiedProperties();
 				
 				bool found = false;
 				float distance = Mathf.Infinity;
@@ -90,16 +76,14 @@ namespace Base.Ravel.Creator.Components
 						EditorGUILayout.BeginHorizontal();
 						if (GUILayout.Button($"Fix parent ({_instance.gameObject.name})")) {
 							_instance.transform.position += Vector3.down * (distance - SeatData.PERFECT_SEAT_HEIGHT);
+							EditorUtility.SetDirty(_instance);
 						}
 						if (GUILayout.Button($"Fix child ({_instance._data.seat.gameObject.name})")) {
 							_instance._data.seat.position += Vector3.down * (distance - SeatData.PERFECT_SEAT_HEIGHT);
+							EditorUtility.SetDirty(_instance);
 						}
 						EditorGUILayout.EndHorizontal();
 					}
-				}
-				
-				if (EditorGUI.EndChangeCheck()) {
-					EditorUtility.SetDirty(_instance);
 				}
 			}
 		}
@@ -111,10 +95,9 @@ namespace Base.Ravel.Creator.Components
 	{
 		public const float PERFECT_SEAT_HEIGHT = 0.6f;
 		
-		public int id;
+		[HideInInspector] public int id;
 		public Transform seat;
-
-		public bool hasHover = false;
+		
 		public UnityEvent onHoverEnter;
 		public UnityEvent onHoverExit;
 		public UnityEvent onSeat;

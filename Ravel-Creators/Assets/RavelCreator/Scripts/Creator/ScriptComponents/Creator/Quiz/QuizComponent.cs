@@ -10,12 +10,12 @@ namespace Base.Ravel.Creator.Components.Quiz
 {
 	public partial class QuizComponent : MonoBehaviour
 	{
-		public bool Networked {
+		public bool SetUniqueID {
 			get { return _networked; }
 		}
 
 		public int ID {
-			get { return _id;}
+			get { return _id; }
 			set { _id = value; }
 		}
 		
@@ -46,11 +46,11 @@ namespace Base.Ravel.Creator.Components.Quiz
 		/// <summary>
 		/// Event for each of the questions, passes id and true/false question answered correctly This call is not networked (but could be if needed).
 		/// </summary>
-		[HideInInspector] public UnityEvent<int, bool> onQuestionAnswered;
+		public UnityEvent<int, bool> onQuestionAnswered;
 		/// <summary>
 		/// Called after all questions have been answered correctly This call is networked.
 		/// </summary>
-		[HideInInspector] public UnityEvent onQuizCompleted;
+		public UnityEvent onQuizCompleted;
 
 		public void ResetQuiz() { }
 
@@ -65,14 +65,14 @@ namespace Base.Ravel.Creator.Components.Quiz
 		/// Call to finish all the questions in this box. 
 		/// </summary>
 		public void CompleteQuiz() { }
-		
+
 		private enum QuizState
 		{
 			Idle = 0,
 			Active = 1,
 			Finished = 2,
 		}
-
+		
 #if UNITY_EDITOR
         /// <summary>
         /// Editor version to add question of given type to the list of questions, so all of the fields can be serialized and filled in.
@@ -94,14 +94,10 @@ namespace Base.Ravel.Creator.Components.Quiz
         private class MonoQuizEditor : Editor
         {
 	        private QuizComponent _instance;
-	        private SerializedProperty onQuestionAnsweredEvt;
-	        private SerializedProperty onQuizCompletedEvt;
 	        
 	        public void OnEnable() {
 		        _instance = (QuizComponent)target;
-		        onQuestionAnsweredEvt = serializedObject.FindProperty("onQuestionAnswered");
-		        onQuizCompletedEvt = serializedObject.FindProperty("onQuizCompleted");
-	        }
+		    }
 	        
             public override void OnInspectorGUI() {
 	            bool dirty = false;
@@ -146,19 +142,10 @@ namespace Base.Ravel.Creator.Components.Quiz
                 }
 
                 //Adds questions to the list, but gives them the right type so there is actually data to serialize and use.
-                if (GUILayout.Button("Add question")) {
-	                _instance.AddQuestion();
-                }
                 if (GUILayout.Button("Add open question")) {
 	                _instance.AddOpenQuestion();
                 }
 
-                if (!dirty) {
-	                EditorGUI.BeginChangeCheck();
-                }
-                EditorGUILayout.PropertyField(onQuizCompletedEvt);
-                EditorGUILayout.PropertyField(onQuestionAnsweredEvt);
-                serializedObject.ApplyModifiedProperties();
                 if (dirty || EditorGUI.EndChangeCheck()) {
 	                EditorUtility.SetDirty(_instance);
                 }

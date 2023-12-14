@@ -41,7 +41,6 @@ namespace Base.Ravel.Creator.Components
         {
             private DisplayPlayerInfoComponent _instance;
             private SerializedProperty _data;
-            private SerializedProperty _evtProperty;
 
             private void OnEnable() {
                 _instance = (DisplayPlayerInfoComponent)target;
@@ -60,18 +59,18 @@ namespace Base.Ravel.Creator.Components
                 if (_instance._data.SpriteInfo) {
                     _instance._data.networked = false;
                     
-                    _evtProperty = _data.FindPropertyRelative("onSpriteRetrieved");
-                    EditorGUILayout.PropertyField(_evtProperty);
-                    serializedObject.ApplyModifiedProperties();
+                    var sprRetrieved = _data.FindPropertyRelative("onSpriteRetrieved");
+                    EditorGUILayout.PropertyField(sprRetrieved);
                 }
                 else {
                     _instance._data.networked =
                         EditorGUILayout.Toggle("network result", _instance._data.networked);
                     
-                    _evtProperty = _data.FindPropertyRelative("onStringRetrieved");
-                    EditorGUILayout.PropertyField(_evtProperty);
-                    serializedObject.ApplyModifiedProperties();
+                    var strRetrieved = _data.FindPropertyRelative("onStringRetrieved");
+                    EditorGUILayout.PropertyField(strRetrieved);
                 }
+                serializedObject.ApplyModifiedProperties();
+                
                 if (EditorGUI.EndChangeCheck()) {
                     EditorUtility.SetDirty(_instance);
                 }

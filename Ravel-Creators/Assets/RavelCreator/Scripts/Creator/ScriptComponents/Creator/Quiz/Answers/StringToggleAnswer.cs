@@ -17,5 +17,15 @@ namespace Base.Ravel.Creator.Components.Quiz
 
         [SerializeField, Tooltip("In this field the answer text will be shown.")]
         private TMP_Text _field;
+        
+        /// <summary>
+        /// Unselects this item.
+        /// </summary>
+        public override void Unselect() { }
+
+        /// <summary>
+        /// Selects this item
+        /// </summary>
+        public override void Select() { }
     }
 }

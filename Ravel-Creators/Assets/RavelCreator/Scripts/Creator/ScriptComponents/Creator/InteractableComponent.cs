@@ -60,7 +60,6 @@ namespace Base.Ravel.Creator.Components
 		{
 			private InteractableComponent _instance;
 			private SerializedProperty _data;
-			private SerializedProperty _evtProperty;
 
 			private bool _hasCollider = false;
 
@@ -153,8 +152,8 @@ namespace Base.Ravel.Creator.Components
 			/// Draws event property with given name in GUI.
 			/// </summary>
 			private void GUIDrawCallback(string propertyName) {
-				_evtProperty = _data.FindPropertyRelative(propertyName);
-				EditorGUILayout.PropertyField(_evtProperty);
+				var eventProp = _data.FindPropertyRelative(propertyName);
+				EditorGUILayout.PropertyField(eventProp);
 				serializedObject.ApplyModifiedProperties();
 			}
 
