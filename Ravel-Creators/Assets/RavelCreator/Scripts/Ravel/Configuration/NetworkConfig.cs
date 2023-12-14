@@ -164,7 +164,7 @@ namespace Base.Ravel.Config
         public enum AppMode
         {
             Unknown = -1,
-            Development = 1,
+            Development = 0,
             App = 2,
             LocalHost = 3,
         }
