@@ -12,7 +12,7 @@ namespace Base.Ravel.Creator.Components
 	public partial class TimerComponent : ComponentBase
 	{
 		public override ComponentData Data { get; }
-		[SerializeField, HideInInspector] private TimerData _data;
+		[SerializeField] private TimerData _data;
 		protected override void BuildComponents() { }
 
 		protected override void DisposeData() { }
@@ -104,17 +104,17 @@ namespace Base.Ravel.Creator.Components
 	[Serializable]
 	public class TimerData : ComponentData
 	{
-		public float duration;
-		public bool startOnAwake;
+		[HideInInspector] public float duration;
+		[HideInInspector] public bool startOnAwake;
 		
 		public UnityEvent onStart;
 		public UnityEvent onFinish;
 
-		public bool hasCountdown = false;
-		public int speed;
-		public TMP_Text evenText;
-		public TMP_Text oddText;
-		public CountDownAnimationProps animateProps;
+		[HideInInspector] public bool hasCountdown = false;
+		[HideInInspector] public int speed;
+		[HideInInspector] public TMP_Text evenText;
+		[HideInInspector] public TMP_Text oddText;
+		[HideInInspector] public CountDownAnimationProps animateProps;
 	}
 
 	[Flags]

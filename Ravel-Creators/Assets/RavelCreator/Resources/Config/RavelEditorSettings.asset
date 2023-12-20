@@ -27,7 +27,7 @@ MonoBehaviour:
     - name: MyEnvironment
       guid: 5aee802e-d332-4d2b-a460-d3281e26b797
       vMajor: 0
-      vMinor: 1
+      vMinor: 2
     - name: Tutorial_v1
       guid: 924d8ceb-8176-4fea-956b-a0a91ac61dad
       vMajor: 0

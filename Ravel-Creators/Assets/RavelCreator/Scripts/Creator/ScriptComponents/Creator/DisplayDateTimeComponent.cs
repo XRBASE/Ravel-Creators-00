@@ -18,7 +18,7 @@ namespace Base.Ravel.Creator.Components
 
         protected override void BuildComponents() { }
 
-        protected override void DisposeData(){}
+        protected override void DisposeData() { }
 
         public void ShowDateTime() { }
 

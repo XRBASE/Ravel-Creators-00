@@ -1,4 +1,5 @@
 using System;
+using MathBuddy.MonoBehaviours;
 using UnityEngine;
 using UnityEngine.Events;
 #if UNITY_EDITOR
@@ -10,7 +11,6 @@ namespace Base.Ravel.Creator.Components
 	/// <summary>
 	/// Skeleton part of the class, contains code and methods for creators, but no implementation
 	/// </summary>
-	[AddComponentMenu("Ravel/Interactable")]
 	[HelpURL("https://www.notion.so/thenewbase/Interactable-57fb6fc2ec1840a0929734a6de98d4be")]
 	public partial class InteractableComponent : ComponentBase, IUniqueId
 	{
@@ -29,6 +29,7 @@ namespace Base.Ravel.Creator.Components
 		}
 		
 		[SerializeField, HideInInspector] private InteractableData _data;
+		private BaseInteractableComponent _component;
 
 		protected override void BuildComponents() { }
 		protected override void DisposeData() { }
@@ -53,6 +54,33 @@ namespace Base.Ravel.Creator.Components
 		/// </summary>
 		public void SetInteractable(bool isInteractable) { }
 
+		/// <summary>
+		/// Replace obsolete component with a new one using the old ones values.
+		/// </summary>
+		public void ReplaceWithNewComponent() {
+			bool wasActive = gameObject.activeSelf;
+			gameObject.SetActive(false);
+			
+			switch (_data.type) {
+				case InteractableData.Type.Click:
+					_component = gameObject.GetOrAddComponent<ClickInteractableComponent>();
+					break;
+				case InteractableData.Type.Trigger:
+					_component = gameObject.GetOrAddComponent<ZoneInteractableComponent>();
+					break;
+				case InteractableData.Type.Switch:
+					_component = gameObject.GetOrAddComponent<SwitchInteractableComponent>();
+					break;
+				case InteractableData.Type.Look:
+					_component = gameObject.GetOrAddComponent<LookInteractableComponent>();
+					break;
+				default:
+					throw new Exception($"Missing type implementation for interactable component of type {_data.type}");
+			}
+			
+			_component.SetDataFromInteractable(_data);
+			gameObject.SetActive(wasActive);
+		}
 
 #if UNITY_EDITOR
 		[CustomEditor(typeof(InteractableComponent))]
@@ -76,6 +104,13 @@ namespace Base.Ravel.Creator.Components
 
 			public override void OnInspectorGUI() {
 				DrawDefaultInspector();
+				
+				EditorGUILayout.HelpBox("`This component has become obsolete! please replace it with the new version", MessageType.Warning);
+				if (GUILayout.Button("Fix")) {
+					_instance.ReplaceWithNewComponent();
+					DestroyImmediate(_instance);
+					return;
+				}
 				
 				EditorGUI.BeginChangeCheck();
 				//Determine type of interaction

@@ -27,10 +27,10 @@ namespace Base.Ravel.Creator.Components.Games
 
         public abstract RavelGameData BaseData { get; }
 
-        public void StartGame(){}
+        public void StartGame() { }
         public void StopGame() { }
         public void ResetGame() { }
-
+        
 #if UNITY_EDITOR
     [CustomEditor(typeof(RavelGameComponent), true)]
     public class RavelGameComponentEditor : Editor

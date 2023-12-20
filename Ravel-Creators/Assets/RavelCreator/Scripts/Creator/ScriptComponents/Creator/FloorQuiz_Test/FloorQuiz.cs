@@ -36,9 +36,8 @@ namespace QuizSampleFloor
         
         [HideInInspector, SerializeField] private int _id;
         
-        public void OnReset() {}
-        
-        public void OnSubmit() {}
+        public void OnReset() { }
+        public void OnSubmit() { }
     }
     
     [Serializable]

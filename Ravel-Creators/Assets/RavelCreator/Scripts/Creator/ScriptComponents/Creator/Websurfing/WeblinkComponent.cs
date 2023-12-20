@@ -15,9 +15,10 @@ public partial class WeblinkComponent : ComponentBase
 	}
 
 	[SerializeField] private string url;
-	
-	protected override void BuildComponents() { } 
+
+	protected override void BuildComponents() { }
 	protected override void DisposeData() { }
+
 	public void OpenURL() { }
 
 	private void OpenUrlDirect() {
