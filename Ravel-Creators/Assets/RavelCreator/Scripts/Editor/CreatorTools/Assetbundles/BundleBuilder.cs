@@ -234,8 +234,8 @@ public static class BundleBuilder
 				Debug.LogError($"Error uploading bundle: {res.Error.FullMessage}");
 			}
 
-			Debug.Log("Opening preview in browser!");
-			Application.OpenURL(CreatorRequest.GetPreviewUrl(config.environmentSO.environment));
+			OpenPreviewEnvironment(config.environmentSO.environment);
+			yield return null;
 			
 			if (autoCleanFiles) {
 				DeleteBundle(path + bundleName);
@@ -257,6 +257,11 @@ public static class BundleBuilder
 				cams[i].gameObject.SetActive(true);
 			}
 		}
+	}
+
+	public static void OpenPreviewEnvironment(Environment env) {
+		Debug.Log("Opening preview in browser!");
+		Application.OpenURL(CreatorRequest.GetPreviewUrl(env));
 	}
 
 	/// <summary>
