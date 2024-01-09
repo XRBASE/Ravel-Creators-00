@@ -20,11 +20,11 @@ public partial class RavelCreatorSettings
 		public override void OnInspectorGUI() {
 			DrawDefaultInspector();
 
-			GUIDrawFolderAndSetBtn(_instance._filePath, _instance.SetFilePath,
+			GUIDrawFolderAndSetBtn(_instance.GetFilePath(), _instance.SetFilePath,
 				new GUIContent("File path", "(Last used) Path that is opened when accessing files. " +
 				                            "Should be a folder within the asset folder of this project.\n" +
 				                            $"{_instance._filePath}"));
-			GUIDrawFolderAndSetBtn(_instance._bundlePath, _instance.SetBundlePath,
+			GUIDrawFolderAndSetBtn(_instance.GetBundlePath(), _instance.SetBundlePath,
 				new GUIContent("Bundle path", "The location at which assetbundles are saved." +
 				                              "Should be a folder within the asset folder of this project.\n" +
 				                              $"{_instance._bundlePath}"));
@@ -32,7 +32,7 @@ public partial class RavelCreatorSettings
 
 		private void GUIDrawFolderAndSetBtn(string value, Action<string> setValueAction, GUIContent content) {
 			EditorGUILayout.BeginHorizontal();
-			
+
 			string data = EditorGUILayout.TextField(content, value);
 			if (!Directory.Exists(data)) {
 				Debug.LogWarning("Filled in path is invalid.");
