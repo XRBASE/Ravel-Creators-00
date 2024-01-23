@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using UnityEditor;
 using UnityEngine;
 using UnityEngine.Events;
 
@@ -36,7 +35,7 @@ namespace Base.Ravel.Creator.Components
             set { _data.autoWalk = value; }
         }
 
-        [SerializeField, HideInInspector] private TrackData _data;
+        [SerializeField] private TrackData _data;
 
         /// <summary>
         /// When this is called, the player will set the navigation target to the track targets until the last target has been reached
@@ -52,63 +51,21 @@ namespace Base.Ravel.Creator.Components
         protected override void BuildComponents() { }
 
         protected override void DisposeData() { }
-
-#if UNITY_EDITOR
-        [CustomEditor(typeof(TrackComponent))]
-        private class TrackComponentEditor : Editor
-        {
-            private TrackComponent _instance;
-            private SerializedProperty _data;
-            private SerializedProperty _onTrackStarted;
-            private SerializedProperty _onTrackEnded;
-            private SerializedProperty _trackTargets;
-
-            public void OnEnable()
-            {
-                _instance = (TrackComponent) target;
-                _data = serializedObject.FindProperty("_data");
-                _trackTargets = _data.FindPropertyRelative("trackTargets");
-                _onTrackStarted = _data.FindPropertyRelative("onTrackStarted");
-                _onTrackEnded = _data.FindPropertyRelative("onTrackEnded");
-            }
-
-            public override void OnInspectorGUI()
-            {
-                DrawDefaultInspector();
-
-                EditorGUI.BeginChangeCheck();
-
-                _instance._data.finishTrackOnStartReached = EditorGUILayout.Toggle("Finish Track On Start Reached",
-                    _instance._data.finishTrackOnStartReached);
-
-                _instance._data.autoWalk = EditorGUILayout.Toggle("Auto Walk", _instance._data.autoWalk);
-
-                _instance._data.run = EditorGUILayout.Toggle("Run", _instance._data.run);
-                
-                EditorGUILayout.PropertyField(_onTrackStarted);
-
-                EditorGUILayout.PropertyField(_onTrackEnded);
-
-                EditorGUILayout.PropertyField(_trackTargets);
-                
-                serializedObject.ApplyModifiedProperties();
-
-                if (EditorGUI.EndChangeCheck())
-                {
-                    EditorUtility.SetDirty(_instance);
-                }
-            }
-        }
-#endif
     }
     
     [Serializable]
     public class TrackData : ComponentData
     {
-        public UnityEvent onTrackStarted, onTrackEnded;
+        
+        [Tooltip("Finish Track On Start Reached")]
         public bool finishTrackOnStartReached;
+        [Tooltip("Move forwards without input")]
         public bool autoWalk;
+        [Tooltip("Always run on path")]
         public bool run;
+        [Tooltip("Points on the path in order")]
         public List<Transform> trackTargets;
+        
+        public UnityEvent onTrackStarted, onTrackEnded;
     }
 }

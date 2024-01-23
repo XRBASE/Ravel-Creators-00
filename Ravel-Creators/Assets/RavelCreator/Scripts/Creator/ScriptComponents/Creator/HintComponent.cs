@@ -18,7 +18,7 @@ namespace Base.Ravel.Creator.Components
 		public override ComponentData Data {
 			get { return _data; }
 		}
-		[SerializeField, HideInInspector] private HintData _data;
+		[SerializeField] private HintData _data;
 
 		protected override void BuildComponents() { }
 
@@ -34,29 +34,17 @@ namespace Base.Ravel.Creator.Components
 		private class HintComponentEditor : Editor
 		{
 			private HintComponent _instance;
-			private SerializedProperty _data;
-			private SerializedProperty _hints;
-
+			
 			private void OnEnable() {
 				_instance = (HintComponent)target;
-				_data = serializedObject.FindProperty("_data");
-				_hints = _data.FindPropertyRelative("hints");
 			}
 
 			public override void OnInspectorGUI() {
 				DrawDefaultInspector();
 
-				EditorGUI.BeginChangeCheck();
-				_instance._data.showOnAwake = EditorGUILayout.Toggle("Show hints on awake", _instance._data.showOnAwake);
-				
-				EditorGUILayout.PropertyField(_hints);
-				serializedObject.ApplyModifiedProperties();
-
 				//Creates and selects a new hint scriptable object, which is automatically added to the hint list.
 				if (GUILayout.Button("Create new hint") && Hint.CreateAndSaveHintEditor(out Hint hint)) {
 					_instance._data.hints.Add(hint);
-				}
-				if (EditorGUI.EndChangeCheck()) {
 					EditorUtility.SetDirty(_instance);
 				}
 			}

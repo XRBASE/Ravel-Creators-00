@@ -2,6 +2,9 @@ using System;
 
 namespace Base.Ravel.TranslateAttributes
 {
+	/// <summary>
+	/// Attributes which can be applied in transform based components.
+	/// </summary>
 	[Flags]
 	public enum TransformAttribute
 	{
@@ -15,7 +18,5 @@ namespace Base.Ravel.TranslateAttributes
 	{
 		World, // global application
 		Self, // local application
-		//TODO: add delta
-		//Delta   // only apply delta values
 	}
 }

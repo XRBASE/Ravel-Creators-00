@@ -11,6 +11,10 @@ namespace Base.Ravel.Creator.Components.Naming
 		/// <typeparam name="T">type of Monobehaviour.</typeparam>
 		/// <returns>True/False name is available.</returns>
 		public static bool Check<T>(T owner) where T : MonoBehaviour, INameIdentifiedObject {
+			if (string.IsNullOrEmpty(owner.Name)) {
+				return false;
+			}
+			
 			T[] nameHolders = GameObject.FindObjectsOfType<T>(true);
 			for (int i = 0; i < nameHolders.Length; i++) {
 				if (nameHolders[i] == owner)
@@ -24,6 +28,9 @@ namespace Base.Ravel.Creator.Components.Naming
 		}
 	}
 
+	/// <summary>
+	/// Interface for objects, that are identified by a unique name. Combine with IUniqueID if an id needs to be bound to this name.
+	/// </summary>
 	public interface INameIdentifiedObject
 	{
 		public string Name { get; }

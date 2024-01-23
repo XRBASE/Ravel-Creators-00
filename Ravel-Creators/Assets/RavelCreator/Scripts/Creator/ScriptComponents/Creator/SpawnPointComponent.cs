@@ -19,7 +19,7 @@ namespace Base.Ravel.Creator.Components
         public override ComponentData Data {
             get { return _data; }
         }
-        [SerializeField, HideInInspector] private SpawnPointData _data;
+        [SerializeField] private SpawnPointData _data;
 
         protected override void BuildComponents() { }
 
@@ -67,18 +67,13 @@ namespace Base.Ravel.Creator.Components
             public override void OnInspectorGUI() {
                 SpawnPointComponent instance = (SpawnPointComponent)target; 
                 DrawDefaultInspector();
-
-                EditorGUI.BeginChangeCheck();
-                instance._data.id = EditorGUILayout.IntField("(Unique) spawn index", instance._data.id);
+                
                 //show which spawn point is the default
+                bool pEnabled = GUI.enabled;
                 GUI.enabled = false;
                 EditorGUILayout.Toggle("Is default spawnpoint", instance._data.id == 0);
-                GUI.enabled = true;
+                GUI.enabled = pEnabled;
                 
-                if (EditorGUI.EndChangeCheck()) {
-                    EditorUtility.SetDirty(instance);
-                }
-
                 if (GUILayout.Button("Snap to nearest collider (below)")) {
                     instance.SnapToCollider();
                     EditorUtility.SetDirty(instance);
@@ -91,7 +86,7 @@ namespace Base.Ravel.Creator.Components
     [Serializable]
     public class SpawnPointData : ComponentData
     {
-        //TODO: name?
+        [Tooltip("(Unique) spawn index")]
         public int id = 0;
     }
 }

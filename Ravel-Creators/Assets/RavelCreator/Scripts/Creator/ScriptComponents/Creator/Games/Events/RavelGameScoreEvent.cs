@@ -47,8 +47,7 @@ namespace Base.Ravel.Creator.Components.Games
 		private class GameScoreEventEditor : Editor
 		{
 			private RavelGameScoreEvent _instance;
-			private SerializedProperty _serProp;
-
+			
 			private List<RavelGameComponent> _games;
 			private List<string> _gameNames;
 			private int _selGame;
@@ -115,6 +114,8 @@ namespace Base.Ravel.Creator.Components.Games
 						GUIDrawProperty("_defaultEvent", "Called when the game stops");
 						break;
 				}
+				
+				serializedObject.ApplyModifiedProperties();
 
 				if (dirty || EditorGUI.EndChangeCheck()) {
 					if (string.IsNullOrEmpty(_instance._format)) {
@@ -136,9 +137,8 @@ namespace Base.Ravel.Creator.Components.Games
 			/// Draws event property with given name in GUI.
 			/// </summary>
 			private void GUIDrawProperty(string propertyName, string tooltip = "") {
-				_serProp = serializedObject.FindProperty(propertyName);
-				EditorGUILayout.PropertyField(_serProp, new GUIContent(propertyName, tooltip));
-				serializedObject.ApplyModifiedProperties();
+				var prop = serializedObject.FindProperty(propertyName);
+				EditorGUILayout.PropertyField(prop, new GUIContent(propertyName, tooltip));
 			}
 
 			private void GetGames() {

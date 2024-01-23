@@ -11,5 +11,15 @@ namespace Base.Ravel.Creator.Components.Quiz
     {
         public UnityEvent<int> onItemSelected;
         public UnityEvent<int> onItemDeselect;
+        
+        /// <summary>
+        /// Set unselect based on network data call. This changes the toggle, only if it has not yet been changed.
+        /// </summary>
+        public abstract void Unselect();
+        
+        /// <summary>
+        /// Set select based on network data call. This changes the toggle, only if it has not yet been changed.
+        /// </summary>
+        public abstract void Select();
     }
 }

@@ -23,15 +23,5 @@ namespace QuizSampleFloor
         [SerializeField] private TMP_Text _answerField;
         [SerializeField] private Material _sourceMaterial;
         [SerializeField] private MeshRenderer[] _highlightRenderers;
-
-        private void Awake() { }
-
-        public void Reset() { }
-
-        public void ShowResult(bool isCorrectAnswer) { }
-
-        private void OnTriggerEnter(Collider other) { }
-
-        private void OnTriggerExit(Collider other) { }
     }
 }
