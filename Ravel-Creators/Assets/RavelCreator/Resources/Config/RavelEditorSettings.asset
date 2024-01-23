@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _creatorPanelSettings:
     saveUserMail: 1
-    userMail: lotte@ravel.world
+    userMail: glenn@thenewbase.co
     autoClean: 1
     versioning: _1_2
     incrementMinorVersionOnBuild: 1
