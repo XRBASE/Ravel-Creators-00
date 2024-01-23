@@ -17,7 +17,7 @@ namespace Base.Ravel.Creator.Components
             get { return null; }
         }
 
-        [SerializeField, HideInInspector] protected PlayableData _data;
+        [SerializeField] protected PlayableData _data;
 		
         public bool SetUniqueID {
             get { return true; }

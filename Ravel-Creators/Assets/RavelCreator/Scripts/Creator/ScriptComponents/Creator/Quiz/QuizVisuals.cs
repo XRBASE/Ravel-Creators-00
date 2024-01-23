@@ -26,12 +26,15 @@ namespace Base.Ravel.Creator.Components.Quiz
 
         [SerializeField] private TMP_Text _questionField;
         [SerializeField] private TMP_InputField _inputField;
-        [SerializeField] private Animation _wrongAnswerAnimation;
+        
+        [SerializeField] private Animation _animationPlayer;
+        [SerializeField] private AnimationClip _wrongAnimation;
+        [SerializeField] private AnimationClip _goodAnimation;
 
         /// <summary>
         /// Called as result of network data, this selects the corresponding answer visual.
         /// </summary>
-        public void SelectMultiAnswer(int answerId, bool force){}
+        public void SelectMultiAnswer(int answerId, bool force) { }
 
         /// <summary>
         /// Called in the case of a reset, this unselects the answer, so that the previous answers are cleared when the quiz is reset.

@@ -1,6 +1,5 @@
 using System;
 using TMPro;
-using UnityEditor;
 using UnityEngine;
 
 namespace Base.Ravel.Creator.Components
@@ -17,12 +16,12 @@ namespace Base.Ravel.Creator.Components
             get { return _data; }
         }
 
-        protected override void BuildComponents(){}
+        protected override void BuildComponents() { }
 
-        protected override void DisposeData(){}
+        protected override void DisposeData() { }
 
-        public void ShowDateTime(){}
-        
+        public void ShowDateTime() { }
+
         public static string ParseDateTime(DisplayDateTimeData.DateTimeFormat format, string customFormat = default)
         {
             switch (format)
@@ -41,59 +40,20 @@ namespace Base.Ravel.Creator.Components
                     return String.Empty;
             }
         }
-
-
-        [SerializeField, HideInInspector] private DisplayDateTimeData _data;
-
-#if UNITY_EDITOR
-        [CustomEditor(typeof(DisplayDateTimeComponent))]
-        public class DisplayDateTimeComponentEditor : Editor
-        {
-            private DisplayDateTimeComponent _instance;
-            private SerializedProperty _data;
-
-            private void OnEnable()
-            {
-                _instance = (DisplayDateTimeComponent) target;
-                _data = serializedObject.FindProperty("_data");
-            }
-
-            public override void OnInspectorGUI()
-            {
-                DrawDefaultInspector();
-                EditorGUI.BeginChangeCheck();
-                EditorGUILayout.PropertyField(_data.FindPropertyRelative("textMeshProUGUI"));
-                EditorGUILayout.PropertyField(_data.FindPropertyRelative("prefixText"));
-                EditorGUILayout.PropertyField(_data.FindPropertyRelative("dateTimeFormat"));
-                if (_instance._data.dateTimeFormat == DisplayDateTimeData.DateTimeFormat.Custom)
-                {
-                    EditorGUILayout.PropertyField(_data.FindPropertyRelative("customDateTimeFormat"));
-                }
-                EditorGUILayout.PropertyField(_data.FindPropertyRelative("postfixText"));
-                if (GUILayout.Button("Preview Text"))
-                {
-                    _instance._data.textMeshProUGUI.text =
-                        _instance._data.prefixText + ParseDateTime(_instance._data.dateTimeFormat, _instance._data.customDateTimeFormat) + _instance._data.postfixText;
-                }
-                serializedObject.ApplyModifiedProperties();
-                if (EditorGUI.EndChangeCheck())
-                {
-                    EditorUtility.SetDirty(_instance);
-                }
-            }
-
-
-        }
-#endif
+        
+        [SerializeField] private DisplayDateTimeData _data;
     }
 
     [Serializable]
     public class DisplayDateTimeData : ComponentData
     {
         public TextMeshProUGUI textMeshProUGUI;
+        
         public string prefixText;
         public string postfixText;
+        
         public DateTimeFormat dateTimeFormat;
+        [Tooltip("Only required for datestrings using the custom format")] 
         public string customDateTimeFormat;
 
         public enum DateTimeFormat

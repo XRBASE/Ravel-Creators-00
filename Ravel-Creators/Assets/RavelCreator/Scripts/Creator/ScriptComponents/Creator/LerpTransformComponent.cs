@@ -16,7 +16,7 @@ namespace Base.Ravel.Creator.Components
 			get { return _data; }
 		}
 
-		[SerializeField, HideInInspector] private LerpTransformData _data;
+		[SerializeField] private LerpTransformData _data;
 
 		protected override void BuildComponents() { }
 
@@ -40,62 +40,23 @@ namespace Base.Ravel.Creator.Components
 				LerpTransformComponent instance = (LerpTransformComponent)target;
 
 				DrawDefaultInspector();
-
-				EditorGUI.BeginChangeCheck();
-				instance._data.translationObject = EditorGUILayout.ObjectField("Object to translate",
-					instance._data.translationObject, typeof(Transform), true) as Transform;
+				
 				if (instance._data.translationObject == null) {
 					EditorGUILayout.HelpBox("No object set to change the transform of", MessageType.Error);
 				}
-
-				instance._data.attributes =
-					(TransformAttribute)EditorGUILayout.EnumFlagsField("Attributes", instance._data.attributes);
-				instance._data.space = (TransformSpace)EditorGUILayout.EnumPopup("Space", instance._data.space);
-				instance._data.delta = EditorGUILayout.Toggle("Apply delta position", instance._data.delta);
-
-				EditorGUILayout.Space();
-				string postfix = (instance._data.delta) ? " (direction)" : " (go to)";
-				string tooltip = (instance._data.delta)
-					? "Moves in direction with this amount of units per second."
-					: "Moves towards this value, over the time set in duration.";
-
-				if (instance._data.attributes.HasFlag(TransformAttribute.Position)) {
-					instance._data.positionChange =
-						EditorGUILayout.Vector3Field(new GUIContent("Position" + postfix, tooltip),
-							instance._data.positionChange);
-				}
-				else if (instance._data.positionChange.magnitude > 0) {
+				
+				if (!instance._data.attributes.HasFlag(TransformAttribute.Position) && instance._data.positionChange.magnitude > 0) {
 					instance._data.positionChange = Vector3.zero;
+					EditorUtility.SetDirty(instance);
 				}
 
-				if (instance._data.attributes.HasFlag(TransformAttribute.Rotation)) {
-					instance._data.rotationChange =
-						EditorGUILayout.Vector3Field(new GUIContent("Rotation" + postfix, tooltip),
-							instance._data.rotationChange);
-				}
-				else if (instance._data.rotationChange.magnitude > 0) {
+				if (!instance._data.attributes.HasFlag(TransformAttribute.Rotation) && instance._data.rotationChange.magnitude > 0) {
 					instance._data.rotationChange = Vector3.zero;
+					EditorUtility.SetDirty(instance);
 				}
 
-				if (instance._data.attributes.HasFlag(TransformAttribute.Scale)) {
-					instance._data.scaleChange =
-						EditorGUILayout.Vector3Field(new GUIContent("Scale" + postfix, tooltip),
-							instance._data.scaleChange);
-				}
-				else if (instance._data.rotationChange.magnitude > 0) {
+				if (!instance._data.attributes.HasFlag(TransformAttribute.Scale) && instance._data.rotationChange.magnitude > 0) {
 					instance._data.scaleChange = Vector3.zero;
-				}
-
-				EditorGUILayout.Space();
-				instance._data.duration = EditorGUILayout.FloatField(
-					new GUIContent("Duration", "The duration it takes to complete the movement, in seconds"),
-					instance._data.duration);
-				instance._data.transformOnAwake = EditorGUILayout.Toggle(
-					new GUIContent("Transform on awake",
-						"Make changes happen directly after the GameObject is enabled."),
-					instance._data.transformOnAwake);
-
-				if (EditorGUI.EndChangeCheck()) {
 					EditorUtility.SetDirty(instance);
 				}
 			}
@@ -109,6 +70,8 @@ namespace Base.Ravel.Creator.Components
 		public Transform translationObject;
 		public TransformAttribute attributes;
 		public TransformSpace space;
+		
+		[Tooltip("Apply values as delta, instead of from to values")]
 		public bool delta;
 
 		public Vector3 positionChange;

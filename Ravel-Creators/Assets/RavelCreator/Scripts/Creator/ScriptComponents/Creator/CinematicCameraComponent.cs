@@ -17,7 +17,7 @@ namespace Base.Ravel.Creator.Components
 		public override ComponentData Data {
 			get { return _data; }
 		}
-		[SerializeField, HideInInspector] private CinematicCamData _data;
+		[SerializeField] private CinematicCamData _data;
 		protected override void BuildComponents() { }
 
 		protected override void DisposeData() { }
@@ -38,13 +38,7 @@ namespace Base.Ravel.Creator.Components
 		{
 			public override void OnInspectorGUI() {
 				CinematicCameraComponent instance = (CinematicCameraComponent)target;
-				DrawDefaultInspector();
 				
-				EditorGUI.BeginChangeCheck();
-				//virtual cam + button to create one a child
-				instance._data.virtualCam = EditorGUILayout.ObjectField("Virtual camera", instance._data.virtualCam,
-					typeof(CinemachineVirtualCamera), true) as CinemachineVirtualCamera;
-
 				if (instance._data.virtualCam == null) {
 					EditorGUILayout.HelpBox("Select a virtual camera first", MessageType.Error);
 					if (GUILayout.Button("Create")) {
@@ -55,14 +49,9 @@ namespace Base.Ravel.Creator.Components
 						instance._data.virtualCam = vc.AddComponent<CinemachineVirtualCamera>();
 						EditorUtility.SetDirty(instance);
 					}
-					else {
-						return;
-					}
 				}
 				
-				//can viewpoint be escaped through escape key?
-				instance._data.canOverride =
-					EditorGUILayout.Toggle("Can player exit view", instance._data.canOverride);
+				DrawDefaultInspector();
 
 				//Transition and blend time
 				instance._data.overrideBlendTime =
@@ -118,16 +107,17 @@ namespace Base.Ravel.Creator.Components
 	{
 		public CinemachineVirtualCamera virtualCam;
 		
+		[Tooltip("Can player exit view")]
 		public bool canOverride;
 		//ghost could be added, but should be tested further before adding it.
 
-		public bool overrideBlendTime;
-		public float blendTime;
+		[HideInInspector] public bool overrideBlendTime;
+		[HideInInspector] public float blendTime;
 		
-		public FollowType followType;
-		public bool followPlayer;
-		public Transform followTarget;
-		public Transform lookTarget;
+		[HideInInspector] public FollowType followType;
+		[HideInInspector] public bool followPlayer;
+		[HideInInspector] public Transform followTarget;
+		[HideInInspector] public Transform lookTarget;
 		
 		public enum FollowType
 		{

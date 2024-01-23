@@ -1,9 +1,6 @@
 using System;
 using UnityEngine;
 using UnityEngine.Events;
-#if UNITY_EDITOR
-using UnityEditor;
-#endif
 
 namespace Base.Ravel.Creator.Components
 {
@@ -14,7 +11,7 @@ namespace Base.Ravel.Creator.Components
 			get { return _data; }
 		}
 
-		[SerializeField, HideInInspector] private ScreenshotComponentData _data;
+		[SerializeField] private ScreenshotComponentData _data;
 
 		protected override void BuildComponents() { }
 
@@ -24,63 +21,17 @@ namespace Base.Ravel.Creator.Components
 		/// Cut pixels between defined anchor points (based on current viewpoint) and donwload the result as a jpg file.
 		/// </summary>
 		public void DownloadScreenshot() { }
-
-#if UNITY_EDITOR
-		[CustomEditor(typeof(ScreenshotComponent))]
-		private class ScreenshotComponentEditor : Editor
-		{
-			private ScreenshotComponent _instance;
-			private SerializedProperty _data;
-			private SerializedProperty _evtProperty;
-
-			public void OnEnable() {
-				_instance = (ScreenshotComponent)target;
-				_data = serializedObject.FindProperty("_data");
-			}
-
-			public override void OnInspectorGUI() {
-
-
-				DrawDefaultInspector();
-				EditorGUI.BeginChangeCheck();
-				_instance._data.fileName = EditorGUILayout.TextField(
-					new GUIContent("Filename", "The initial filename of the file, user can still change it."),
-					_instance._data.fileName);
-
-				_instance._data.sizeMin = EditorGUILayout.ObjectField(
-					new GUIContent("Min anchor",
-						"The minimal screen position of the made screenshot (Lower left corner of the image)."),
-					_instance._data.sizeMin, typeof(Transform), true) as Transform;
-				_instance._data.sizeMax = EditorGUILayout.ObjectField(
-					new GUIContent("Max anchor",
-						"The maximum screen position of the made screenshot (upper right corner of the image)."),
-					_instance._data.sizeMax, typeof(Transform), true) as Transform;
-
-				GUIDrawCallback("beforeScreenshot");
-				GUIDrawCallback("afterScreenshot");
-
-				if (EditorGUI.EndChangeCheck()) {
-					EditorUtility.SetDirty(_instance);
-				}
-			}
-
-			/// <summary>
-			/// Draws event property with given name in GUI.
-			/// </summary>
-			private void GUIDrawCallback(string propertyName) {
-				_evtProperty = _data.FindPropertyRelative(propertyName);
-				EditorGUILayout.PropertyField(_evtProperty);
-				serializedObject.ApplyModifiedProperties();
-			}
-		}
-#endif
 	}
 
 	[Serializable]
 	public class ScreenshotComponentData : ComponentData
 	{
+		[Tooltip("The initial filename of the file, user can still change it.")]
 		public string fileName = "ravel-screenshot";
-		public Transform sizeMin, sizeMax;
+		[Tooltip("Lower right corner of the printscreen.")]
+		public Transform sizeMin;
+		[Tooltip("Upper left corner of the printscreen.")]
+		public Transform sizeMax;
 		public UnityEvent beforeScreenshot, afterScreenshot;
 	}
 }

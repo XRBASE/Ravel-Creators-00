@@ -8,16 +8,16 @@ using UnityEditor;
 /// Component used to open a given webURL as the result of a trigger event.
 /// </summary>
 [AddComponentMenu("Ravel/Websurfing/Weblink component")]
-public class WeblinkComponent : ComponentBase
+public partial class WeblinkComponent : ComponentBase
 {
 	public override ComponentData Data {
 		get { return null; }
 	}
 
-	protected override void BuildComponents() { } 
-	protected override void DisposeData() { }
-
 	[SerializeField] private string url;
+
+	protected override void BuildComponents() { }
+	protected override void DisposeData() { }
 
 	public void OpenURL() { }
 
@@ -37,7 +37,7 @@ public class WeblinkComponent : ComponentBase
 			EditorGUILayout.BeginHorizontal();
 			if (!string.IsNullOrEmpty(instance.url) && 
 			    !(instance.url.StartsWith("https://") || instance.url.StartsWith("http://"))) {
-				
+
 				EditorGUILayout.HelpBox("Please add Https:// in front of your url, as the weblink will otherwise " +
 				                        "be opened as subdomain of Ravel (i.e. Https://Ravel.com/[URL]).", MessageType.Warning);
 				

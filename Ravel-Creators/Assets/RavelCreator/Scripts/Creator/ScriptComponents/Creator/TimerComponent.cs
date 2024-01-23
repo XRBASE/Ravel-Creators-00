@@ -8,10 +8,11 @@ using UnityEditor;
 
 namespace Base.Ravel.Creator.Components
 {
+	//this should change the help url, check it though
 	public partial class TimerComponent : ComponentBase
 	{
 		public override ComponentData Data { get; }
-		[SerializeField, HideInInspector] private TimerData _data;
+		[SerializeField] private TimerData _data;
 		protected override void BuildComponents() { }
 
 		protected override void DisposeData() { }
@@ -43,14 +44,10 @@ namespace Base.Ravel.Creator.Components
 		{
 			private TimerComponent _instance;
 			private SerializedProperty _data;
-			private SerializedProperty onStartEvt;
-			private SerializedProperty onFinEvt;
 
 			private void OnEnable() {
 				_instance = (TimerComponent)target;
 				_data = serializedObject.FindProperty("_data");
-				onStartEvt = _data.FindPropertyRelative("onStart");
-				onFinEvt = _data.FindPropertyRelative("onFinish");
 			}
 
 			public override void OnInspectorGUI() {
@@ -82,14 +79,23 @@ namespace Base.Ravel.Creator.Components
 						_instance._data.evenText, typeof(TMP_Text), true) as TMP_Text;
 				}
 
-				EditorGUILayout.PropertyField(onStartEvt);
-				EditorGUILayout.PropertyField(onFinEvt);
+				GUIDrawCallback("onStart");
+				GUIDrawCallback("onFinish");
 
 				serializedObject.ApplyModifiedProperties();
 
 				if (EditorGUI.EndChangeCheck()) {
 					EditorUtility.SetDirty(_instance);
 				}
+			}
+			
+			/// <summary>
+			/// Draws event property with given name in GUI.
+			/// </summary>
+			private void GUIDrawCallback(string propertyName) {
+				var eventProp = _data.FindPropertyRelative(propertyName);
+				EditorGUILayout.PropertyField(eventProp);
+				serializedObject.ApplyModifiedProperties();
 			}
 		}
 #endif
@@ -98,17 +104,17 @@ namespace Base.Ravel.Creator.Components
 	[Serializable]
 	public class TimerData : ComponentData
 	{
-		public float duration;
-		public bool startOnAwake;
+		[HideInInspector] public float duration;
+		[HideInInspector] public bool startOnAwake;
 		
 		public UnityEvent onStart;
 		public UnityEvent onFinish;
 
-		public bool hasCountdown = false;
-		public int speed;
-		public TMP_Text evenText;
-		public TMP_Text oddText;
-		public CountDownAnimationProps animateProps;
+		[HideInInspector] public bool hasCountdown = false;
+		[HideInInspector] public int speed;
+		[HideInInspector] public TMP_Text evenText;
+		[HideInInspector] public TMP_Text oddText;
+		[HideInInspector] public CountDownAnimationProps animateProps;
 	}
 
 	[Flags]

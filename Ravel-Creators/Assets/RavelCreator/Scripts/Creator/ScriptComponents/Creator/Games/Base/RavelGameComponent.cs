@@ -30,72 +30,29 @@ namespace Base.Ravel.Creator.Components.Games
         public void StartGame() { }
         public void StopGame() { }
         public void ResetGame() { }
-
+        
 #if UNITY_EDITOR
     [CustomEditor(typeof(RavelGameComponent), true)]
     public class RavelGameComponentEditor : Editor
     {
         private RavelGameComponent _baseInstance;
-        private SerializedProperty _baseData;
-        private SerializedProperty _baseSerializedProperty;
         
         private bool _nameValid;
 
         protected virtual void OnEnable() {
             _baseInstance = (RavelGameComponent)target;
-            _baseData = serializedObject.FindProperty("_data");
-
-            if (string.IsNullOrEmpty(_baseInstance.BaseData.name)) {
-                _baseInstance.BaseData.name = _baseInstance.gameObject.name;
-            }
-            _nameValid = NameAvailabilityCheck.Check(_baseInstance);
         }
         
         public override void OnInspectorGUI() {
-            DrawDefaultInspector();
-            bool dirty = false;
-            EditorGUI.BeginChangeCheck();
-            
-            _baseInstance.BaseData.name = EditorGUILayout.TextField("Name", _baseInstance.BaseData.name);
-            if (EditorGUI.EndChangeCheck()) {
-                dirty = true;
-					
-                _nameValid = NameAvailabilityCheck.Check(_baseInstance);
-            }
-            else {
-                EditorGUI.BeginChangeCheck();
-            }
+            _nameValid = NameAvailabilityCheck.Check(_baseInstance);
 
             if (!_nameValid) {
+                _baseInstance.BaseData.name = EditorGUILayout.TextField("Name", _baseInstance.BaseData.name);
+                
                 EditorGUILayout.HelpBox($"Game name should be unique. Name {_baseInstance.BaseData.name} is already taken!", MessageType.Error);
+                return;
             }
-
-            _baseInstance.BaseData.startOnLoad = EditorGUILayout.Toggle(
-                new GUIContent("start on load","Automatically start the game, after it's been loaded."), _baseInstance.BaseData.startOnLoad);
-            _baseInstance.BaseData.hasScore = EditorGUILayout.Toggle("Has score", _baseInstance.BaseData.hasScore);
-            if (_baseInstance.BaseData.hasScore) {
-                _baseInstance.BaseData.scoreboard = EditorGUILayout.ObjectField("Scoreboard", _baseInstance.BaseData.scoreboard,
-                    typeof(ScoreboardComponent), true) as ScoreboardComponent;
-            }
-            
-            GUIDrawProperty("onGameStart");
-            GUIDrawProperty("onGameStop");
-            GUIDrawProperty("onGameReset");
-            GUIDrawProperty("onLocalScoreChange", "Called when the local player scores points, or the points reset.");
-            GUIDrawProperty("onGameProgress", "Called when the percentage of completeness changes in the game.");
-            
-            if (dirty || EditorGUI.EndChangeCheck()) {
-                EditorUtility.SetDirty(_baseInstance);
-            }
-        }
-        
-        /// <summary>
-        /// Draws event property with given name in GUI.
-        /// </summary>
-        private void GUIDrawProperty(string propertyName, string tooltip = "") {
-            _baseSerializedProperty = _baseData.FindPropertyRelative(propertyName);
-            EditorGUILayout.PropertyField(_baseSerializedProperty, new GUIContent(propertyName, tooltip));
-            serializedObject.ApplyModifiedProperties();
+            DrawDefaultInspector();
         }
     }
 #endif
@@ -104,7 +61,7 @@ namespace Base.Ravel.Creator.Components.Games
     [Serializable]
     public class RavelGameData : ComponentData
     {
-        public int id;
+        [HideInInspector] public int id;
         public string name;
 
         public bool startOnLoad;

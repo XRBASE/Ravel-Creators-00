@@ -26,22 +26,19 @@ namespace Base.Ravel.Creator.Components.Quiz
         /// <summary>
         /// Unselects this item.
         /// </summary>
-        public void Unselect() { }
+        public override void Unselect() { }
 
         /// <summary>
         /// Selects this item
         /// </summary>
-        public void Select() { }
+        public override void Select() { }
 
 #if UNITY_EDITOR
         [CustomEditor(typeof(GameObjectAnswer))]
         private class GameObjectAnswerEditor : Editor
         {
 	        public override void OnInspectorGUI() {
-		        GameObjectAnswer instance = (GameObjectAnswer)target;
-
 		        DrawDefaultInspector();
-		        
 		        EditorGUILayout.HelpBox("The game object version of an answer requires the creator to call the select and unselection options. This can be performed using the interactable component.", MessageType.Info);
 	        }
         }

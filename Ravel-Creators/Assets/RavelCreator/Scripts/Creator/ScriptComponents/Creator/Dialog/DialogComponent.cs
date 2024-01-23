@@ -18,7 +18,7 @@ namespace Base.Ravel.Creator.Components
         public override ComponentData Data {
             get { return _data; }
         }
-        [SerializeField, HideInInspector] private DialogData _data;
+        [SerializeField] private DialogData _data;
 
         protected override void BuildComponents() { }
 
@@ -45,104 +45,40 @@ namespace Base.Ravel.Creator.Components
         public void PrevMessage() { }
 
 #if UNITY_EDITOR
+        
         [CustomEditor(typeof(DialogComponent))]
         private class DialogComponentEditor : Editor
         {
             private DialogComponent _instance;
+
+            //previous message count
+            private int pMsgCount = 0;
             
-            private SerializedObject _serObj;
-            private SerializedProperty _messages;
-            private SerializedProperty _event;
-
-            private int _prevMsgCount = 0;
-
             public void OnEnable() {
                 _instance = (DialogComponent)target;
-                _serObj = new SerializedObject(_instance);
-                _messages = _serObj.FindProperty("_data").FindPropertyRelative("messages");
             }
-
+            
             public override void OnInspectorGUI() {
-                var indent = EditorGUI.indentLevel;
-                EditorGUI.indentLevel = 0;
+                EditorGUI.BeginChangeCheck();
+                pMsgCount = _instance._data.messages.Length;
                 DrawDefaultInspector();
                 //checks for any changes, so object can be marked as dirty
-                bool dirty = false;
-                EditorGUI.BeginChangeCheck();
+                bool dirty = EditorGUI.EndChangeCheck();
                 
-                //list of message info.
-                EditorGUILayout.PropertyField(_messages,
-                    new GUIContent("Messages", "These are the shown messages in order."));
-
-                dirty = EditorGUI.EndChangeCheck();
+                
                 if (dirty) {
-                    if (_prevMsgCount < _instance._data.messages.Length) {
+                    if (pMsgCount < _instance._data.messages.Length) {
                         //message added
-                        DialogMessage newMsg, sampleMsg;
-                        for (int i = _prevMsgCount; i < _instance._data.messages.Length; i++) {
+                        DialogMessage newMsg;
+                        
+                        //last valid msg
+                        DialogMessage sampleMsg = _instance._data.messages[pMsgCount - 1];
+                        for (int i = pMsgCount; i < _instance._data.messages.Length; i++) {
                             newMsg = _instance._data.messages[i];
-                            if (!newMsg.HasHeader) {
-                                continue;
-                            }
-                            
-                            for (int j = i; j >= 0; j--) {
-                                sampleMsg = _instance._data.messages[j];
-                                if (sampleMsg.HasHeader && sampleMsg.HasColor &&
-                                    sampleMsg.header == newMsg.header) {
-                                    newMsg.color = sampleMsg.color;
-                                    break;
-                                }
-                            }
+                            newMsg.CopyData(sampleMsg);
                         }
                     }
-                    
-                    _prevMsgCount = _instance._data.messages.Length;
                 }
-                else {
-                    EditorGUI.BeginChangeCheck();
-                }
-                
-                //usage
-                _instance._data._usage = (DialogData.DisplayUsage)
-                    EditorGUILayout.EnumPopup("Display usage", _instance._data._usage);
-                EditorGUI.indentLevel = 1;
-                string description = DialogData.GetUsageDescription(_instance._data._usage);
-                float h = description.Split('\n').Length;
-                EditorGUILayout.LabelField(description, GUILayout.Height(EditorGUIUtility.singleLineHeight * h));
-                EditorGUI.indentLevel = 0;
-                EditorGUILayout.Space();
-                
-                //boolean values.
-                _instance._data._playOnAwake =
-                    EditorGUILayout.Toggle("Play dialog on awake", _instance._data._playOnAwake);
-                _instance._data._autoNext =
-                    EditorGUILayout.Toggle(new GUIContent("Auto next message", "Move to the next message automatically when the clip and delay have passed."), 
-                        _instance._data._autoNext);
-                if (_instance._data._autoNext) {
-                    EditorGUI.indentLevel = 1;
-                    EditorGUILayout.LabelField("Use message -> options -> delay to set the amount of time,\n" +
-                                               "before the next message is show. Messages without delay are not skipped.", GUILayout.Height(EditorGUIUtility.singleLineHeight * 2));
-                    EditorGUI.indentLevel = 0;
-                }
-                
-                //audiosource (checks the messages for messages containing a clip field).
-                if (_instance._data.hasAudio) {
-                    _instance._data.audioSource = EditorGUILayout.ObjectField("AudioSource",
-                        _instance._data.audioSource, typeof(AudioSource), true) as AudioSource;
-                }
-                
-                _instance._data.writeText = EditorGUILayout.Toggle(
-                    new GUIContent("Write text", "Should text appear letter for letter in the prefab"),
-                    _instance._data.writeText);
-                if (_instance._data.writeText) {
-                    EditorGUILayout.FloatField(
-                        new GUIContent("Message write speed",
-                            "Speed at which words are witten in the display prefab, in letters per second"),
-                        _instance._data.messageSpeed);
-                }
-                
-                _instance._data.displayTemplate = EditorGUILayout.ObjectField(new GUIContent("Display template", "This template acts as a prefab for the displayed messages."),
-                    _instance._data.displayTemplate, typeof(DialogDisplay), true) as DialogDisplay;
 
                 //when missing a prefab, an error is shown, when not missing one, a check is performed to determine whether the textfield is in the template object.
                 //if not, another error is thrown.
@@ -155,46 +91,6 @@ namespace Base.Ravel.Creator.Components
                         EditorGUILayout.HelpBox("Cannot display messages, no body set in display component!", MessageType.Error);
                         
                 }
-
-                //shows the possible events for the dialog.
-                _event = _serObj.FindProperty("_data").FindPropertyRelative("onDialogStart");
-                EditorGUILayout.PropertyField(_event, new GUIContent("On dialog started", "Called when the dialog starts."));
-                
-                _event = _serObj.FindProperty("_data").FindPropertyRelative("onDialogFinished");
-                EditorGUILayout.PropertyField(_event, new GUIContent("On dialog finished", "Called when all messages have been read by the user"));
-                
-                _event = _serObj.FindProperty("_data").FindPropertyRelative("onMessageClose");
-                EditorGUILayout.PropertyField(_event,
-                    new GUIContent("On message close", "Called when any message closes, passes the message index"));
-                
-                _event = _serObj.FindProperty("_data").FindPropertyRelative("onMessageShow");
-                EditorGUILayout.PropertyField(_event,
-                    new GUIContent("On message show", "Called when any message opens, passes the message index"));
-                //Applies event changes
-                _serObj.ApplyModifiedProperties();
-                
-                //when object has changed, check if it still has audio (and save) and mark the object as dirty
-                if (dirty || EditorGUI.EndChangeCheck()) {
-                    _instance._data.hasAudio = CheckMessagesForAudio();
-                    
-                    EditorUtility.SetDirty(_instance);
-                }
-                
-                EditorGUI.indentLevel = indent;
-            }
-            
-            /// <summary>
-            /// Checks through all the messages, to see if any of them has audio enabled. It is presumed if the flag is there
-            /// that the audio is. Otherwise it will throw an error because of the missing clip.
-            /// </summary>
-            private bool CheckMessagesForAudio() {
-                for (int i = 0; i < _instance._data.messages.Length; i++) {
-                    if (_instance._data.messages[i].HasAudio) {
-                        return true;
-                    }
-                }
-
-                return false;
             }
         }
 #endif
@@ -300,9 +196,27 @@ namespace Base.Ravel.Creator.Components
             Color = 1<<3,
             Image = 1<<4,
         }
+
+        /// <summary>
+        /// Copy message internal data (header, color, img and options).
+        /// </summary>
+        /// <param name="copyFrom">image from which data is copied.</param>
+        public void CopyData(DialogMessage copyFrom) {
+            options = copyFrom.options;
+            if (copyFrom.HasHeader) {
+                header = copyFrom.header;
+            }
+
+            if (copyFrom.HasColor) {
+                color = copyFrom.color;
+            }
+
+            if (copyFrom.HasImg) {
+                img = copyFrom.img;
+            }
+        }
         
 #if UNITY_EDITOR
-        // IngredientDrawer
         [CustomPropertyDrawer(typeof(DialogMessage))]
         public class DialogMessageDrawer : PropertyDrawer
         {
