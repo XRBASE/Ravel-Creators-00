@@ -14,10 +14,17 @@ namespace MathBuddy.Strings
             return subDir.StartsWith(rootDir);
         }
         
+        public static string ReverseString(string input) {
+            Char[] chars = input.ToCharArray();
+            Array.Reverse(chars);
+            
+            return new string(chars);
+        }
+        
         public static string ToCsv(IEnumerable<string> data)
         {
             string output = "";
-            if (data == null)
+            if (data == null || !data.Any())
                 return output;
             
             foreach (var str in data) {
@@ -46,7 +53,6 @@ namespace MathBuddy.Strings
         public static string ToString(this string input, NamingCastType castFrom, NamingCastType castTo)
         {
             string[] words;
-            //first make a list of words all in lower case
             switch (castFrom) {
                 case NamingCastType.lowerCamelCase:
                 case NamingCastType.UpperCamelCase:
@@ -64,14 +70,13 @@ namespace MathBuddy.Strings
                             words[i] = (input.Substring(wordIndexes[i], wordIndexes[i + 1] - wordIndexes[i])).ToLower();    
                         } else
                         {
-                            words[i] = (input.Substring(wordIndexes[i])).ToLower();
+                            words[i] = (input.Substring(wordIndexes[i]));
                         }
                     }
                     
                     break;
                 case NamingCastType.UPPER_CASE:
                 case NamingCastType.lower_case:
-                case NamingCastType.UserFormatting:
                     input = input.ToLower();
                     words = input.Split('_');
                     break;
