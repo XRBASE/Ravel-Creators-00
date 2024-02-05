@@ -1578,6 +1578,8 @@ MonoBehaviour:
     netIndex: 1
     resultField: {fileID: 6312719133670166994}
     templateEntry: {fileID: 74947300}
+    view: {fileID: 7639870}
+    autoScroll: 1
     namePlaceHolder: Name
     options:
     - A free token

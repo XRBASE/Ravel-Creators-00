@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using Base.Ravel.Creator.Components;
 using TMPro;
 using UnityEngine;
+using UnityEngine.UI;
 
 public partial class WheelOfFortuneComponent : ComponentBase, IUniqueId
 {
@@ -18,9 +19,9 @@ public partial class WheelOfFortuneComponent : ComponentBase, IUniqueId
     public override ComponentData Data {
         get { return _data; }
     }
-
-    [SerializeField] private WheelData _data;
     
+    [SerializeField] private WheelData _data;
+
     protected override void DisposeData() { }
 
     public void Spin() { }
@@ -50,6 +51,10 @@ public partial class WheelOfFortuneComponent : ComponentBase, IUniqueId
         public TMP_Text resultField;
         [Tooltip("This is the template that is used to create new entries/options from")]
         public WheelEntryComponent templateEntry;
+        [Tooltip("The system will scroll in this scroll rect when a new entry has been added.")] 
+        public ScrollRect view;
+        [Tooltip("Should view scroll down when new entry is added.")] 
+        public bool autoScroll = true;
         [Tooltip("Place holder for new entries before a name has been filled in")] 
         public string namePlaceHolder = "Name";
         [Tooltip("This is the initial list of options available to the player")] 
