@@ -170,9 +170,14 @@ namespace Base.Ravel.Creator.Components
         public virtual bool HasImg {
             get { return options.HasFlag(MessageFlags.Image); }
         }
+
+        public virtual bool HasTitle {
+            get { return options.HasFlag(MessageFlags.Title); }
+        }
 	
         public string header;
         public bool playerNameHeader;
+        public string title;
         public string body;
         public Color color;
         public Sprite img;
@@ -195,6 +200,7 @@ namespace Base.Ravel.Creator.Components
             Header =1<<2,
             Color = 1<<3,
             Image = 1<<4,
+            Title = 1<<5,
         }
 
         /// <summary>
@@ -213,6 +219,10 @@ namespace Base.Ravel.Creator.Components
 
             if (copyFrom.HasImg) {
                 img = copyFrom.img;
+            }
+
+            if (copyFrom.HasTitle) {
+                title = copyFrom.title;
             }
         }
         
@@ -239,6 +249,9 @@ namespace Base.Ravel.Creator.Components
                         h += EditorGUI.GetPropertyHeight(property.FindPropertyRelative("playerNameHeader"));
                         if (!property.FindPropertyRelative("playerNameHeader").boolValue)
                             h += EditorGUI.GetPropertyHeight(property.FindPropertyRelative("header"));
+                    }
+                    if (flags.HasFlag(MessageFlags.Title)) {
+                        h += EditorGUI.GetPropertyHeight(property.FindPropertyRelative("title"));
                     }
                     if (flags.HasFlag(MessageFlags.Color)) {
                         h += EditorGUI.GetPropertyHeight(property.FindPropertyRelative("color"));
@@ -294,6 +307,14 @@ namespace Base.Ravel.Creator.Components
                         else {
                             property.FindPropertyRelative("header").stringValue = "Player";
                         }
+                    }
+                    
+                    //title field
+                    if (flags.HasFlag(MessageFlags.Title)) {
+                        rect = new Rect(position.x, position.y + h, position.width,
+                            EditorGUI.GetPropertyHeight(property.FindPropertyRelative("title")));
+                        EditorGUI.PropertyField(rect, property.FindPropertyRelative("title"), new GUIContent("title"));
+                        h += rect.height;
                     }
                     
                     //text field
