@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 949795995692355560}
   - component: {fileID: 949795995692355561}
   - component: {fileID: 949795995692355562}
-  - component: {fileID: 949795995692355563}
+  - component: {fileID: 8956484767104304818}
   m_Layer: 0
   m_Name: ZoneTrigger_5
   m_TagString: Untagged
@@ -98,7 +98,7 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 1, y: 1, z: 1}
   m_Center: {x: 0, y: 0, z: 0}
---- !u!114 &949795995692355563
+--- !u!114 &8956484767104304818
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -107,24 +107,23 @@ MonoBehaviour:
   m_GameObject: {fileID: 949795995692355565}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 45a107d8e6c0deb4986c213ca547be0d, type: 3}
+  m_Script: {fileID: 11500000, guid: 2f14bdebaf0eed947b824092d4796b86, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   _data:
-    type: 1
     hasHover: 0
-    delayed: 0
-    delayTime: 0
     onHoverEnter:
       m_PersistentCalls:
         m_Calls: []
     onHoverExit:
       m_PersistentCalls:
         m_Calls: []
-    onClick:
-      m_PersistentCalls:
-        m_Calls: []
-    onEnter:
+    interactable: 1
+    networked: 0
+    id: -1
+    delayed: 0
+    delay: 0
+    onEnterZone:
       m_PersistentCalls:
         m_Calls:
         - m_Target: {fileID: 949795996530033447}
@@ -139,18 +138,9 @@ MonoBehaviour:
             m_StringArgument: 
             m_BoolArgument: 0
           m_CallState: 2
-    onExit:
+    onExitZone:
       m_PersistentCalls:
         m_Calls: []
-    onSwitchOn:
-      m_PersistentCalls:
-        m_Calls: []
-    onSwitchOff:
-      m_PersistentCalls:
-        m_Calls: []
-    networked: 0
-    id: -1
-    interactable: 1
 --- !u!1 &949795995713807619
 GameObject:
   m_ObjectHideFlags: 0
@@ -194,7 +184,7 @@ GameObject:
   - component: {fileID: 949795995721575886}
   - component: {fileID: 949795995721575887}
   - component: {fileID: 949795995721575920}
-  - component: {fileID: 949795995721575921}
+  - component: {fileID: 7429077707108167191}
   m_Layer: 0
   m_Name: ZoneTrigger_7
   m_TagString: Untagged
@@ -280,7 +270,7 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 1, y: 1, z: 1}
   m_Center: {x: 0, y: 0, z: 0}
---- !u!114 &949795995721575921
+--- !u!114 &7429077707108167191
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -289,24 +279,23 @@ MonoBehaviour:
   m_GameObject: {fileID: 949795995721575923}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 45a107d8e6c0deb4986c213ca547be0d, type: 3}
+  m_Script: {fileID: 11500000, guid: 2f14bdebaf0eed947b824092d4796b86, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   _data:
-    type: 1
     hasHover: 0
-    delayed: 0
-    delayTime: 0
     onHoverEnter:
       m_PersistentCalls:
         m_Calls: []
     onHoverExit:
       m_PersistentCalls:
         m_Calls: []
-    onClick:
-      m_PersistentCalls:
-        m_Calls: []
-    onEnter:
+    interactable: 1
+    networked: 0
+    id: -1
+    delayed: 0
+    delay: 0
+    onEnterZone:
       m_PersistentCalls:
         m_Calls:
         - m_Target: {fileID: 949795996530033447}
@@ -321,18 +310,9 @@ MonoBehaviour:
             m_StringArgument: 
             m_BoolArgument: 0
           m_CallState: 2
-    onExit:
+    onExitZone:
       m_PersistentCalls:
         m_Calls: []
-    onSwitchOn:
-      m_PersistentCalls:
-        m_Calls: []
-    onSwitchOff:
-      m_PersistentCalls:
-        m_Calls: []
-    networked: 0
-    id: -1
-    interactable: 1
 --- !u!1 &949795995747002599
 GameObject:
   m_ObjectHideFlags: 0
@@ -380,7 +360,7 @@ GameObject:
   - component: {fileID: 949795995789045492}
   - component: {fileID: 949795995789045493}
   - component: {fileID: 949795995789045494}
-  - component: {fileID: 949795995789045495}
+  - component: {fileID: 2153992625190249577}
   m_Layer: 0
   m_Name: ZoneTrigger_1
   m_TagString: Untagged
@@ -466,7 +446,7 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 1, y: 1, z: 1}
   m_Center: {x: 0, y: 0, z: 0}
---- !u!114 &949795995789045495
+--- !u!114 &2153992625190249577
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -475,24 +455,23 @@ MonoBehaviour:
   m_GameObject: {fileID: 949795995789045497}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 45a107d8e6c0deb4986c213ca547be0d, type: 3}
+  m_Script: {fileID: 11500000, guid: 2f14bdebaf0eed947b824092d4796b86, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   _data:
-    type: 1
     hasHover: 0
-    delayed: 0
-    delayTime: 0
     onHoverEnter:
       m_PersistentCalls:
         m_Calls: []
     onHoverExit:
       m_PersistentCalls:
         m_Calls: []
-    onClick:
-      m_PersistentCalls:
-        m_Calls: []
-    onEnter:
+    interactable: 1
+    networked: 0
+    id: -1
+    delayed: 0
+    delay: 0
+    onEnterZone:
       m_PersistentCalls:
         m_Calls:
         - m_Target: {fileID: 949795996530033447}
@@ -520,7 +499,7 @@ MonoBehaviour:
             m_StringArgument: 
             m_BoolArgument: 0
           m_CallState: 2
-    onExit:
+    onExitZone:
       m_PersistentCalls:
         m_Calls:
         - m_Target: {fileID: 949795996530033447}
@@ -548,15 +527,6 @@ MonoBehaviour:
             m_StringArgument: 
             m_BoolArgument: 0
           m_CallState: 2
-    onSwitchOn:
-      m_PersistentCalls:
-        m_Calls: []
-    onSwitchOff:
-      m_PersistentCalls:
-        m_Calls: []
-    networked: 0
-    id: -1
-    interactable: 1
 --- !u!1 &949795995936795891
 GameObject:
   m_ObjectHideFlags: 0
@@ -569,7 +539,7 @@ GameObject:
   - component: {fileID: 949795995936795854}
   - component: {fileID: 949795995936795855}
   - component: {fileID: 949795995936795888}
-  - component: {fileID: 949795995936795889}
+  - component: {fileID: 3311379844755595223}
   m_Layer: 0
   m_Name: ZoneTrigger_11
   m_TagString: Untagged
@@ -655,7 +625,7 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 1, y: 1, z: 1}
   m_Center: {x: 0, y: 0, z: 0}
---- !u!114 &949795995936795889
+--- !u!114 &3311379844755595223
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -664,24 +634,23 @@ MonoBehaviour:
   m_GameObject: {fileID: 949795995936795891}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 45a107d8e6c0deb4986c213ca547be0d, type: 3}
+  m_Script: {fileID: 11500000, guid: 2f14bdebaf0eed947b824092d4796b86, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   _data:
-    type: 1
     hasHover: 0
-    delayed: 0
-    delayTime: 0
     onHoverEnter:
       m_PersistentCalls:
         m_Calls: []
     onHoverExit:
       m_PersistentCalls:
         m_Calls: []
-    onClick:
-      m_PersistentCalls:
-        m_Calls: []
-    onEnter:
+    interactable: 1
+    networked: 0
+    id: -1
+    delayed: 0
+    delay: 0
+    onEnterZone:
       m_PersistentCalls:
         m_Calls:
         - m_Target: {fileID: 949795996530033447}
@@ -696,18 +665,9 @@ MonoBehaviour:
             m_StringArgument: 
             m_BoolArgument: 0
           m_CallState: 2
-    onExit:
+    onExitZone:
       m_PersistentCalls:
         m_Calls: []
-    onSwitchOn:
-      m_PersistentCalls:
-        m_Calls: []
-    onSwitchOff:
-      m_PersistentCalls:
-        m_Calls: []
-    networked: 0
-    id: -1
-    interactable: 1
 --- !u!1 &949795995944181513
 GameObject:
   m_ObjectHideFlags: 0
@@ -720,7 +680,7 @@ GameObject:
   - component: {fileID: 949795995944181508}
   - component: {fileID: 949795995944181509}
   - component: {fileID: 949795995944181510}
-  - component: {fileID: 949795995944181511}
+  - component: {fileID: 599095880124852620}
   m_Layer: 0
   m_Name: ZoneTrigger_9
   m_TagString: Untagged
@@ -806,7 +766,7 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 1, y: 1, z: 1}
   m_Center: {x: 0, y: 0, z: 0}
---- !u!114 &949795995944181511
+--- !u!114 &599095880124852620
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -815,24 +775,23 @@ MonoBehaviour:
   m_GameObject: {fileID: 949795995944181513}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 45a107d8e6c0deb4986c213ca547be0d, type: 3}
+  m_Script: {fileID: 11500000, guid: 2f14bdebaf0eed947b824092d4796b86, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   _data:
-    type: 1
     hasHover: 0
-    delayed: 0
-    delayTime: 0
     onHoverEnter:
       m_PersistentCalls:
         m_Calls: []
     onHoverExit:
       m_PersistentCalls:
         m_Calls: []
-    onClick:
-      m_PersistentCalls:
-        m_Calls: []
-    onEnter:
+    interactable: 1
+    networked: 0
+    id: -1
+    delayed: 0
+    delay: 0
+    onEnterZone:
       m_PersistentCalls:
         m_Calls:
         - m_Target: {fileID: 949795996530033447}
@@ -847,18 +806,9 @@ MonoBehaviour:
             m_StringArgument: 
             m_BoolArgument: 0
           m_CallState: 2
-    onExit:
+    onExitZone:
       m_PersistentCalls:
         m_Calls: []
-    onSwitchOn:
-      m_PersistentCalls:
-        m_Calls: []
-    onSwitchOff:
-      m_PersistentCalls:
-        m_Calls: []
-    networked: 0
-    id: -1
-    interactable: 1
 --- !u!1 &949795996173512021
 GameObject:
   m_ObjectHideFlags: 0
@@ -871,7 +821,7 @@ GameObject:
   - component: {fileID: 949795996173512016}
   - component: {fileID: 949795996173512017}
   - component: {fileID: 949795996173512018}
-  - component: {fileID: 949795996173512019}
+  - component: {fileID: 4505917830137615163}
   m_Layer: 0
   m_Name: ZoneTrigger_8
   m_TagString: Untagged
@@ -957,7 +907,7 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 1, y: 1, z: 1}
   m_Center: {x: 0, y: 0, z: 0}
---- !u!114 &949795996173512019
+--- !u!114 &4505917830137615163
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -966,24 +916,23 @@ MonoBehaviour:
   m_GameObject: {fileID: 949795996173512021}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 45a107d8e6c0deb4986c213ca547be0d, type: 3}
+  m_Script: {fileID: 11500000, guid: 2f14bdebaf0eed947b824092d4796b86, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   _data:
-    type: 1
     hasHover: 0
-    delayed: 0
-    delayTime: 0
     onHoverEnter:
       m_PersistentCalls:
         m_Calls: []
     onHoverExit:
       m_PersistentCalls:
         m_Calls: []
-    onClick:
-      m_PersistentCalls:
-        m_Calls: []
-    onEnter:
+    interactable: 1
+    networked: 0
+    id: -1
+    delayed: 0
+    delay: 0
+    onEnterZone:
       m_PersistentCalls:
         m_Calls:
         - m_Target: {fileID: 949795996530033447}
@@ -998,18 +947,9 @@ MonoBehaviour:
             m_StringArgument: 
             m_BoolArgument: 0
           m_CallState: 2
-    onExit:
+    onExitZone:
       m_PersistentCalls:
         m_Calls: []
-    onSwitchOn:
-      m_PersistentCalls:
-        m_Calls: []
-    onSwitchOff:
-      m_PersistentCalls:
-        m_Calls: []
-    networked: 0
-    id: -1
-    interactable: 1
 --- !u!1 &949795996222029046
 GameObject:
   m_ObjectHideFlags: 0
@@ -1022,7 +962,7 @@ GameObject:
   - component: {fileID: 949795996222029041}
   - component: {fileID: 949795996222029042}
   - component: {fileID: 949795996222029043}
-  - component: {fileID: 949795996222029044}
+  - component: {fileID: 7480761111220360679}
   m_Layer: 0
   m_Name: ZoneTrigger_3
   m_TagString: Untagged
@@ -1108,7 +1048,7 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 1, y: 1, z: 1}
   m_Center: {x: 0, y: 0, z: 0}
---- !u!114 &949795996222029044
+--- !u!114 &7480761111220360679
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -1117,24 +1057,23 @@ MonoBehaviour:
   m_GameObject: {fileID: 949795996222029046}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 45a107d8e6c0deb4986c213ca547be0d, type: 3}
+  m_Script: {fileID: 11500000, guid: 2f14bdebaf0eed947b824092d4796b86, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   _data:
-    type: 1
     hasHover: 0
-    delayed: 0
-    delayTime: 0
     onHoverEnter:
       m_PersistentCalls:
         m_Calls: []
     onHoverExit:
       m_PersistentCalls:
         m_Calls: []
-    onClick:
-      m_PersistentCalls:
-        m_Calls: []
-    onEnter:
+    interactable: 1
+    networked: 0
+    id: -1
+    delayed: 0
+    delay: 0
+    onEnterZone:
       m_PersistentCalls:
         m_Calls:
         - m_Target: {fileID: 949795996530033447}
@@ -1174,7 +1113,7 @@ MonoBehaviour:
             m_StringArgument: 
             m_BoolArgument: 0
           m_CallState: 2
-    onExit:
+    onExitZone:
       m_PersistentCalls:
         m_Calls:
         - m_Target: {fileID: 1144189720529989654}
@@ -1202,15 +1141,6 @@ MonoBehaviour:
             m_StringArgument: 
             m_BoolArgument: 0
           m_CallState: 2
-    onSwitchOn:
-      m_PersistentCalls:
-        m_Calls: []
-    onSwitchOff:
-      m_PersistentCalls:
-        m_Calls: []
-    networked: 0
-    id: -1
-    interactable: 1
 --- !u!1 &949795996301727462
 GameObject:
   m_ObjectHideFlags: 0
@@ -1223,7 +1153,7 @@ GameObject:
   - component: {fileID: 949795996301727457}
   - component: {fileID: 949795996301727458}
   - component: {fileID: 949795996301727459}
-  - component: {fileID: 949795996301727460}
+  - component: {fileID: 4342613429231244336}
   m_Layer: 0
   m_Name: ZoneTrigger_2
   m_TagString: Untagged
@@ -1309,7 +1239,7 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 1, y: 1, z: 1}
   m_Center: {x: 0, y: 0, z: 0}
---- !u!114 &949795996301727460
+--- !u!114 &4342613429231244336
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -1318,24 +1248,23 @@ MonoBehaviour:
   m_GameObject: {fileID: 949795996301727462}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 45a107d8e6c0deb4986c213ca547be0d, type: 3}
+  m_Script: {fileID: 11500000, guid: 2f14bdebaf0eed947b824092d4796b86, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   _data:
-    type: 1
     hasHover: 0
-    delayed: 0
-    delayTime: 0
     onHoverEnter:
       m_PersistentCalls:
         m_Calls: []
     onHoverExit:
       m_PersistentCalls:
         m_Calls: []
-    onClick:
-      m_PersistentCalls:
-        m_Calls: []
-    onEnter:
+    interactable: 1
+    networked: 0
+    id: -1
+    delayed: 0
+    delay: 0
+    onEnterZone:
       m_PersistentCalls:
         m_Calls:
         - m_Target: {fileID: 949795996530033447}
@@ -1387,7 +1316,7 @@ MonoBehaviour:
             m_StringArgument: 
             m_BoolArgument: 0
           m_CallState: 2
-    onExit:
+    onExitZone:
       m_PersistentCalls:
         m_Calls:
         - m_Target: {fileID: 949795996530033447}
@@ -1439,15 +1368,6 @@ MonoBehaviour:
             m_StringArgument: 
             m_BoolArgument: 0
           m_CallState: 2
-    onSwitchOn:
-      m_PersistentCalls:
-        m_Calls: []
-    onSwitchOff:
-      m_PersistentCalls:
-        m_Calls: []
-    networked: 0
-    id: -1
-    interactable: 1
 --- !u!1 &949795996381266718
 GameObject:
   m_ObjectHideFlags: 0
@@ -1460,7 +1380,7 @@ GameObject:
   - component: {fileID: 949795996381266713}
   - component: {fileID: 949795996381266714}
   - component: {fileID: 949795996381266715}
-  - component: {fileID: 949795996381266716}
+  - component: {fileID: 6387605623699927367}
   m_Layer: 0
   m_Name: ZoneTrigger_6
   m_TagString: Untagged
@@ -1546,7 +1466,7 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 1, y: 1, z: 1}
   m_Center: {x: 0, y: 0, z: 0}
---- !u!114 &949795996381266716
+--- !u!114 &6387605623699927367
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -1555,24 +1475,23 @@ MonoBehaviour:
   m_GameObject: {fileID: 949795996381266718}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 45a107d8e6c0deb4986c213ca547be0d, type: 3}
+  m_Script: {fileID: 11500000, guid: 2f14bdebaf0eed947b824092d4796b86, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   _data:
-    type: 1
     hasHover: 0
-    delayed: 0
-    delayTime: 0
     onHoverEnter:
       m_PersistentCalls:
         m_Calls: []
     onHoverExit:
       m_PersistentCalls:
         m_Calls: []
-    onClick:
-      m_PersistentCalls:
-        m_Calls: []
-    onEnter:
+    interactable: 1
+    networked: 0
+    id: -1
+    delayed: 0
+    delay: 0
+    onEnterZone:
       m_PersistentCalls:
         m_Calls:
         - m_Target: {fileID: 949795996530033447}
@@ -1587,18 +1506,9 @@ MonoBehaviour:
             m_StringArgument: 
             m_BoolArgument: 0
           m_CallState: 2
-    onExit:
+    onExitZone:
       m_PersistentCalls:
         m_Calls: []
-    onSwitchOn:
-      m_PersistentCalls:
-        m_Calls: []
-    onSwitchOff:
-      m_PersistentCalls:
-        m_Calls: []
-    networked: 0
-    id: -1
-    interactable: 1
 --- !u!1 &949795996429063030
 GameObject:
   m_ObjectHideFlags: 0
@@ -1611,7 +1521,7 @@ GameObject:
   - component: {fileID: 949795996429063025}
   - component: {fileID: 949795996429063026}
   - component: {fileID: 949795996429063027}
-  - component: {fileID: 949795996429063028}
+  - component: {fileID: 1729250642267063383}
   m_Layer: 0
   m_Name: ZoneTrigger_4
   m_TagString: Untagged
@@ -1697,7 +1607,7 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 1, y: 1, z: 1}
   m_Center: {x: 0, y: 0, z: 0}
---- !u!114 &949795996429063028
+--- !u!114 &1729250642267063383
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -1706,24 +1616,23 @@ MonoBehaviour:
   m_GameObject: {fileID: 949795996429063030}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 45a107d8e6c0deb4986c213ca547be0d, type: 3}
+  m_Script: {fileID: 11500000, guid: 2f14bdebaf0eed947b824092d4796b86, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   _data:
-    type: 1
     hasHover: 0
-    delayed: 0
-    delayTime: 0
     onHoverEnter:
       m_PersistentCalls:
         m_Calls: []
     onHoverExit:
       m_PersistentCalls:
         m_Calls: []
-    onClick:
-      m_PersistentCalls:
-        m_Calls: []
-    onEnter:
+    interactable: 1
+    networked: 0
+    id: -1
+    delayed: 0
+    delay: 0
+    onEnterZone:
       m_PersistentCalls:
         m_Calls:
         - m_Target: {fileID: 949795996530033447}
@@ -1738,18 +1647,9 @@ MonoBehaviour:
             m_StringArgument: 
             m_BoolArgument: 0
           m_CallState: 2
-    onExit:
+    onExitZone:
       m_PersistentCalls:
         m_Calls: []
-    onSwitchOn:
-      m_PersistentCalls:
-        m_Calls: []
-    onSwitchOff:
-      m_PersistentCalls:
-        m_Calls: []
-    networked: 0
-    id: -1
-    interactable: 1
 --- !u!1 &949795996447691152
 GameObject:
   m_ObjectHideFlags: 0
@@ -1810,7 +1710,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
-  - {fileID: 1310611756244318514}
+  - {fileID: 9135045868279112999}
   m_Father: {fileID: 949795996631293859}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -1823,13 +1723,16 @@ MonoBehaviour:
   m_GameObject: {fileID: 949795996530033448}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e8b0913330570cb4990ea03f16f1593f, type: 3}
+  m_Script: {fileID: 11500000, guid: 569df57c5cac66f4989642bce6cd10dd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   _data:
     walkRadius: 3
     idleWalkUpdateTimeOut: 5
-    animator: {fileID: 1291923423286545441}
+    animator: {fileID: 4134053294775105551}
+    onInitialised:
+      m_PersistentCalls:
+        m_Calls: []
 --- !u!1 &949795996631293860
 GameObject:
   m_ObjectHideFlags: 0
@@ -1877,7 +1780,7 @@ GameObject:
   - component: {fileID: 949795996874545193}
   - component: {fileID: 949795996874545194}
   - component: {fileID: 949795996874545195}
-  - component: {fileID: 949795996874545196}
+  - component: {fileID: 224282100998709646}
   m_Layer: 0
   m_Name: ZoneTrigger
   m_TagString: Untagged
@@ -1963,7 +1866,7 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 1, y: 1, z: 1}
   m_Center: {x: 0, y: 0, z: 0}
---- !u!114 &949795996874545196
+--- !u!114 &224282100998709646
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -1972,24 +1875,23 @@ MonoBehaviour:
   m_GameObject: {fileID: 949795996874545198}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 45a107d8e6c0deb4986c213ca547be0d, type: 3}
+  m_Script: {fileID: 11500000, guid: 2f14bdebaf0eed947b824092d4796b86, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   _data:
-    type: 1
     hasHover: 0
-    delayed: 0
-    delayTime: 0
     onHoverEnter:
       m_PersistentCalls:
         m_Calls: []
     onHoverExit:
       m_PersistentCalls:
         m_Calls: []
-    onClick:
-      m_PersistentCalls:
-        m_Calls: []
-    onEnter:
+    interactable: 1
+    networked: 0
+    id: -1
+    delayed: 0
+    delay: 0
+    onEnterZone:
       m_PersistentCalls:
         m_Calls:
         - m_Target: {fileID: 949795996530033447}
@@ -2017,7 +1919,7 @@ MonoBehaviour:
             m_StringArgument: 
             m_BoolArgument: 0
           m_CallState: 2
-    onExit:
+    onExitZone:
       m_PersistentCalls:
         m_Calls:
         - m_Target: {fileID: 5433529792406571938}
@@ -2033,15 +1935,6 @@ MonoBehaviour:
             m_StringArgument: 
             m_BoolArgument: 0
           m_CallState: 2
-    onSwitchOn:
-      m_PersistentCalls:
-        m_Calls: []
-    onSwitchOff:
-      m_PersistentCalls:
-        m_Calls: []
-    networked: 0
-    id: -1
-    interactable: 1
 --- !u!1 &949795997046630323
 GameObject:
   m_ObjectHideFlags: 0
@@ -2128,7 +2021,7 @@ GameObject:
   - component: {fileID: 949795997310641237}
   - component: {fileID: 949795997310641238}
   - component: {fileID: 949795997310641239}
-  - component: {fileID: 949795997310641240}
+  - component: {fileID: 2173429730772725862}
   m_Layer: 0
   m_Name: ZoneTrigger_10
   m_TagString: Untagged
@@ -2214,7 +2107,7 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 1, y: 1, z: 1}
   m_Center: {x: 0, y: 0, z: 0}
---- !u!114 &949795997310641240
+--- !u!114 &2173429730772725862
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -2223,24 +2116,23 @@ MonoBehaviour:
   m_GameObject: {fileID: 949795997310641242}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 45a107d8e6c0deb4986c213ca547be0d, type: 3}
+  m_Script: {fileID: 11500000, guid: 2f14bdebaf0eed947b824092d4796b86, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   _data:
-    type: 1
     hasHover: 0
-    delayed: 0
-    delayTime: 0
     onHoverEnter:
       m_PersistentCalls:
         m_Calls: []
     onHoverExit:
       m_PersistentCalls:
         m_Calls: []
-    onClick:
-      m_PersistentCalls:
-        m_Calls: []
-    onEnter:
+    interactable: 1
+    networked: 0
+    id: -1
+    delayed: 0
+    delay: 0
+    onEnterZone:
       m_PersistentCalls:
         m_Calls:
         - m_Target: {fileID: 949795996530033447}
@@ -2255,18 +2147,9 @@ MonoBehaviour:
             m_StringArgument: 
             m_BoolArgument: 0
           m_CallState: 2
-    onExit:
+    onExitZone:
       m_PersistentCalls:
         m_Calls: []
-    onSwitchOn:
-      m_PersistentCalls:
-        m_Calls: []
-    onSwitchOff:
-      m_PersistentCalls:
-        m_Calls: []
-    networked: 0
-    id: -1
-    interactable: 1
 --- !u!1 &949795997364440490
 GameObject:
   m_ObjectHideFlags: 0
@@ -2350,12 +2233,18 @@ MonoBehaviour:
     - header: NPC
       playerNameHeader: 0
       body: By entering this trigger, I will teleport to an anchor.
+      color: {r: 0, g: 0, b: 0, a: 0}
+      img: {fileID: 0}
+      userPlayerImg: 0
       options: 4
       delay: 0
       clip: {fileID: 8300000, guid: 8a87732ae4a54f540aaddaac44b9e584, type: 3}
     - header: NPC
       playerNameHeader: 0
       body: From there I will start to follow you.
+      color: {r: 0, g: 0, b: 0, a: 0}
+      img: {fileID: 0}
+      userPlayerImg: 0
       options: 4
       delay: 2
       clip: {fileID: 0}
@@ -2363,6 +2252,9 @@ MonoBehaviour:
       playerNameHeader: 0
       body: By leaving the trigger, I will teleport back to the anchor and start
         looking at you.
+      color: {r: 0, g: 0, b: 0, a: 0}
+      img: {fileID: 0}
+      userPlayerImg: 0
       options: 4
       delay: 2
       clip: {fileID: 0}
@@ -2374,6 +2266,9 @@ MonoBehaviour:
     hasAudio: 0
     audioSource: {fileID: 0}
     displayTemplate: {fileID: 0}
+    onDialogStart:
+      m_PersistentCalls:
+        m_Calls: []
     onDialogFinished:
       m_PersistentCalls:
         m_Calls:
@@ -2445,12 +2340,18 @@ MonoBehaviour:
     - header: NPC
       playerNameHeader: 0
       body: By entering this trigger, I will look at you.
+      color: {r: 0, g: 0, b: 0, a: 0}
+      img: {fileID: 0}
+      userPlayerImg: 0
       options: 4
       delay: 0
       clip: {fileID: 8300000, guid: 8a87732ae4a54f540aaddaac44b9e584, type: 3}
     - header: NPC
       playerNameHeader: 0
       body: If you leave the trigger, I will walk randomly within a (provided) range.
+      color: {r: 0, g: 0, b: 0, a: 0}
+      img: {fileID: 0}
+      userPlayerImg: 0
       options: 4
       delay: 2
       clip: {fileID: 0}
@@ -2462,6 +2363,9 @@ MonoBehaviour:
     hasAudio: 0
     audioSource: {fileID: 0}
     displayTemplate: {fileID: 0}
+    onDialogStart:
+      m_PersistentCalls:
+        m_Calls: []
     onDialogFinished:
       m_PersistentCalls:
         m_Calls:
@@ -2557,6 +2461,9 @@ MonoBehaviour:
     - header: NPC
       playerNameHeader: 0
       body: In front of you are some some examples of emotes I can execute
+      color: {r: 0, g: 0, b: 0, a: 0}
+      img: {fileID: 0}
+      userPlayerImg: 0
       options: 4
       delay: 0
       clip: {fileID: 8300000, guid: 8a87732ae4a54f540aaddaac44b9e584, type: 3}
@@ -2568,6 +2475,9 @@ MonoBehaviour:
     hasAudio: 0
     audioSource: {fileID: 0}
     displayTemplate: {fileID: 0}
+    onDialogStart:
+      m_PersistentCalls:
+        m_Calls: []
     onDialogFinished:
       m_PersistentCalls:
         m_Calls:
@@ -2639,18 +2549,27 @@ MonoBehaviour:
     - header: NPC
       playerNameHeader: 0
       body: Hi, I am an NPC.
+      color: {r: 0, g: 0, b: 0, a: 0}
+      img: {fileID: 0}
+      userPlayerImg: 0
       options: 4
       delay: 0
       clip: {fileID: 8300000, guid: 8a87732ae4a54f540aaddaac44b9e584, type: 3}
     - header: NPC
       playerNameHeader: 0
       body: You can let me do all sorts of things,
+      color: {r: 0, g: 0, b: 0, a: 0}
+      img: {fileID: 0}
+      userPlayerImg: 0
       options: 4
       delay: 2
       clip: {fileID: 0}
     - header: NPC
       playerNameHeader: 0
       body: step into the next trigger to let me walk towards my next anchor
+      color: {r: 0, g: 0, b: 0, a: 0}
+      img: {fileID: 0}
+      userPlayerImg: 0
       options: 4
       delay: 0
       clip: {fileID: 8300000, guid: 8a87732ae4a54f540aaddaac44b9e584, type: 3}
@@ -2662,6 +2581,9 @@ MonoBehaviour:
     hasAudio: 0
     audioSource: {fileID: 0}
     displayTemplate: {fileID: 0}
+    onDialogStart:
+      m_PersistentCalls:
+        m_Calls: []
     onDialogFinished:
       m_PersistentCalls:
         m_Calls:
@@ -2708,84 +2630,74 @@ MonoBehaviour:
     onMessageShow:
       m_PersistentCalls:
         m_Calls: []
---- !u!1001 &949795996886361966
+--- !u!1001 &1816140760897939826
 PrefabInstance:
   m_ObjectHideFlags: 0
   serializedVersion: 2
   m_Modification:
     m_TransformParent: {fileID: 949795996530033446}
     m_Modifications:
-    - target: {fileID: 2242335352920170076, guid: c3b894149216a26499b6d768d6309354,
-        type: 3}
-      propertyPath: m_RootOrder
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 2242335352920170076, guid: c3b894149216a26499b6d768d6309354,
-        type: 3}
-      propertyPath: m_LocalPosition.x
-      value: -4.26
-      objectReference: {fileID: 0}
-    - target: {fileID: 2242335352920170076, guid: c3b894149216a26499b6d768d6309354,
-        type: 3}
-      propertyPath: m_LocalPosition.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 2242335352920170076, guid: c3b894149216a26499b6d768d6309354,
-        type: 3}
-      propertyPath: m_LocalPosition.z
-      value: -5.8
-      objectReference: {fileID: 0}
-    - target: {fileID: 2242335352920170076, guid: c3b894149216a26499b6d768d6309354,
-        type: 3}
-      propertyPath: m_LocalRotation.w
-      value: 0.7660445
-      objectReference: {fileID: 0}
-    - target: {fileID: 2242335352920170076, guid: c3b894149216a26499b6d768d6309354,
-        type: 3}
-      propertyPath: m_LocalRotation.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 2242335352920170076, guid: c3b894149216a26499b6d768d6309354,
-        type: 3}
-      propertyPath: m_LocalRotation.y
-      value: 0.6427876
-      objectReference: {fileID: 0}
-    - target: {fileID: 2242335352920170076, guid: c3b894149216a26499b6d768d6309354,
-        type: 3}
-      propertyPath: m_LocalRotation.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 2242335352920170076, guid: c3b894149216a26499b6d768d6309354,
-        type: 3}
-      propertyPath: m_LocalEulerAnglesHint.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 2242335352920170076, guid: c3b894149216a26499b6d768d6309354,
-        type: 3}
-      propertyPath: m_LocalEulerAnglesHint.y
-      value: 80
-      objectReference: {fileID: 0}
-    - target: {fileID: 2242335352920170076, guid: c3b894149216a26499b6d768d6309354,
-        type: 3}
-      propertyPath: m_LocalEulerAnglesHint.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 5997035449546956374, guid: c3b894149216a26499b6d768d6309354,
-        type: 3}
+    - target: {fileID: 1867323052885804367, guid: b07b7ca38b769eb4ca6ade8b3a767498, type: 3}
       propertyPath: m_Name
       value: Buster
       objectReference: {fileID: 0}
+    - target: {fileID: 2335998180068921725, guid: b07b7ca38b769eb4ca6ade8b3a767498, type: 3}
+      propertyPath: m_ApplyRootMotion
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7490059811900410965, guid: b07b7ca38b769eb4ca6ade8b3a767498, type: 3}
+      propertyPath: m_RootOrder
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7490059811900410965, guid: b07b7ca38b769eb4ca6ade8b3a767498, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7490059811900410965, guid: b07b7ca38b769eb4ca6ade8b3a767498, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7490059811900410965, guid: b07b7ca38b769eb4ca6ade8b3a767498, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7490059811900410965, guid: b07b7ca38b769eb4ca6ade8b3a767498, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7490059811900410965, guid: b07b7ca38b769eb4ca6ade8b3a767498, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7490059811900410965, guid: b07b7ca38b769eb4ca6ade8b3a767498, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7490059811900410965, guid: b07b7ca38b769eb4ca6ade8b3a767498, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7490059811900410965, guid: b07b7ca38b769eb4ca6ade8b3a767498, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7490059811900410965, guid: b07b7ca38b769eb4ca6ade8b3a767498, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7490059811900410965, guid: b07b7ca38b769eb4ca6ade8b3a767498, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
-  m_SourcePrefab: {fileID: 100100000, guid: c3b894149216a26499b6d768d6309354, type: 3}
---- !u!95 &1291923423286545441 stripped
+  m_SourcePrefab: {fileID: 100100000, guid: b07b7ca38b769eb4ca6ade8b3a767498, type: 3}
+--- !u!95 &4134053294775105551 stripped
 Animator:
-  m_CorrespondingSourceObject: {fileID: 2072658512218925903, guid: c3b894149216a26499b6d768d6309354,
-    type: 3}
-  m_PrefabInstance: {fileID: 949795996886361966}
+  m_CorrespondingSourceObject: {fileID: 2335998180068921725, guid: b07b7ca38b769eb4ca6ade8b3a767498, type: 3}
+  m_PrefabInstance: {fileID: 1816140760897939826}
   m_PrefabAsset: {fileID: 0}
---- !u!4 &1310611756244318514 stripped
+--- !u!4 &9135045868279112999 stripped
 Transform:
-  m_CorrespondingSourceObject: {fileID: 2242335352920170076, guid: c3b894149216a26499b6d768d6309354,
-    type: 3}
-  m_PrefabInstance: {fileID: 949795996886361966}
+  m_CorrespondingSourceObject: {fileID: 7490059811900410965, guid: b07b7ca38b769eb4ca6ade8b3a767498, type: 3}
+  m_PrefabInstance: {fileID: 1816140760897939826}
   m_PrefabAsset: {fileID: 0}

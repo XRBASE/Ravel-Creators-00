@@ -1853,6 +1853,26 @@ PrefabInstance:
       propertyPath: _data.displayTemplate
       value: 
       objectReference: {fileID: 1882683385}
+    - target: {fileID: 9135045868279112999, guid: 4e42c2e27988d2d4590148c2966ec4fa, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0.64
+      objectReference: {fileID: 0}
+    - target: {fileID: 9135045868279112999, guid: 4e42c2e27988d2d4590148c2966ec4fa, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: -5.63
+      objectReference: {fileID: 0}
+    - target: {fileID: 9135045868279112999, guid: 4e42c2e27988d2d4590148c2966ec4fa, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 0.7071068
+      objectReference: {fileID: 0}
+    - target: {fileID: 9135045868279112999, guid: 4e42c2e27988d2d4590148c2966ec4fa, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0.7071068
+      objectReference: {fileID: 0}
+    - target: {fileID: 9135045868279112999, guid: 4e42c2e27988d2d4590148c2966ec4fa, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 90
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 4e42c2e27988d2d4590148c2966ec4fa, type: 3}
 --- !u!4 &376200418 stripped
@@ -9095,7 +9115,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e8b0913330570cb4990ea03f16f1593f, type: 3}
+  m_Script: {fileID: 11500000, guid: 569df57c5cac66f4989642bce6cd10dd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!1 &2034219641
