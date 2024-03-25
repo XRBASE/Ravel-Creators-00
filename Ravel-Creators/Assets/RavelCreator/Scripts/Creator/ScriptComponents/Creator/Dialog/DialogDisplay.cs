@@ -15,19 +15,27 @@ namespace Base.Ravel.Creator.Components
 			get { return _header != null; }
 		}
 
+		public bool HasTitleReference {
+			get { return _title != null; }
+		}
+
 		public bool HasBodyReference {
 			get { return _body != null; }
 		}
 
 		[SerializeField] private TMP_Text _header;
+		[SerializeField] private TMP_Text _title;
 		[SerializeField] private TMP_Text _body;
-		[SerializeField, Tooltip("When set, these graphics will change colors, based on the colors added in the messages.")] 
+
+		[SerializeField,
+		 Tooltip("When set, these graphics will change colors, based on the colors added in the messages.")]
 		private List<Graphic> _colorHighlights;
 
-		[SerializeField, Tooltip("When set, this graphic will show the profile image connected to the message shown.")] 
+		[SerializeField, Tooltip("When set, this graphic will show the profile image connected to the message shown.")]
 		private Image _profileImg;
 
 		public void NextMessage() { }
+
 		public void PrevMessage() { }
 
 #if UNITY_EDITOR
