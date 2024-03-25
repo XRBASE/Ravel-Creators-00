@@ -1,0 +1,40 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 21b9a635d928e464d91c0fdef2ebef96, type: 3}
+  m_Name: RavelEditorSettings
+  m_EditorClassIdentifier: 
+  _creatorPanelSettings:
+    saveUserMail: 1
+    userMail: lotte@ravel.world
+    autoClean: 1
+    versioning: _1_2
+    incrementMinorVersionOnBuild: 1
+  _editorBundles:
+    bundles:
+    - name: TMP_CollectiblesTest
+      guid: 70cfae4a-587a-4094-a578-945233c3d775
+      vMajor: 0
+      vMinor: 0
+    - name: MyEnvironment
+      guid: 5aee802e-d332-4d2b-a460-d3281e26b797
+      vMajor: 0
+      vMinor: 6
+    - name: Tutorial_v1
+      guid: 924d8ceb-8176-4fea-956b-a0a91ac61dad
+      vMajor: 0
+      vMinor: 0
+    - name: Tutorial_v2
+      guid: cf727050-89ac-45e6-98ff-afdb0039150e
+      vMajor: 0
+      vMinor: 0
+  _filePath: /
+  _bundlePath: /StreamingAssets
