@@ -1,0 +1,21 @@
+{
+    "name": "AD_RAvatars",
+    "rootNamespace": "",
+    "references": [
+        "GUID:96af4ea235d92d245a095007c6ca3701",
+        "GUID:d78d5587af9f7ca45b5485a055817da8",
+        "GUID:39f15d367b09ec94f92e9de88be205fa",
+        "GUID:c1f8506b2521baf4a9e8e8fd472fe118",
+        "GUID:9f0995e706b816f418d9600d72c84a0a",
+        "GUID:d43bb8b9e37ef1546a0fe44e2074489a"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}
