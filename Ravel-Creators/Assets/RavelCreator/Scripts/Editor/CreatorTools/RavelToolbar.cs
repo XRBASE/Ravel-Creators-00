@@ -94,6 +94,8 @@ public class RavelToolbar
 
             BundleBuilder.BuildOpenScene(bundleName, true, cleanup);
         }
+
+        GUI.enabled = true;
         if (GUILayout.Button(new GUIContent("Build", "Build asset bundle"), RavelEditorStying.txtBtnSmall)) {
             BundleBuilder.BuildOpenScene(bundleName, false, false);
         }
