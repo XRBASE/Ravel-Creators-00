@@ -6,5 +6,5 @@ using UnityEngine.Events;
 public class QuestEvent
 {
         public UnityEvent unityEvent;
-        public bool fireEventOnLoad = true;
+        public bool disableFireEventOnLoad;
 }

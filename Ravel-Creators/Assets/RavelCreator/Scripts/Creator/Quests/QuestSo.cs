@@ -66,6 +66,7 @@ public class QuestSo : ScriptableObject
                 instance.DeleteQuest();
                 EditorUtility.SetDirty(instance);
             }
+            
         }
     }
 #endif
