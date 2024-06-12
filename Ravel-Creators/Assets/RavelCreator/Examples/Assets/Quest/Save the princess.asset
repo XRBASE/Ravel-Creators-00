@@ -1,0 +1,19 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f91e0ddf11d670b4ca5179b96c53d923, type: 3}
+  m_Name: Save the princess
+  m_EditorClassIdentifier: 
+  questData:
+    guid: 148cb8b0-719d-4fd6-9e3f-404f5ab60e6d
+    environmentId: 2ffaa36b-692c-4038-835e-b706661af173
+    title: Save the princess
+    description: Rescue the princess out of the claws of the big bad boss
