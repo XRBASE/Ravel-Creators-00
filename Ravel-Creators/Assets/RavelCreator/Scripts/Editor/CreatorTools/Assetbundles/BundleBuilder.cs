@@ -50,8 +50,6 @@ public static class BundleBuilder
 				//unload all other scene's
 				EditorSceneManager.OpenScene(s.path, OpenSceneMode.Single);
 				Debug.LogWarning($"Multiple scenes, building active scene ({s.name})");
-
-				s = EditorSceneManager.GetActiveScene();
 			}
 			else {
 				Debug.LogError("Multiple scenes, cancelling build.");
@@ -65,6 +63,7 @@ public static class BundleBuilder
 	private static IEnumerator BuildScene(Scene s, string bundleName, bool preview, bool autoCleanFiles) {
 		//See if there is an active scene configuration in the scene, otherwise cancel the build.
 		//Missing config errors are shown to the user.
+
 		if (!TryGetConfig(out SceneConfiguration config)) {
 			Debug.LogWarning("Could not find scene configuration component! Cancelling build.");
 			yield break;
@@ -147,7 +146,7 @@ public static class BundleBuilder
 			EditorUtility.DisplayDialog("Error clearing dynamic content",
 				$"Could not clear previously used dynamic content: \n{res.Error.FullMessage}!", "Ok");
 			
-			throw new Exception($"Could not clear previously used dynamic content: \n{res.Error.FullMessage}!");
+			Debug.LogError($"Could not clear previously used dynamic content: \n{res.Error.FullMessage}!");
 		}
 		
 		//Upload file content to backend, using names in scene.
@@ -160,7 +159,7 @@ public static class BundleBuilder
 				EditorUtility.DisplayDialog("Error setting dynamic content",
 					$"There was an error setting the dynamic content: \n{res.Error.FullMessage}!", "Ok");
 				
-				throw new Exception($"Dynamic content error: \n{res.Error.FullMessage}!");
+				Debug.LogError($"Dynamic content error: \n{res.Error.FullMessage}!");
 			}
 		}
 		
@@ -184,43 +183,15 @@ public static class BundleBuilder
 		
 		//Other asset-bundles are being cleared in preparation of the bundle build.
 		Debug.Log($"Build scene {s.name} for environment {config.environmentSO.environment.name}");
-		string[] bundleNames = AssetDatabase.GetAllAssetBundleNames();
-		string[] assets;
-		bool sceneAdded = false;
-		foreach (string name in bundleNames) {
-			assets = AssetDatabase.GetAssetPathsFromAssetBundle(name);
-			foreach (string assetPath in assets) {
-				if (name == bundleName && assetPath == s.path) {
-					sceneAdded = true;
-					continue;
-				}
-				AssetImporter.GetAtPath(assetPath).SetAssetBundleNameAndVariant("", "");
-			}
-			if (name != bundleName)
-				AssetDatabase.RemoveAssetBundleName(name, true);
-		}
-		
-		//If scene was not already assigned to the right bundle, assign the scene to it.
-		if (!sceneAdded) {
-			AssetImporter.GetAtPath(s.path).SetAssetBundleNameAndVariant(bundleName, "");
-		}
 
-		//Get the bundle path from the config and create missing folders if they're not already there
-		string path = RavelCreatorSettings.Get().GetBundlePath();
-		if (!Directory.Exists(path)) {
-			Debug.LogWarning($"Bundle directory {path} does not exist, creating it!");
-			Directory.CreateDirectory(path);
-		}
-		
-		//build the actual bundle
-		BuildPipeline.BuildAssetBundles(path, BuildAssetBundleOptions.None, BuildTarget.WebGL);
+		BuildAssetBundle(s, bundleName, out string path);
 		
 		//increment version numbers.
 		if(RavelEditor.CreatorPanelSettings.incrementMinorVersionOnBuild){
 			data.vMinor++;
 			RavelEditor.EditorBundles.SaveConfig();
 		}
-
+		
 		if (preview) {
 			//send result to webserver.
 			Debug.Log("Uploading bundle!");
@@ -257,6 +228,40 @@ public static class BundleBuilder
 				cams[i].gameObject.SetActive(true);
 			}
 		}
+	}
+
+	public static void BuildAssetBundle(Scene s, string bundleName, out string path)
+	{
+		string[] bundleNames = AssetDatabase.GetAllAssetBundleNames();
+		string[] assets;
+		bool sceneAdded = false;
+		foreach (string name in bundleNames) {
+			assets = AssetDatabase.GetAssetPathsFromAssetBundle(name);
+			foreach (string assetPath in assets) {
+				if (name == bundleName && assetPath == s.path) {
+					sceneAdded = true;
+					continue;
+				}
+				AssetImporter.GetAtPath(assetPath).SetAssetBundleNameAndVariant("", "");
+			}
+			if (name != bundleName)
+				AssetDatabase.RemoveAssetBundleName(name, true);
+		}
+		
+		//If scene was not already assigned to the right bundle, assign the scene to it.
+		if (!sceneAdded) {
+			AssetImporter.GetAtPath(s.path).SetAssetBundleNameAndVariant(bundleName, "");
+		}
+
+		//Get the bundle path from the config and create missing folders if they're not already there
+		path = RavelCreatorSettings.Get().GetBundlePath();
+		if (!Directory.Exists(path)) {
+			Debug.LogWarning($"Bundle directory {path} does not exist, creating it!");
+			Directory.CreateDirectory(path);
+		}
+		
+		//build the actual bundle
+		BuildPipeline.BuildAssetBundles(path, BuildAssetBundleOptions.None, BuildTarget.WebGL);
 	}
 
 	public static void OpenPreviewEnvironment(Environment env) {
