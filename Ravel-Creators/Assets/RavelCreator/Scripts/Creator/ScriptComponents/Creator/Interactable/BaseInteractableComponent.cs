@@ -28,6 +28,7 @@ namespace Base.Ravel.Creator.Components
 			compData.onHoverExit = data.onHoverExit;
 
 			compData.interactable = data.interactable;
+			compData.highlightable = data.highlightable;
 			
 			compData.networked = data.networked;
 			compData.id = data.id;
@@ -49,7 +50,8 @@ namespace Base.Ravel.Creator.Components
 		public UnityEvent onHoverEnter;
 		public UnityEvent onHoverExit;
 
-		public bool interactable;
+		public bool interactable = true;
+		public bool highlightable = true;
 		
 		public bool networked;
 		[HideInInspector] public int id;

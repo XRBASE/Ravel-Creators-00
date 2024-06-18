@@ -1,5 +1,4 @@
 using Base.Ravel.Config;
-using Base.Ravel.Networking;
 using UnityEditor;
 using UnityEditor.SceneManagement;
 using UnityEngine;
@@ -94,6 +93,8 @@ public class RavelToolbar
 
             BundleBuilder.BuildOpenScene(bundleName, true, cleanup);
         }
+
+        GUI.enabled = true;
         if (GUILayout.Button(new GUIContent("Build", "Build asset bundle"), RavelEditorStying.txtBtnSmall)) {
             BundleBuilder.BuildOpenScene(bundleName, false, false);
         }
