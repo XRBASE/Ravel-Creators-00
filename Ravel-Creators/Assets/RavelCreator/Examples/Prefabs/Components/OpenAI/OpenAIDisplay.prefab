@@ -390,7 +390,7 @@ Canvas:
   m_OverridePixelPerfect: 0
   m_SortingBucketNormalizedSize: 0
   m_VertexColorAlwaysGammaSpace: 0
-  m_AdditionalShaderChannelsFlag: 0
+  m_AdditionalShaderChannelsFlag: 25
   m_UpdateRectTransformForStandalone: 0
   m_SortingLayerID: 0
   m_SortingOrder: 0
@@ -724,7 +724,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 50, y: -0.0029296875}
+  m_AnchoredPosition: {x: 50, y: -0.000091552734}
   m_SizeDelta: {x: -100, y: 0}
   m_Pivot: {x: 0, y: 1}
 --- !u!114 &7717296304497691443
@@ -1135,6 +1135,18 @@ MonoBehaviour:
             m_StringArgument: 
             m_BoolArgument: 0
           m_CallState: 2
+        - m_Target: {fileID: 7735420002112738422}
+          m_TargetAssemblyTypeName: UnityEngine.GameObject, UnityEngine
+          m_MethodName: SetActive
+          m_Mode: 6
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 1
+          m_CallState: 2
     OnAnswerRecieved:
       m_PersistentCalls:
         m_Calls:
@@ -1149,6 +1161,18 @@ MonoBehaviour:
             m_FloatArgument: 0
             m_StringArgument: 
             m_BoolArgument: 1
+          m_CallState: 2
+        - m_Target: {fileID: 7735420002112738422}
+          m_TargetAssemblyTypeName: UnityEngine.GameObject, UnityEngine
+          m_MethodName: SetActive
+          m_Mode: 6
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
           m_CallState: 2
     OnDispose:
       m_PersistentCalls:
@@ -1768,7 +1792,7 @@ MonoBehaviour:
   m_HandleRect: {fileID: 5187143520185140464}
   m_Direction: 2
   m_Value: 1
-  m_Size: 0.999997
+  m_Size: 1
   m_NumberOfSteps: 0
   m_OnValueChanged:
     m_PersistentCalls:
@@ -1894,8 +1918,9 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 0}
-        m_TargetAssemblyTypeName: OpenAIDisplay, Assembly-CSharp
+      - m_Target: {fileID: 6292302712791886131}
+        m_TargetAssemblyTypeName: Base.Ravel.Creator.Components.OpenAI.AIDialogDisplayComponent,
+          Assembly-CSharp
         m_MethodName: Dispose
         m_Mode: 1
         m_Arguments:
@@ -2051,8 +2076,9 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 0}
-        m_TargetAssemblyTypeName: OpenAIDisplay, Assembly-CSharp
+      - m_Target: {fileID: 6292302712791886131}
+        m_TargetAssemblyTypeName: Base.Ravel.Creator.Components.OpenAI.AIDialogDisplayComponent,
+          Assembly-CSharp
         m_MethodName: Initialize
         m_Mode: 1
         m_Arguments:
