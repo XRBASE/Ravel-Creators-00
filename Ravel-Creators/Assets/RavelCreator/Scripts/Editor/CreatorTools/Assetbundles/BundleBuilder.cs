@@ -43,7 +43,7 @@ public static class BundleBuilder
 		Scene s = EditorSceneManager.GetActiveScene();
 		
 		//check for multiple scenes (if so, only the active one will be build).
-		if (EditorSceneManager.loadedSceneCount > 1) {
+		if (SceneManager.loadedSceneCount > 1) {
 			if (EditorUtility.DisplayDialog("Build open scene",
 				    $"There are multiple scene's open, only the active scene ({s.name}), will actually be built into the bundle",
 				    "Build", "Cancel")) {
