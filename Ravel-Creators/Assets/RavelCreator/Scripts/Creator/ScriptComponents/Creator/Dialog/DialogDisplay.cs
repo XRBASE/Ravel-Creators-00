@@ -26,6 +26,8 @@ namespace Base.Ravel.Creator.Components
 		[SerializeField] private TMP_Text _header;
 		[SerializeField] private TMP_Text _title;
 		[SerializeField] private TMP_Text _body;
+		[SerializeField] private TMP_Text _inputHint;
+		
 
 		[SerializeField,
 		 Tooltip("When set, these graphics will change colors, based on the colors added in the messages.")]
