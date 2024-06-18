@@ -290,6 +290,7 @@ namespace Base.Ravel.Creator.Components
 		[HideInInspector] public int id = -1;
 
 		public bool interactable = true;
+		public bool highlightable = true;
 
 		public enum Type
 		{
