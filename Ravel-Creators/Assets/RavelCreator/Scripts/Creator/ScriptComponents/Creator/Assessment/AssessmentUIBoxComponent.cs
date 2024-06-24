@@ -39,6 +39,7 @@ namespace Base.Ravel.Creator.Components.Assessments {
         public bool acceptWrongAnswers;
         
         public UnityEvent onComplete;
+        public UnityEvent onNewQuestion;
         public UnityEvent onReset;
     }
 }
