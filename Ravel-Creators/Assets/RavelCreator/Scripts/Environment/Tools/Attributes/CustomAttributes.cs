@@ -5,7 +5,7 @@ using UnityEngine;
 using UnityEditor;
 #endif
 
-namespace Base.Ravel.CustomAttributes
+namespace SpaceShift.CustomAttributes
 {
     [AttributeUsage(AttributeTargets.Field, AllowMultiple = false, Inherited = true)]
     public class ReadOnlyAttribute : PropertyAttribute { }

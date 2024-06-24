@@ -1,4 +1,5 @@
 using System;
+using Base.Ravel.CharacterAnimation.Emotes;
 using UnityEngine;
 using UnityEngine.Events;
 
@@ -77,5 +78,8 @@ namespace Base.Ravel.Creator.Components
         
         public Animator animator;
         public UnityEvent onInitialised;
+        
+        [Tooltip("Custom set of emotes, leave empty to use defaults")]
+        public EmoteSet customEmotes = null;
     }
 }
