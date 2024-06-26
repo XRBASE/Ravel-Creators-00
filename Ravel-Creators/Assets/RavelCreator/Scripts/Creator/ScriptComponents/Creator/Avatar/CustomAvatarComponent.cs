@@ -1,6 +1,6 @@
 using System;
 using Base.Ravel.Creator.Components;
-using Base.Ravel.CustomAttributes;
+using SpaceShift.CustomAttributes;
 using UnityEditor;
 using UnityEngine;
 

@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Base.Ravel.Config;
-using Base.Ravel.CustomAttributes;
+using SpaceShift.CustomAttributes;
 using Base.Ravel.Users;
 using UnityEngine;
 
