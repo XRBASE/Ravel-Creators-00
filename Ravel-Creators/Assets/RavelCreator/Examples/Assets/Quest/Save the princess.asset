@@ -14,6 +14,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   questData:
     guid: 148cb8b0-719d-4fd6-9e3f-404f5ab60e6d
-    environmentId: 2ffaa36b-692c-4038-835e-b706661af173
+    environmentId: fb7c8642-ba26-4078-8767-0c1121cdfd0f
     title: Save the princess
     description: Rescue the princess out of the claws of the big bad boss

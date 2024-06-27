@@ -14,6 +14,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   questData:
     guid: 2e604335-a39e-4a19-b841-67c7d712b1f7
-    environmentId: 9bc796a1-79e3-4a05-86f8-dbce0b6e89b6
+    environmentId: fb7c8642-ba26-4078-8767-0c1121cdfd0f
     title: Beat the big bad boss
     description: Defeat the big bad boss
