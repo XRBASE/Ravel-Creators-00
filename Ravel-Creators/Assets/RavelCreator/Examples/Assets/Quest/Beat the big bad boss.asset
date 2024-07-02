@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: Beat the big bad boss
   m_EditorClassIdentifier: 
   questData:
-    guid: 2e604335-a39e-4a19-b841-67c7d712b1f7
+    guid: 954b428c-1f11-465a-81cd-15b4c62c2638
     environmentId: fb7c8642-ba26-4078-8767-0c1121cdfd0f
-    title: Beat the big bad boss
-    description: Defeat the big bad boss
+    title: Defeat the big bad boss
+    description: Rid the world of this evil
