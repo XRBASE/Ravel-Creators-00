@@ -1,4 +1,4 @@
-#if UNITY_EDITOR
+/*#if UNITY_EDITOR
 using Base.Ravel.Config;
 using Base.Ravel.Networking;
 using UnityEditor;
@@ -511,4 +511,4 @@ public class EnvironmentSOEditor : Editor
         RefreshEnvironment();
     }
 }
-#endif
+#endif*/
