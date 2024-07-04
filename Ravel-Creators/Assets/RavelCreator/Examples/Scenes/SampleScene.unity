@@ -273,7 +273,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 9159861550475728977, guid: 4460656af65d797489797a19c2626f3a, type: 3}
       propertyPath: _id
-      value: 8
+      value: 9
       objectReference: {fileID: 0}
     - target: {fileID: 9159861550475728979, guid: 4460656af65d797489797a19c2626f3a, type: 3}
       propertyPath: m_Name
@@ -304,6 +304,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 1642813419}
     m_Modifications:
+    - target: {fileID: 1368748946061693991, guid: bb1309e6e4a26b848a3f721014666ee8, type: 3}
+      propertyPath: _data.id
+      value: 2
+      objectReference: {fileID: 0}
     - target: {fileID: 3090666532429086102, guid: bb1309e6e4a26b848a3f721014666ee8, type: 3}
       propertyPath: m_Name
       value: MovingPlatform
@@ -555,7 +559,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 74947301, guid: 444ee7f1d7def8d499d48c27d81a94ce, type: 3}
       propertyPath: _data.netIndex
-      value: 20
+      value: 21
       objectReference: {fileID: 0}
     - target: {fileID: 120666920, guid: 444ee7f1d7def8d499d48c27d81a94ce, type: 3}
       propertyPath: m_AnchorMax.y
@@ -1352,7 +1356,7 @@ MonoBehaviour:
       m_PersistentCalls:
         m_Calls: []
     networked: 1
-    id: 2
+    id: 3
     interactable: 1
     highlightable: 1
 --- !u!65 &249361415
@@ -1561,19 +1565,19 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1941752139998576839, guid: 75b4e14215e8abf479814f40dd3a7771, type: 3}
       propertyPath: _data.id
-      value: 6
+      value: 7
       objectReference: {fileID: 0}
     - target: {fileID: 1941752140077812870, guid: 75b4e14215e8abf479814f40dd3a7771, type: 3}
       propertyPath: _data.id
-      value: 23
+      value: 24
       objectReference: {fileID: 0}
     - target: {fileID: 1941752140738051087, guid: 75b4e14215e8abf479814f40dd3a7771, type: 3}
       propertyPath: _data.id
-      value: 15
+      value: 16
       objectReference: {fileID: 0}
     - target: {fileID: 1941752141526070651, guid: 75b4e14215e8abf479814f40dd3a7771, type: 3}
       propertyPath: _data.id
-      value: 17
+      value: 18
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -2174,7 +2178,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _data:
-    id: 3
+    id: 4
 --- !u!114 &399384818
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2720,7 +2724,7 @@ MonoBehaviour:
       m_PersistentCalls:
         m_Calls: []
     networked: 1
-    id: 4
+    id: 5
     interactable: 1
     highlightable: 1
 --- !u!65 &451382722
@@ -3665,7 +3669,7 @@ MonoBehaviour:
       m_PersistentCalls:
         m_Calls: []
     networked: 1
-    id: 5
+    id: 6
     interactable: 1
     highlightable: 1
 --- !u!65 &646364279
@@ -3833,7 +3837,7 @@ MonoBehaviour:
       m_PersistentCalls:
         m_Calls: []
     networked: 1
-    id: 7
+    id: 8
     interactable: 1
     highlightable: 1
 --- !u!65 &747302755
@@ -4931,7 +4935,7 @@ MonoBehaviour:
       m_PersistentCalls:
         m_Calls: []
     networked: 1
-    id: 9
+    id: 10
     interactable: 1
     highlightable: 1
 --- !u!65 &1041747031
@@ -5099,7 +5103,7 @@ MonoBehaviour:
       m_PersistentCalls:
         m_Calls: []
     networked: 1
-    id: 11
+    id: 12
     interactable: 1
     highlightable: 1
 --- !u!65 &1063155916
@@ -5233,7 +5237,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8310065130475972402, guid: 673e4fea53b14534c9ff57b7a9fbb454, type: 3}
       propertyPath: _data.id
-      value: 12
+      value: 13
       objectReference: {fileID: 0}
     - target: {fileID: 8310065130475972402, guid: 673e4fea53b14534c9ff57b7a9fbb454, type: 3}
       propertyPath: _data.name
@@ -6081,7 +6085,7 @@ MonoBehaviour:
       m_PersistentCalls:
         m_Calls: []
     networked: 1
-    id: 13
+    id: 14
     interactable: 1
     highlightable: 1
 --- !u!65 &1224860219
@@ -6978,7 +6982,7 @@ MonoBehaviour:
       m_PersistentCalls:
         m_Calls: []
     networked: 1
-    id: 16
+    id: 17
     interactable: 1
     highlightable: 1
 --- !u!65 &1316746530
@@ -7659,7 +7663,7 @@ MonoBehaviour:
       m_PersistentCalls:
         m_Calls: []
     networked: 1
-    id: 18
+    id: 19
     interactable: 1
     highlightable: 1
 --- !u!65 &1526169617
@@ -7828,7 +7832,7 @@ MonoBehaviour:
       m_PersistentCalls:
         m_Calls: []
     networked: 1
-    id: 19
+    id: 20
     interactable: 1
     highlightable: 1
 --- !u!65 &1569502766
@@ -8952,7 +8956,7 @@ MonoBehaviour:
       m_PersistentCalls:
         m_Calls: []
     networked: 1
-    id: 21
+    id: 22
     interactable: 1
     highlightable: 1
 --- !u!65 &1794211160
@@ -9124,7 +9128,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1030931476054499483, guid: 1f6fa7e4ffb004840987506f9f86614c, type: 3}
       propertyPath: _data.id
-      value: 22
+      value: 23
       objectReference: {fileID: 0}
     - target: {fileID: 1030931476054499483, guid: 1f6fa7e4ffb004840987506f9f86614c, type: 3}
       propertyPath: _data.name
@@ -9154,7 +9158,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6069522243713810079, guid: 20f32b47715b80b4c9fe36e77527883a, type: 3}
       propertyPath: _data.id
-      value: 10
+      value: 11
       objectReference: {fileID: 0}
     - target: {fileID: 6069522243713810080, guid: 20f32b47715b80b4c9fe36e77527883a, type: 3}
       propertyPath: m_StaticEditorFlags
@@ -9214,7 +9218,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6069522245048329926, guid: 20f32b47715b80b4c9fe36e77527883a, type: 3}
       propertyPath: _data.id
-      value: 14
+      value: 15
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -9774,7 +9778,7 @@ MonoBehaviour:
       m_PersistentCalls:
         m_Calls: []
     networked: 1
-    id: 24
+    id: 25
     interactable: 1
     highlightable: 1
 --- !u!65 &1919663761
@@ -10503,7 +10507,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _data:
-    id: 25
+    id: 26
 --- !u!111 &2034219646
 Animation:
   m_ObjectHideFlags: 0
