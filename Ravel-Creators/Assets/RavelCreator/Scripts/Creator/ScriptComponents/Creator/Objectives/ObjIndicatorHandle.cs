@@ -1,3 +1,4 @@
+using System;
 using Base.Ravel.Creator.Components;
 using UnityEngine;
 
@@ -15,6 +16,7 @@ public partial class ObjIndicatorHandle : ComponentBase
 
     public void ClearTarget() { }
 
+    [Serializable]
     public class IndicatorData : ComponentData {
         public bool enabled = true;
         public Sprite icoOverride;
